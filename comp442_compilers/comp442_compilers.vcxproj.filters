@@ -30,7 +30,7 @@
     <ClInclude Include="token.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="state.h">
+    <ClInclude Include="lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClCompile Include="token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="state.cpp">
+    <ClCompile Include="lexer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

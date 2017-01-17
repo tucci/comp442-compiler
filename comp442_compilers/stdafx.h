@@ -8,10 +8,12 @@
 #include "targetver.h"
 
 #include <stdio.h>
+#include <string>
 #include <iostream>
 #include <tchar.h>
 
 #include "dfa.h"
+#include "lexer.h"
 
 // TODO: reference additional headers your program requires here
 

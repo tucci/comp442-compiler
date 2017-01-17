@@ -1,10 +1,13 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-class token {
-public:
-	token();
-	~token();
+enum token_type {
+
+};
+
+struct token {
+	std::string lexeme;
+	token_type token_type;
 };
 
 #endif // !TOKEN_H
