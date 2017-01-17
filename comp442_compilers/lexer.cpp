@@ -12,9 +12,9 @@ lexer::lexer() {
 lexer::~lexer() {
 }
 
-std::string lexer::next_token() {
+token lexer::next_token() {
 	bool token_created = false;
-	std::string token;
+	token token;
 	// create init state at state 1
 	state current_state = {1};
 	// loop until we have created a token
@@ -24,7 +24,7 @@ std::string lexer::next_token() {
 		// TODO: find a better way to do this
 		if (lookup != " ") {
 			// add this char to our token as we go
-			token.append(lookup);
+			token.lexeme.append(lookup);
 			// get the state for the current state and lookup
 			current_state = tokenizer.table(current_state.state_identifier, lookup);
 			// If we are the final, then we create the token
@@ -48,7 +48,7 @@ std::string lexer::next_char() {
 
 void lexer::init_tokenizer() {
 	state start = tokenizer.create_start_state();
-	state s2 = tokenizer.create_state(true);
+	state s2 = tokenizer.create_state(true, non_zero_t);
 	tokenizer.add_transition(start, " ", start);
 	tokenizer.add_transition(start, "1", s2);
 	tokenizer.add_transition(start, "2", s2);

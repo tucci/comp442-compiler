@@ -8,9 +8,11 @@ int main()
 
 
 	lexer lex;
-	cout << lex.next_token() << endl;
-	cout << lex.next_token() << endl;
-	cout << lex.next_token() << endl;
+	token t = lex.next_token();
+
+	cout << "token type: " << t.type<< endl;
+	cout << token_type::non_zero_t;
+	
 
 
     return 0;

@@ -20,9 +20,9 @@ state dfa::create_start_state() {
 	return start_state;
 }
 
-state dfa::create_state(bool is_final_state, bool is_backup) {
+state dfa::create_state(bool is_final_state, bool is_backup, token_type type) {
 	// init state with the incremented state identifier and specified is_final_state
-	state new_state = { ++m_state_count, false, is_final_state, is_backup};
+	state new_state = { ++m_state_count, false, is_final_state, is_backup, type};
 	// create the transition map for this state
 	std::unordered_map<std::string, state>* transitions = new std::unordered_map<std::string, state>;
 	// add the transition map to our state transition table
@@ -40,45 +40,15 @@ bool dfa::add_transition(state from_state, std::string transition, state to_stat
 	}
 	return false;
 }
-
+// Add an else transition to the two states
 bool dfa::add_else_transition(state from_state, state to_state) {
 	return add_transition(from_state, ELSE_TRANSITION, to_state);
 }
 
-bool  dfa::has_state(state state) {
+bool dfa::has_state(state state) {
 	return state_transition_table.find(state.state_identifier) != state_transition_table.end();
 }
 
-state dfa::table(int state, std::string lookup_transition) {
-	return state_transition_table.at(state)->at(lookup_transition);
+state dfa::table(int from_state, std::string lookup_transition) {
+	return state_transition_table.at(from_state)->at(lookup_transition);
 }
-
-//bool dfa::test_string(std::string input) {
-//	bool is_accepted = false;
-//	int str_index = 0;
-//	// reference to the current str
-//	std::string current_str;
-//	// reference to the current state
-//	state current_state = m_start_state;
-//
-//	while (!is_accepted && str_index < input.length()) {
-//		current_str = input.substr(str_index, 1);
-//		state transition_state;
-//		try { // try to see if the current state has a transition from thr current_str string
-//			transition_state = current_state.transitions.at(current_str);
-//			// if no exception has been thrown, then there is a transition
-//			// set the current state to the transition state
-//			current_state = transition_state;
-//			// move the string index to read the next char
-//			str_index++;
-//			// Check to see if we are the final state and have read all the input
-//			if (current_state.is_final_state && str_index == input.length()) {
-//				return true;
-//			}
-//		} catch (const std::out_of_range& oor) {
-//			// Didn't find the transition. therefore we reject this string
-//			return false;
-//		}
-//	}
-//	return false;
-//}
