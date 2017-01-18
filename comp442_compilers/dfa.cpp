@@ -40,7 +40,7 @@ bool dfa::add_transition(state from_state, std::string transition, state to_stat
 	}
 	return false;
 }
-// Add an else transition to the two states
+
 bool dfa::add_else_transition(state from_state, state to_state) {
 	return add_transition(from_state, ELSE_TRANSITION, to_state);
 }

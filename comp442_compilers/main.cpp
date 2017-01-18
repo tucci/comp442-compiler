@@ -5,9 +5,8 @@ using namespace std;
 
 int main()
 {
-
-
-	lexer lex;
+	specification spec;
+	lexer lex(spec);
 	token t = lex.next_token();
 
 	cout << "token type: " << t.type<< endl;

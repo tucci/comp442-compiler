@@ -2,12 +2,9 @@
 #include "lexer.h"
 
 
-lexer::lexer() {
-	source = "   1 23 55";
-	index = 0;
-	init_tokenizer();
+lexer::lexer(specification spec) {
+	this->spec = spec.get_spec();
 }
-
 
 lexer::~lexer() {
 }
@@ -21,16 +18,18 @@ token lexer::next_token() {
 	do {
 		// get the next char in the input
 		std::string lookup = next_char();
-		// TODO: find a better way to do this
+		// TODO: find a better way to do this, dont want to put spaces here
+		// TODO: appending the lexeme like wont work out nicely
 		if (lookup != " ") {
 			// add this char to our token as we go
 			token.lexeme.append(lookup);
 			// get the state for the current state and lookup
-			current_state = tokenizer.table(current_state.state_identifier, lookup);
+			current_state = spec.table(current_state.state_identifier, lookup);
 			// If we are the final, then we create the token
 			if (current_state.is_final_state) {
 				token_created = true;
 				if (current_state.is_backup) {
+					// TODO: implement backtracking. might need to double buffer
 					//backup_char();
 				}
 			}
@@ -41,25 +40,14 @@ token lexer::next_token() {
 	return token;
 }
 
-std::string lexer::next_char() {
-	return source.substr(index++, 1);
-	
+void lexer::set_source(std::string path_to_file) {
+	source_file = path_to_file;
 }
 
-void lexer::init_tokenizer() {
-	state start = tokenizer.create_start_state();
-	state s2 = tokenizer.create_state(true, non_zero_t);
-	tokenizer.add_transition(start, " ", start);
-	tokenizer.add_transition(start, "1", s2);
-	tokenizer.add_transition(start, "2", s2);
-	tokenizer.add_transition(start, "3", s2);
-	tokenizer.add_transition(start, "4", s2);
-	tokenizer.add_transition(start, "5", s2);
-	tokenizer.add_transition(start, "6", s2);
-	tokenizer.add_transition(start, "7", s2);
-	tokenizer.add_transition(start, "8", s2);
-	tokenizer.add_transition(start, "9", s2);
 
+std::string lexer::next_char() {
+	//return source.substr(index++, 1);
+	
 }
 
 
