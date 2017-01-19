@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dfa.h" />
+    <ClInclude Include="dfa_helper.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="specification.h" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dfa.cpp" />
+    <ClCompile Include="dfa_helper.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="specification.cpp" />

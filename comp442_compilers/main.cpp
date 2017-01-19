@@ -10,10 +10,10 @@ int main()
 	if (lex.set_source("SourceCode.txt")) {
 		while (lex.has_more_tokens()) {
 			token t = lex.next_token();
-			cout << t.lexeme << ", " 
-				<< t.type << ", " 
-				<< t.token_line << ", " 
-				<< t.token_location;
+			cout << "lexeme: " << t.lexeme << ", " 
+				<< "type: " << t.type << ", " 
+				<< "line number: " << t.token_line << ", " 
+				<< "index: " << t.token_location << endl;
 		}
 	} else {
 		cout << "Source code not found" << endl;

@@ -50,5 +50,16 @@ bool dfa::has_state(state state) {
 }
 
 state dfa::table(int from_state, std::string lookup_transition) {
-	return state_transition_table.at(from_state)->at(lookup_transition);
+	std::unordered_map<std::string, state>* state_transitions = state_transition_table.at(from_state);
+	state transition_to_state;
+	std::unordered_map<std::string, state>::const_iterator found = state_transitions->find(lookup_transition);
+	// If we dont have a transition for this state, go the else state
+	if (found == state_transitions->end()) {
+		transition_to_state = state_transitions->at(ELSE_TRANSITION);
+	} else {
+		// if we did find something, then go that transition state
+		transition_to_state = found->second;
+	}
+	return transition_to_state;
 }
+

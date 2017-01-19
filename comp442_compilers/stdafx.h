@@ -18,8 +18,10 @@
 
 // Our files
 #include "dfa.h"
+#include "dfa_helper.h"
 #include "lexer.h"
-#include "token.h"
 #include "specification.h"
+#include "token.h"
+
 
 #endif // !STDAFX_H
