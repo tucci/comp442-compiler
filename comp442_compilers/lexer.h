@@ -12,19 +12,22 @@ public:
 	token next_token();
 	// Sets the source file for this lexer to tokenize
 	bool set_source(std::string path_to_file);
+	bool has_more_tokens();
 private:
-
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	dfa spec;
+	// Returns the token that is evaluated from this state
+	token create_token(state state);
 	// Returns the next char pointer in the stream for the tokenizer to read from
 	char* next_char();
 	// moves the pointer of the current source_index back by one
 	void backup_char();
+	// the current line of the source file we are at
 	int current_line_index;
+	// the current char index for that line of the source file we are at
 	int current_char_index;
 	// Flag to see if all the tokens have been consumed
 	bool out_of_tokens;
-
 	// The file path to the current source file
 	std::string source_file_path;
 	// The buffer to hold the source file

@@ -7,14 +7,18 @@ int main()
 {
 	specification spec;
 	lexer lex(spec);
-	lex.set_source("SourceCode.txt");
-
-	char* c = lex.next_char();
-	while (c != NULL) {
-		cout << *c;
-		c = lex.next_char();
+	if (lex.set_source("SourceCode.txt")) {
+		while (lex.has_more_tokens()) {
+			token t = lex.next_token();
+			cout << t.lexeme << ", " 
+				<< t.type << ", " 
+				<< t.token_line << ", " 
+				<< t.token_location;
+		}
+	} else {
+		cout << "Source code not found" << endl;
 	}
-	cout << "end of source";
+	
 	
     return 0;
 }

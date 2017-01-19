@@ -10,10 +10,14 @@ lexer::~lexer() {
 }
 
 token lexer::next_token() {
-	if (out_of_tokens) {
-		// TODO: find a better way to do this
-		return token{"", token_type::null_token ,-1 , -1};
-	}
+	//if (lookup == "\n") {
+	//    // TODO: make sure we dont start at line 1
+	//    // TODO: test this
+	//    source_line_index++;
+	//    source_char_index++;
+	//}
+	
+
 	bool token_created = false;
 	token token;
 	// create init state at state 1
@@ -22,27 +26,22 @@ token lexer::next_token() {
 	do {
 		// get the next char in the input
 		char lookup = *next_char();
-		//if (lookup == "\n") {
-			//    // TODO: make sure we dont start at line 1
-			//    // TODO: test this
-			//    source_line_index++;
-			//    source_char_index++;
-			//}
+		if (lookup == NULL) {
+			out_of_tokens = true;
+			// TODO: figure out a better way to return a nullable value
+			token = { "", token_type::null_token ,-1 , -1 };
+			break;
+		}
+		// get the state for the current state and lookup
+		current_state = spec.table(current_state.state_identifier, std::string(1, lookup));
 
-		// TODO: find a better way to do this, dont want to put spaces here
-		// TODO: appending the lexeme like wont work out nicely
-		if (lookup != ' ') {
-			// add this char to our token as we go
-			token.lexeme.append(lookup);
-			// get the state for the current state and lookup
-			current_state = spec.table(current_state.state_identifier, std::string(1, lookup));
-			// If we are the final, then we create the token
-			if (current_state.is_final_state) {
-				token_created = true;
-				if (current_state.is_backup) {
-					// TODO: implement backtracking. might need to double buffer
-					//backup_char();
-				}
+		// If we are the final, then we create the token
+		if (current_state.is_final_state) {
+			token_created = true;
+			token = create_token(current_state);
+			if (current_state.is_backup) {
+				// TODO: implement backtracking and see why
+				backup_char();
 			}
 		}
 		
@@ -70,8 +69,22 @@ bool lexer::set_source(std::string path_to_file) {
 		istream.close();
 		return true; // everything was read properly
 	}
+	istream.close();
 	return false; // file was not read properly
 	
+}
+
+bool lexer::has_more_tokens() {
+	return !out_of_tokens;
+}
+
+token lexer::create_token(state state) {
+	token token;
+	// TODO: figure out how to set this token's lexeme
+	// TODO: set token line and index
+	// TODO: check if this token is a reserved word or operator
+	token.type = state.token_type;
+	return token;
 }
 
 
@@ -85,5 +98,6 @@ char* lexer::next_char() {
 void lexer::backup_char() {
 	source_index--;
 }
+
 
 

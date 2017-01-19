@@ -15,7 +15,7 @@ struct state {
 	// Whether this state needs to use backtracking
 	bool is_backup;
 	// the token type for the lexeme it accepts
-	token_type final_token;
+	token_type token_type;
 };
 
 class dfa {
@@ -32,6 +32,7 @@ public:
 	bool add_else_transition(state from_state, state to_state);
 	// Get the transition state from the from_state identifier using lookup_transition input
 	state table(int from_state, std::string lookup_transition);
+
 
 private:
 	// constant identifier to be used in the state transition table to use when no onther lookup is there
