@@ -10,18 +10,29 @@ public:
 	~lexer();
 	// Spits out the next token that the lexer reads
 	token next_token();
-	void set_source(std::string path_to_file);
-
+	// Sets the source file for this lexer to tokenize
+	bool set_source(std::string path_to_file);
 private:
-	std::ifstream file;
+
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	dfa spec;
-	// Returns the next char in the stream for the tokenizer to read from
-	std::string next_char();
-
-	std::string source_file;
+	// Returns the next char pointer in the stream for the tokenizer to read from
+	char* next_char();
+	// moves the pointer of the current source_index back by one
+	void backup_char();
 	int current_line_index;
 	int current_char_index;
+	// Flag to see if all the tokens have been consumed
+	bool out_of_tokens;
+
+	// The file path to the current source file
+	std::string source_file_path;
+	// The buffer to hold the source file
+	std::vector<char> source;
+	// the size of the source file in bytes
+	int source_size;
+	// the current index of the source buffer we are indexing into
+	int source_index;
 };
 
 #endif

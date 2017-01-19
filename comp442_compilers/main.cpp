@@ -7,13 +7,15 @@ int main()
 {
 	specification spec;
 	lexer lex(spec);
-	token t = lex.next_token();
+	lex.set_source("SourceCode.txt");
 
-	cout << "token type: " << t.type<< endl;
-	cout << token_type::non_zero_t;
+	char* c = lex.next_char();
+	while (c != NULL) {
+		cout << *c;
+		c = lex.next_char();
+	}
+	cout << "end of source";
 	
-
-
     return 0;
 }
 

@@ -2,7 +2,8 @@
 #define TOKEN_H
 
 enum token_type {
-	non_token_t,// special token to tell the tokenizer that this is not a token
+	null_token,// special token for the lexer to tell that this is a nullable value
+	non_token_t,// special token to tell the lexer that this is not a token and should carry on
 	non_zero_t
 };
 

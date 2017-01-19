@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="SourceCode.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dfa.h" />
