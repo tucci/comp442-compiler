@@ -6,8 +6,7 @@ enum token_type {
 	null_token,
 	// special token to tell the lexer that this is not a token and should carry on
 	// this means this state is an intermediate state
-	non_token_t,
-	non_zero_t,
+	non_token,
 	id,
 	num,
 };

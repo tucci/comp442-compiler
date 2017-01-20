@@ -14,6 +14,7 @@ token lexer::next_token() {
 	// the token to return
 	token token;
 	// create init state at state 1
+
 	state current_state = {1};
 	// loop until we have created a token
 	do {
@@ -37,9 +38,25 @@ token lexer::next_token() {
 			// if this is not a whitespace character we can add it to our lexeme
 			token.lexeme += lookup;
 		}
+		const state* state_lookup = spec.table(current_state.state_identifier, std::string(1, lookup));
+		if (state_lookup == NULL) {
+			// Check to see if there is a else transition
+			const state* else_state = spec.table(current_state.state_identifier, dfa::ELSE_TRANSITION);
+			if (else_state != NULL) {
+				current_state = *else_state;
+			} else {
+				// TODO: Figure out if we need this bit of code
+				// this is used right now to test states that dont have else transitions
+				// Question: does this mean that there is an error in the code and we should just move on to the next char?
+				// Answer:???
+				throw 10;
+			}
+			
+		} else {
+			// get the state for the current state and lookup
+			current_state = *state_lookup;
+		}
 		
-		// get the state for the current state and lookup
-		current_state = spec.table(current_state.state_identifier, std::string(1, lookup));
 
 		// If we are the final, then we create the token
 		if (current_state.is_final_state) {
