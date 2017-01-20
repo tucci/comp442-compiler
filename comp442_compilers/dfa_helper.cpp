@@ -29,30 +29,28 @@ void dfa_helper::letter_transitions(dfa spec, state start, state end) {
 void dfa_helper::float_transitions(dfa spec, state start, state end) {
 	state intermediate1 = spec.create_state();
 	integer_transitions(spec, start, intermediate1);
-	state intermediate2 = spec.create_state();
-	fraction_transitions(spec, intermediate1, intermediate2);
-	spec.add_else_transition(intermediate2, end);
+	fraction_transitions(spec, intermediate1, end);
 }
 
-
-// TODO: figure this out
 void dfa_helper::fraction_transitions(dfa spec, state start, state end) {
+	state intermediate1 = spec.create_state();
+	spec.add_transition(start, ".", intermediate1);
+	digit_transitions(spec, intermediate1, end);
+	nonzero_transitions(spec, end, end);
+	state intermediate2 = spec.create_state();
+	spec.add_transition(end, "0", intermediate2);
+	spec.add_transition(intermediate2, "0", intermediate2);
+	nonzero_transitions(spec, intermediate2, end);
 
 }
 
 void dfa_helper::integer_transitions(dfa spec, state start, state end) {
-	state intermediate1 = spec.create_state();
-	nonzero_transitions(spec, start, intermediate1);
-	digit_transitions(spec, intermediate1, intermediate1);
-	spec.add_else_transition(intermediate1, end);
-	state intermediate2 = spec.create_state();
-	spec.add_transition(start, "0", intermediate2);
-	spec.add_else_transition(intermediate2, end);
+
 }
 
 // TODO: figure this out. both start with a number
 void dfa_helper::num_transitions(dfa spec, state start, state end) {
-
+	
 }
 
 void dfa_helper::alphanum_transitions(dfa spec, state start, state end) {
@@ -62,12 +60,8 @@ void dfa_helper::alphanum_transitions(dfa spec, state start, state end) {
 }
 
 void dfa_helper::id_transitions(dfa spec, state start, state end) {
-	state intermediate1 = spec.create_state();
-	letter_transitions(spec, start, intermediate1);
-	state intermediate2 = spec.create_state();
-	alphanum_transitions(spec, intermediate1, intermediate2);
-	alphanum_transitions(spec, intermediate2, intermediate2);
-	spec.add_else_transition(intermediate2, end);
+	letter_transitions(spec, start, end);
+	alphanum_transitions(spec, end, end);
 }
 
 
