@@ -52,9 +52,8 @@ specification::specification() {
 	// Error state
 	spec.add_else_transition(start, error);
 
-	// TODO: also need to include other whitespace characters here
-	spec.add_transition(start, " ", start);
-	spec.add_transition(start, "\t", start);
+	// Add white space transitions
+	whitespace_transitions(start, start);
 	
 	// id state transitions
 	state* id_intermediate = spec.create_state();
@@ -200,8 +199,10 @@ void specification::update_token_for_lexeme(token* t) {
 		if (in_reserved_words != RESERVED_WORDS.end()) {
 			t->type = token_type::reserved_word;
 		}
-
+		// Check to see if this identifier is in our token map
 		std::unordered_map<std::string, token_type>::const_iterator in_token_map = TOKEN_MAP.find(t->lexeme);
+		// If the lexeme is in our token map, then it is a identifer such as "and, or, not"
+		// We will change it from an identifier token to it's respective and/or/not token
 		if (in_token_map != TOKEN_MAP.end()) {
 			t->type = in_token_map->second;
 		}
@@ -213,11 +214,21 @@ dfa specification::get_spec() {
 }
 
 
+void specification::whitespace_transitions(state* start, state* end) {
+	spec.add_transition(start, " ", start);
+	spec.add_transition(start, "\t", start);
+	spec.add_transition(start, "\n", start);
+	spec.add_transition(start, "\v", start);
+	spec.add_transition(start, "\r", start);
+	spec.add_transition(start, "\f", start);
+	spec.add_transition(start, "\r\n", start);
+}
 
 void specification::nonzero_transitions(state* start, state* end) {
 	std::string rule = "123456789";
 	for (int i = 0; i < rule.size(); i++) {
-		// create transitions
+		// create transitions 1 - 9 from the start state and end state
+		// this will create 9 transitions
 		spec.add_transition(start, rule.substr(i, 1), end);
 	}
 }
@@ -225,7 +236,8 @@ void specification::nonzero_transitions(state* start, state* end) {
 void specification::digit_transitions(state* start, state* end) {
 	std::string rule = "0123456789";
 	for (int i = 0; i < rule.size(); i++) {
-		// create transitions
+		// create transitions 0 - 9 from the start state and end state
+		// this will create 10 transitions
 		spec.add_transition(start, rule.substr(i, 1), end);
 	}
 }
@@ -233,7 +245,8 @@ void specification::digit_transitions(state* start, state* end) {
 void specification::letter_transitions(state* start, state* end) {
 	std::string rule = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (int i = 0; i < rule.size(); i++) {
-		// create transitions
+		// create transitions a - z and A - Z from the start state and end state
+		// this will create 26 * 2 transitions
 		spec.add_transition(start, rule.substr(i, 1), end);
 	}
 }

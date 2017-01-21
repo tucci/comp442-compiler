@@ -12,7 +12,7 @@ struct state {
 	bool is_start_state;
 	// Whether this state is a final state
 	bool is_final_state;
-	// Whether this state needs to tell the lexer to backtrack
+	// Whether this state needs to tell the lexer to backtracking
 	// This will usually be true if there is an else transition to this state
 	// Example the else state between < intermediate and < final state use an else transition between them
 	// So the < final state needs to be a back tracking state

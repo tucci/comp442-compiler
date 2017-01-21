@@ -20,6 +20,9 @@ private:
 
 	// The dfa/state transition table for this spec
 	dfa spec;
+
+	// Create white space transitions from the from the start state to the end state
+	void whitespace_transitions(state* start, state* end);
 	// Create non zero transitions regex="[0-9]" from the start state to the end state
 	void nonzero_transitions(state* start, state* end);
 	// Create non digit transitions regex="[1-9]" from the start state to the end state
