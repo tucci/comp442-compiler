@@ -12,7 +12,12 @@ struct state {
 	bool is_start_state;
 	// Whether this state is a final state
 	bool is_final_state;
-	// Whether this state needs to use backtracking
+	// Whether this state needs to tell the lexer to backtrack
+	// This will usually be true if there is an else transition to this state
+	// Example the else state between < intermediate and < final state use an else transition between them
+	// So the < final state needs to be a back tracking state
+	// However you may not want this for the error state.
+	// You must explicitly set this state when you create a state
 	bool is_backup;
 	// the token type for the lexeme it accepts
 	token_type token_type;

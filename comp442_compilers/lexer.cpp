@@ -32,12 +32,7 @@ token lexer::next_token() {
 		}
 		// advance the char index in the source file
 		current_char_index++;
-	
-		// TODO: figure out a way to handle comments
-		if (!isspace(lookup)) {
-			// if this is not a whitespace character we can add it to our lexeme
-			lexeme += lookup;
-		}
+
 		const state* state_lookup = spec.table(current_state.state_identifier, std::string(1, lookup));
 		if (state_lookup == NULL) {
 			// Check to see if there is a else transition
@@ -53,6 +48,11 @@ token lexer::next_token() {
 			}
 			
 		} else {
+			// TODO: figure out a way to handle comments
+			if (!isspace(lookup)) {
+				// if this is not a whitespace character we can add it to our lexeme
+				lexeme += lookup;
+			}
 			// get the state for the current state and lookup
 			current_state = *state_lookup;
 		}

@@ -40,6 +40,14 @@ bool dfa::add_transition(state* from_state, std::string transition, state* to_st
 }
 
 bool dfa::add_else_transition(state* from_state, state* to_state) {
+	// We can either set states to be backup states when we create the state
+	// Or we can automatically do it when we create the else transitions/
+	// However doing it when we create the else state makes it prone to create un wanted bugs
+	// So create backup states explicity when creating the states
+	// For now this code is commented in case of anything
+	//if (to_state->token_type != token_type::error_token) {
+	//	to_state->is_backup = true;
+	//}
 	return add_transition(from_state, ELSE_TRANSITION, to_state);
 }
 
