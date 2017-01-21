@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "dfa_helper.h"
 
 // TODO: test all of these
 

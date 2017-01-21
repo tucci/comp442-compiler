@@ -6,7 +6,10 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
-
+// TODO: change current readme to a readme on how to compile the code
+// TODO: test in lab this week with v120
+// TODO: Figure out if they want a vs project or what
+// TODO: write tests for this
 #include "targetver.h"
 
 // external libs
@@ -22,6 +25,5 @@
 #include "lexer.h"
 #include "specification.h"
 #include "token.h"
-
 
 #endif // !STDAFX_H

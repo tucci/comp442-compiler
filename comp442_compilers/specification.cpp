@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "specification.h"
-
 
 specification::specification() {
 	// Here we hardcode the spec into the dfa

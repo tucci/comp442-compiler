@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "dfa.h"
 
 const std::string dfa::ELSE_TRANSITION = "ELSE_TRANSITION";
 

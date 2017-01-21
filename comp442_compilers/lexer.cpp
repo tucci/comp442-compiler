@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "lexer.h"
-
 
 lexer::lexer(specification spec) {
 	this->spec = spec.get_spec();
