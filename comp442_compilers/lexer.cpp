@@ -17,16 +17,18 @@ token lexer::next_token() {
 	// loop until we have created a token
 	do {
 		// get the next char in the input
-		char lookup = *next_char();
+		char* lookup_ptr = next_char();
+		char lookup;
 		// There are no more chars to read
-		if (lookup == NULL) {
+		if (lookup_ptr == NULL) {
 			// Since we have no more chars to read
 			// we also have no more tokens to parse
 			out_of_tokens = true;
-			// TODO: figure out a better way to return a nullable value
-			// Return a value indicating that no token was create
-			token = { "", token_type::null_token ,-1 , -1 };
-			break;
+			// Return a nullable token
+			// When getting the null token
+			return create_token("", { -1, false, false, false, token_type::non_token });
+		} else {
+			lookup = *lookup_ptr;
 		}
 		// advance the char index in the source file
 		current_char_index++;
@@ -47,7 +49,7 @@ token lexer::next_token() {
 				// this is used right now to test states that dont have else transitions
 				// Question: does this mean that there is an error in the code and we should just move on to the next char?
 				// Answer:???
-				throw 10;
+				std::cout << "error";
 			}
 			
 		} else {
@@ -107,10 +109,15 @@ token lexer::create_token(std::string lexeme, state state) {
 	token t;
 	t.lexeme = lexeme;
 	t.type = state.token_type;
+	// Since reserved words may be tokenized as ids, we will change it here
+	// to avoid adding more complexity to it in our dfa
+	if (t.type == token_type::id && specification::is_reserved_word(t.lexeme)) {
+		t.type = token_type::reserved_word;
+	}
 	t.token_line = current_line_index;
 	// We need token length to compute the starting char index for this token
 	// instead of having the index point to the end of the token in the source file
-	t.token_location = current_char_index - t.lexeme.size();;
+	t.token_location = current_char_index - t.lexeme.size();
 	return t;
 }
 

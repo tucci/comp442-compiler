@@ -8,9 +8,15 @@ class specification {
 public:
 	specification();
 	~specification();
+	static bool is_reserved_word(std::string);
 	// Returns the dfa for this specification
 	dfa get_spec();
 private:
+	// Holds all the keywords for our language
+	const static std::unordered_set<std::string> RESERVED_WORDS;
+
+
+
 	// The dfa/state transition table for this spec
 	dfa spec;
 	// Create non zero transitions regex="[0-9]" from the start state to the end state

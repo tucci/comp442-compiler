@@ -1,5 +1,21 @@
 #include "stdafx.h"
 
+
+// A set of all the reserved keyword for the language
+const std::unordered_set<std::string> specification::RESERVED_WORDS = {
+	"if",
+	"then",
+	"else",
+	"for",
+	"class",
+	"int",
+	"float",
+	"get",
+	"put",
+	"return",
+	"program"
+};
+
 specification::specification() {
 	// Here we hardcode the spec into the dfa
 	state* start = spec.create_start_state();
@@ -24,6 +40,11 @@ specification::specification() {
 }
 
 specification::~specification() {
+}
+
+bool specification::is_reserved_word(std::string lexeme) {
+	std::unordered_set<std::string>::iterator in_set = RESERVED_WORDS.find(lexeme);
+	return in_set != RESERVED_WORDS.end();
 }
 
 dfa specification::get_spec() {

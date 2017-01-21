@@ -15,6 +15,7 @@
 // external libs
 #include <stdio.h>
 #include <string>
+#include <unordered_set>
 #include <iostream>
 #include <fstream>
 #include <tchar.h>

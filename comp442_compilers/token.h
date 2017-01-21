@@ -2,13 +2,12 @@
 #define TOKEN_H
 
 enum token_type {
-	// special token for the lexer to tell that this is a nullable value
-	null_token,
 	// special token to tell the lexer that this is not a token and should carry on
 	// this means this state is an intermediate state
 	non_token,
 	id,
 	num,
+	reserved_word
 };
 
 struct token {
