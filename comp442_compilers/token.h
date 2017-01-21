@@ -7,7 +7,8 @@ enum token_type {
 	non_token,
 	id,
 	num,
-	reserved_word
+	reserved_word,
+	operator_t,
 };
 
 struct token {

@@ -10,15 +10,15 @@
 // TODO: test in lab this week with v120
 // TODO: Figure out if they want a vs project or what
 // TODO: write tests for this
+
+// TODO: see if u need targetver.h
 #include "targetver.h"
 
 // external libs
-#include <stdio.h>
 #include <string>
 #include <unordered_set>
 #include <iostream>
 #include <fstream>
-#include <tchar.h>
 
 // Our files
 #include "dfa.h"

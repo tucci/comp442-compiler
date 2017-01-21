@@ -9,13 +9,14 @@ public:
 	specification();
 	~specification();
 	static bool is_reserved_word(std::string);
+	static bool is_operator(std::string);
 	// Returns the dfa for this specification
 	dfa get_spec();
 private:
 	// Holds all the keywords for our language
 	const static std::unordered_set<std::string> RESERVED_WORDS;
-
-
+	// Holds all the operators for our language
+	const static std::unordered_set<std::string> OPERATORS;
 
 	// The dfa/state transition table for this spec
 	dfa spec;

@@ -109,10 +109,16 @@ token lexer::create_token(std::string lexeme, state state) {
 	token t;
 	t.lexeme = lexeme;
 	t.type = state.token_type;
-	// Since reserved words may be tokenized as ids, we will change it here
-	// to avoid adding more complexity to it in our dfa
-	if (t.type == token_type::id && specification::is_reserved_word(t.lexeme)) {
-		t.type = token_type::reserved_word;
+	// To avoid adding more complexity to our dfa, we will change tokens depending on their lexeme
+	if (t.type == token_type::id) {
+		// Since reserved words may be tokenized as ids. We will change it here
+		if (specification::is_reserved_word(t.lexeme)) {
+			t.type = token_type::reserved_word;
+		}
+		// Some operators such as and,not, or will be tokenized as ids. We will change them to opertors here
+		if (specification::is_operator(t.lexeme)) {
+			t.type = token_type::operator_t;
+		}
 	}
 	t.token_line = current_line_index;
 	// We need token length to compute the starting char index for this token

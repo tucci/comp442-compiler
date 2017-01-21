@@ -16,6 +16,24 @@ const std::unordered_set<std::string> specification::RESERVED_WORDS = {
 	"program"
 };
 
+// A set of all the operartors for the language
+const std::unordered_set<std::string> specification::OPERATORS = {
+	"==",
+	"<>",
+	"<",
+	">",
+	"<=",
+	">=",
+	"+",
+	"-",
+	"*",
+	"/",
+	"=",
+	"and",
+	"not",
+	"or"
+};
+
 specification::specification() {
 	// Here we hardcode the spec into the dfa
 	state* start = spec.create_start_state();
@@ -37,6 +55,21 @@ specification::specification() {
 	spec.add_else_transition(i2, num_state);
 	spec.add_else_transition(i3, num_state);
 	spec.add_else_transition(i4, num_state);
+
+	// Operators
+
+	// Parenthensis, brackets, braces
+
+
+	// Semi colon, dot, and comma
+
+	// TODO: comments are a little tricky do do nested comments
+	// you might have to seperate the /* and */ from each other
+
+	// Comments
+
+	// Error state
+	
 }
 
 specification::~specification() {
@@ -45,6 +78,11 @@ specification::~specification() {
 bool specification::is_reserved_word(std::string lexeme) {
 	std::unordered_set<std::string>::iterator in_set = RESERVED_WORDS.find(lexeme);
 	return in_set != RESERVED_WORDS.end();
+}
+
+bool specification::is_operator(std::string lexeme) {
+	std::unordered_set<std::string>::iterator in_set = OPERATORS.find(lexeme);
+	return in_set != OPERATORS.end();
 }
 
 dfa specification::get_spec() {
