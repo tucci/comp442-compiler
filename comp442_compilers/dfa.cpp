@@ -7,7 +7,7 @@ dfa::dfa() {
 }
 
 dfa::~dfa() {
-	// delete all the states in the map
+	// TODO: delete all the states in the map
 }
 
 state* dfa::create_start_state() {

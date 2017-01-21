@@ -13,7 +13,7 @@ int main()
 			cout << "lexeme: " << t.lexeme << ", " 
 				<< "type: " << t.type << ", " 
 				<< "line number: " << t.token_line << ", " 
-				<< "index: " << t.token_location << endl;
+				<< "column: " << t.token_column << endl;
 		}
 	} else {
 		cout << "Source code not found" << endl;

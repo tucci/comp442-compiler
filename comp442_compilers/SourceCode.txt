@@ -1,15 +1,7 @@
-int help h_ello 123
-334 4343 nin__tendo  
-bubba
-
-int x = 123;
-float y = 2.4;
-return xyz;
-for(int i = 0; i < 10; i = i + 1) {
-	if (x and y) {
-	}
-	if (x or y) {
+for (int i = 0; i < 10; i = i + 1) {
+	if (i < 10) {
+	
 	} else {
-		
+	
 	}
 }

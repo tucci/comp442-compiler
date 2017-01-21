@@ -8,15 +8,15 @@ class specification {
 public:
 	specification();
 	~specification();
-	static bool is_reserved_word(std::string);
-	static bool is_operator(std::string);
+	// This will be used to turn identifiers to reserved words and word operators such as "and, or, not" into their tokens
+	static void update_token_for_lexeme(token*);
 	// Returns the dfa for this specification
 	dfa get_spec();
 private:
 	// Holds all the keywords for our language
 	const static std::unordered_set<std::string> RESERVED_WORDS;
-	// Holds all the operators for our language
-	const static std::unordered_set<std::string> OPERATORS;
+	// Holds all the mappings from lexems to token types for our language. Does not include ids/reserved words/ or number tokens
+	const static std::unordered_map<std::string, token_type> TOKEN_MAP;
 
 	// The dfa/state transition table for this spec
 	dfa spec;
