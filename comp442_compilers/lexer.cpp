@@ -8,6 +8,7 @@ lexer::~lexer() {
 }
 
 token lexer::next_token() {
+
 	bool token_created = false;
 	// the token to return
 	token token;
@@ -24,9 +25,7 @@ token lexer::next_token() {
 			// Since we have no more chars to read
 			// we also have no more tokens to parse
 			out_of_tokens = true;
-			// Return a nullable token
-			// When getting the null token
-			return create_token("", { -1, false, false, false, token_type::non_token });
+			return create_token(lexeme, current_state);
 		} else {
 			lookup = *lookup_ptr;
 		}
