@@ -14,7 +14,7 @@ token lexer::next_token() {
 	// the token to return
 	token token;
 	// create init state at state 1
-
+	std::string lexeme;
 	state current_state = {1};
 	// loop until we have created a token
 	do {
@@ -36,7 +36,7 @@ token lexer::next_token() {
 		// TODO: figure out a way to handle comments
 		if (!isspace(lookup)) {
 			// if this is not a whitespace character we can add it to our lexeme
-			token.lexeme += lookup;
+			lexeme += lookup;
 		}
 		const state* state_lookup = spec.table(current_state.state_identifier, std::string(1, lookup));
 		if (state_lookup == NULL) {
@@ -57,15 +57,10 @@ token lexer::next_token() {
 			current_state = *state_lookup;
 		}
 		
-
 		// If we are the final, then we create the token
 		if (current_state.is_final_state) {
+			token = create_token(lexeme, current_state);
 			token_created = true;
-			token.type = current_state.token_type;
-			token.token_line = current_line_index;
-			// We need token length to compute the starting char index for this token
-			// instead of having the index point to the end of the token in the source file
-			token.token_location = current_char_index - token.lexeme.size();;
 			if (current_state.is_backup) {
 				// TODO: implement backtracking and see why
 				backup_char();
@@ -108,6 +103,17 @@ bool lexer::set_source(std::string path_to_file) {
 
 bool lexer::has_more_tokens() {
 	return !out_of_tokens;
+}
+
+token lexer::create_token(std::string lexeme, state state) {
+	token t;
+	t.lexeme = lexeme;
+	t.type = state.token_type;
+	t.token_line = current_line_index;
+	// We need token length to compute the starting char index for this token
+	// instead of having the index point to the end of the token in the source file
+	t.token_location = current_char_index - t.lexeme.size();;
+	return t;
 }
 
 char* lexer::next_char() {

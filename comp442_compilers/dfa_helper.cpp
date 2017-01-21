@@ -3,7 +3,6 @@
 
 // TODO: test all of these
 
-
 void dfa_helper::nonzero_transitions(dfa* spec, state* start, state* end) {
 	std::string rule = "123456789";
 	for (int i = 0; i < rule.size(); i++) {
@@ -58,7 +57,6 @@ void dfa_helper::integer_transitions(dfa* spec, state* start, state* end, state*
 	digit_transitions(spec, end, end);
 }
 
-// TODO: implement dfa lambda hack to prevent multiple end states
 void dfa_helper::num_transitions(dfa* spec, state* start, state* end, state* end2, state* end3) {
 	nonzero_transitions(spec, start, end);
 	digit_transitions(spec, end, end);

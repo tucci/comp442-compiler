@@ -17,7 +17,7 @@ private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	dfa spec;
 	// Returns the token that is evaluated from this state
-	token create_token(state state);
+	token create_token(std::string lexeme, state state);
 	// Returns the next char pointer in the stream for the tokenizer to read from
 	char* next_char();
 	// moves the pointer of the current source_index back by one

@@ -25,7 +25,6 @@ specification::specification() {
 	spec.add_else_transition(i4, num_state);
 }
 
-
 specification::~specification() {
 }
 

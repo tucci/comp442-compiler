@@ -3,6 +3,7 @@
 
 // This class is used to help generate dfa transitions easily from our grammar rule
 class dfa_helper {
+	// TODO: write tests
 public:
 	// Create non zero transitions regex="[0-9]" from the start state to the end state
 	static void nonzero_transitions(dfa* spec, state* start, state* end);
