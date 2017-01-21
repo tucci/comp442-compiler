@@ -42,9 +42,6 @@
     <ClInclude Include="specification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dfa_helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,9 +60,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="specification.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dfa_helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

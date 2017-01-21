@@ -21,7 +21,6 @@
 
 // Our files
 #include "dfa.h"
-#include "dfa_helper.h"
 #include "lexer.h"
 #include "specification.h"
 #include "token.h"
