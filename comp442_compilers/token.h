@@ -34,6 +34,8 @@ enum token_type {
 	opensquare,		// [ open square
 	closesquare,	// ] close square
 	semicolon,		// ; semi colon, or end of statement
+	cmt,			// comment
+	cmt_start		// special token to indicate we are at the start of a comment used by lexer
 };
 
 struct token {

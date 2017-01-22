@@ -16,7 +16,7 @@ struct state {
 	// So the < final state needs to be a back tracking state
 	// However you may not want this for the error state.
 	// You must explicitly set this state when you create a state
-	bool is_backup;
+	bool needs_to_backtrack;
 	// the token type for the lexeme it accepts
 	token_type token_type;
 };
@@ -30,7 +30,7 @@ public:
 	// Create the starting state for this dfa
 	state* create_start_state();
 	// Create the a state to be used in this dfa
-	state* create_state(bool is_final_state=false, bool is_backup=false, token_type type=non_token);
+	state* create_state(bool is_final_state=false, bool needs_to_backtrack=false, token_type type=non_token);
 	// add a transition from the from state to the to_state using a transition string
 	bool add_transition(state* from_state, std::string transition, state* to_state);
 	// Add an else transition to the two states

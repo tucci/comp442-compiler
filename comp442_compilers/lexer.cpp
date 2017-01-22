@@ -19,7 +19,12 @@ token lexer::next_token() {
 	// then it finds the lookahead token and caches it for the next call to next_token()
 	// then once we found the lookahead token, we return the current token
 
+	// TODO: fix duplicate token creation
 	token current_token;
+	// flag to see if we should add the transition char to the current lexeme we are building
+	bool should_add_char;
+	// flag to see if we are currently in a comment
+	bool in_comment;
 	// if this is not the first call to next_token
 	// we should set the current token to the lookahead token we already found last time we called next_token
 	if (lookahead_token.type != token_type::non_token) {
@@ -44,6 +49,8 @@ token lexer::next_token() {
 	state current_state = { 1 };
 	// loop until we have created a token
 	do {
+		in_comment = false;
+		should_add_char = false;
 		// get the next char in the input
 		char* lookup_ptr = next_char();
 		char lookup;
@@ -60,17 +67,27 @@ token lexer::next_token() {
 		// advance the char index in the source file
 		current_char_index++;
 
+		// Get the next state from the current state and lookup char
 		state* state_lookup = spec->table(current_state.state_identifier, std::string(1, lookup));
+
 		if (state_lookup == NULL) {
 			// Check to see if there is a else transition
 			state* else_state = spec->table(current_state.state_identifier, dfa::ELSE_TRANSITION);
+			// If we do have an else state, we'll go to it and continue
 			if (else_state != NULL) {
 				current_state = *else_state;
+				if (current_state.token_type == token_type::cmt_start) {
+					in_comment = true;
+				}
 			} else {
+				// If we don't have en else state, then there is an error in the source code
+				// and we should handle this
+
 				// TODO: Figure out if we need this bit of code
 				// this is used right now to test states that dont have else transitions
-				// Question: does this mean that there is an error in the code and we should just move on to the next char?
-				// Answer:???
+				// Question: How should we handle the error in the code?
+				// Possible solutions: just move on to the next char?
+				// Possible solutions: create an error token and give line number?
 				std::cout << "error";
 			}
 
@@ -78,17 +95,21 @@ token lexer::next_token() {
 			// TODO: figure out a way to handle comments
 			if (!isspace(lookup)) {
 				// if this is not a whitespace character we can add it to our lexeme
-				lexeme += lookup;
+				should_add_char = true;
+				
 			}
 			// get the state for the current state and lookup
 			current_state = *state_lookup;
 		}
-
+		if (in_comment || should_add_char) {
+			lexeme += lookup;
+		}
+		
 		// If we are the final, then we create the token
 		if (current_state.is_final_state) {
 			token = create_token(lexeme, current_state);
 			token_created = true;
-			if (current_state.is_backup) {
+			if (current_state.needs_to_backtrack) {
 				backup_char();
 			}
 		}

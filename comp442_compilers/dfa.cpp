@@ -25,9 +25,9 @@ state* dfa::create_start_state() {
 	return start_state;
 }
 
-state* dfa::create_state(bool is_final_state, bool is_backup, token_type type) {
+state* dfa::create_state(bool is_final_state, bool needs_to_backtrack, token_type type) {
 	// init state with the incremented state identifier and specified is_final_state
-	state* new_state = new state{ ++m_state_count, false, is_final_state, is_backup, type };
+	state* new_state = new state{ ++m_state_count, false, is_final_state, needs_to_backtrack, type };
 	states.push_back(new_state);
 	// create the transition map for this state
 	std::shared_ptr<std::unordered_map<std::string, state*>> transitions = std::shared_ptr<std::unordered_map<std::string, state*>>(new std::unordered_map<std::string, state*>);
