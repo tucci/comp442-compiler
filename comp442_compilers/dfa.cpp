@@ -30,7 +30,7 @@ state* dfa::create_state(bool is_final_state, bool is_backup, token_type type) {
 	state* new_state = new state{ ++m_state_count, false, is_final_state, is_backup, type };
 	states.push_back(new_state);
 	// create the transition map for this state
-	std::unordered_map<std::string, state*>* transitions = new std::unordered_map<std::string, state*>;
+	std::shared_ptr<std::unordered_map<std::string, state*>> transitions = std::shared_ptr<std::unordered_map<std::string, state*>>(new std::unordered_map<std::string, state*>);
 	// add the transition map to our state transition table
 	state_transition_table.emplace(new_state->state_identifier, transitions);
 	return new_state;
