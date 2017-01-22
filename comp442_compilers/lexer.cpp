@@ -59,7 +59,7 @@ token lexer::next_token() {
 		// advance the char index in the source file
 		current_char_index++;
 
-		state* state_lookup = spec->table(current_state.state_identifier, string(1, lookup));
+		state* state_lookup = spec->table(current_state.state_identifier, std::string(1, lookup));
 		if (state_lookup == NULL) {
 			// Check to see if there is a else transition
 			state* else_state = spec->table(current_state.state_identifier, dfa::ELSE_TRANSITION);

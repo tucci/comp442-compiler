@@ -15,7 +15,10 @@ public:
 	bool has_more_tokens();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
-	dfa spec;
+	dfa* spec;
+	// a token look ahead so we can avoid having to return a null token value at the end
+	token lookahead_token;
+
 	// Returns the token that is evaluated from this state
 	token create_token(std::string lexeme, state state);
 	// Returns the next char pointer in the stream for the tokenizer to read from
