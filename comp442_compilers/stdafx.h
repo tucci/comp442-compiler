@@ -17,13 +17,16 @@
 // external libs
 #include <string>
 #include <unordered_set>
+#include <unordered_map>
 #include <iostream>
+#include <memory>
 #include <fstream>
 
 // Our files
-#include "dfa.h"
-#include "lexer.h"
-#include "specification.h"
 #include "token.h"
+#include "dfa.h"
+#include "specification.h"
+#include "lexer.h"
+
 
 #endif // !STDAFX_H
