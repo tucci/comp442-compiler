@@ -1,8 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include "specification.h"
-
 class lexer {
 public:
 	// Create the lexer with the specifiec language specification for this lexer to use
@@ -15,7 +13,7 @@ public:
 	bool has_more_tokens();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
-	dfa* spec;
+	std::shared_ptr<dfa> spec;
 	// a token look ahead so we can avoid having to return a null token value at the end
 	token lookahead_token;
 

@@ -1,8 +1,6 @@
 #ifndef DFA_H
 #define DFA_H
 
-#include <unordered_map>
-#include "token.h"
 
 
 struct state {

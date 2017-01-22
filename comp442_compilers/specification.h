@@ -11,14 +11,14 @@ public:
 	// This will be used to turn identifiers to reserved words and word operators such as "and, or, not" into their tokens
 	static void update_token_for_lexeme(token*);
 	// Returns the dfa for this specification
-	dfa* get_spec();
+	std::shared_ptr<dfa> get_spec();
 private:
 	// Holds all the keywords for our language
 	const static std::unordered_set<std::string> RESERVED_WORDS;
 	// Holds all the mappings from lexems to token types for our language. Does not include ids/reserved words/ or number tokens
 	const static std::unordered_map<std::string, token_type> TOKEN_MAP;
 	// The dfa/state transition table for this spec
-	dfa* spec;
+	std::shared_ptr<dfa> spec;
 	// Create white space transitions from the from the start state to the end state
 	void whitespace_transitions(state* start, state* end);
 	// Create non zero transitions regex="[0-9]" from the start state to the end state

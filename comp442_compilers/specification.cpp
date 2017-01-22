@@ -44,7 +44,7 @@ const std::unordered_map<std::string, token_type> specification::TOKEN_MAP = {
 };
 
 specification::specification() {
-	spec = new dfa;
+	spec = std::shared_ptr<dfa>(new dfa);
 	// Here we create the lanugage elements and specs into the dfa
 	state* start = spec->create_start_state();
 
@@ -189,10 +189,6 @@ specification::specification() {
 
 specification::~specification() {
 	std::cout << "delete specification" << std::endl;
-	if (spec != NULL) {
-		delete spec;
-		spec = NULL;
-	}
 }
 
 void specification::update_token_for_lexeme(token* t) {
@@ -215,7 +211,7 @@ void specification::update_token_for_lexeme(token* t) {
 	}
 }
 
-dfa* specification::get_spec() {
+std::shared_ptr<dfa> specification::get_spec() {
 	return spec;
 }
 

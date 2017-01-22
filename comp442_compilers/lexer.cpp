@@ -6,10 +6,6 @@ lexer::lexer(specification* spec) {
 
 lexer::~lexer() {
 	std::cout << "delete lexer" << std::endl;
-	if (spec != NULL) {
-		delete spec;
-		spec = NULL;
-	}
 }
 
 token lexer::next_token() {
