@@ -8,13 +8,39 @@ lexer::~lexer() {
 }
 
 token lexer::next_token() {
+	// Next token works by always keeping a reference to a lookahead token
+	// this is done so that when driver code/parser keeps calling next_token()
+	// it doesn't get a null token at the end
+	// Keeping a lookahead token ensures that has_more_tokens() will always supply it with actual tokens
+	// and spit out a nullable token at the end of stream indicating that this is the last token
 
+	// next_token() basically sets the current token to return to the lookahed token we alread had
+	// then it finds the lookahead token and caches it for the next call to next_token()
+	// then once we found the lookahead token, we return the current token
+
+	token current_token;
+	// if this is not the first call to next_token
+	// we should set the current token to the lookahead token we already found last time we called next_token
+	if (lookahead_token.type != token_type::non_token) {
+		// set the current token to the lookahead token
+		// we found previously
+		current_token = lookahead_token;
+	} else {
+		// this is the first call to next_token()
+		// We need to set this to a non token type
+		// because the first time we call next_token()
+		// we need to identidy that we don't have a lookahead token
+		current_token = { "", token_type::non_token };
+	}
+
+
+	// Find the lookahead token
 	bool token_created = false;
 	// the token to return
 	token token;
 	// create init state at state 1
 	std::string lexeme;
-	state current_state = {1};
+	state current_state = { 1 };
 	// loop until we have created a token
 	do {
 		// get the next char in the input
@@ -25,17 +51,18 @@ token lexer::next_token() {
 			// Since we have no more chars to read
 			// we also have no more tokens to parse
 			out_of_tokens = true;
-			return create_token(lexeme, current_state);
+			token = create_token(lexeme, current_state);
+			break;
 		} else {
 			lookup = *lookup_ptr;
 		}
 		// advance the char index in the source file
 		current_char_index++;
 
-		const state* state_lookup = spec.table(current_state.state_identifier, std::string(1, lookup));
+		state* state_lookup = spec->table(current_state.state_identifier, string(1, lookup));
 		if (state_lookup == NULL) {
 			// Check to see if there is a else transition
-			const state* else_state = spec.table(current_state.state_identifier, dfa::ELSE_TRANSITION);
+			state* else_state = spec->table(current_state.state_identifier, dfa::ELSE_TRANSITION);
 			if (else_state != NULL) {
 				current_state = *else_state;
 			} else {
@@ -45,7 +72,7 @@ token lexer::next_token() {
 				// Answer:???
 				std::cout << "error";
 			}
-			
+
 		} else {
 			// TODO: figure out a way to handle comments
 			if (!isspace(lookup)) {
@@ -55,13 +82,12 @@ token lexer::next_token() {
 			// get the state for the current state and lookup
 			current_state = *state_lookup;
 		}
-		
+
 		// If we are the final, then we create the token
 		if (current_state.is_final_state) {
 			token = create_token(lexeme, current_state);
 			token_created = true;
 			if (current_state.is_backup) {
-				// TODO: implement backtracking and see why
 				backup_char();
 			}
 		}
@@ -72,7 +98,27 @@ token lexer::next_token() {
 		}
 	} while (!token_created);
 
-	return token;
+
+	// If the lookahead token is a non token
+	// then we have no more tokens to read
+	if (current_state.token_type == token_type::non_token) {
+		out_of_tokens = true;
+	} else {
+		// If the next token is not a non token, then it is a good token
+		// Set the lookahead token to the one we just found
+		lookahead_token = token;
+	}
+	// If there is no current token
+	// then this means this is the first time we are calling next_token()
+	// which means we have no current token because there doesn't exist a lookahead token
+	// so we will just return the lookahead token
+	if (current_token.type == token_type::non_token) {
+		return lookahead_token;
+	}
+
+	// Return the current token
+	// This value was actually found last time we called next_token
+	return current_token;
 }
 
 bool lexer::set_source(std::string path_to_file) {
