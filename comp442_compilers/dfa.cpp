@@ -8,17 +8,6 @@ dfa::dfa() {
 
 dfa::~dfa() {
 	std::cout << "delete dfa" << std::endl;
-	// TODO: delete all the states in the map
-	std::unordered_map<int, std::unordered_map<std::string, state*>*>::iterator state_it = state_transition_table.begin();
-	// Delete transitions for each state
-	for (; state_it != state_transition_table.end(); state_it++) {
-		if (state_it->second != NULL) {
-			// Delete the transition map for that state
-			delete state_it->second;
-			// set its pointer to NULL
-			state_it->second = NULL;
-		}
-	}
 
 	// Delete states
 	for (std::vector<state*>::iterator it = states.begin(); it != states.end(); ++it) {
@@ -51,7 +40,7 @@ bool dfa::add_transition(state* from_state, std::string transition, state* to_st
 	// We need to check if these states are in the table
 	if (has_state(*from_state) && has_state(*to_state)) {
 		// Get this transitions for the from state
-		std::unordered_map<std::string, state*>* state_transitions = state_transition_table.at(from_state->state_identifier);
+		std::shared_ptr<std::unordered_map<std::string, state*>> state_transitions = state_transition_table.at(from_state->state_identifier);
 		state_transitions->emplace(transition, to_state);
 		return true;
 	}
@@ -75,7 +64,7 @@ bool dfa::has_state(state state) {
 }
 
 state* dfa::table(int from_state, std::string lookup_transition) {
-	std::unordered_map<std::string, state*>* state_transitions = state_transition_table.at(from_state);
+	std::shared_ptr<std::unordered_map<std::string, state*>> state_transitions = state_transition_table.at(from_state);
 	std::unordered_map<std::string, state*>::iterator found = state_transitions->find(lookup_transition);
 	// If we dont have a transition for this state, go the else state
 	if (found == state_transitions->end()) {

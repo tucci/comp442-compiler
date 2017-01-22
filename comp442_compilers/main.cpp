@@ -7,6 +7,7 @@ int main()
 {
 	specification spec;
 	lexer lex(&spec);
+	// TODO: write tokens out to file
 	if (lex.set_source("SourceCode.txt")) {
 		while (lex.has_more_tokens()) {
 			token t = lex.next_token();

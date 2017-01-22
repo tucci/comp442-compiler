@@ -10,13 +10,13 @@ public:
 	token next_token();
 	// Sets the source file for this lexer to tokenize
 	bool set_source(std::string path_to_file);
+	// Whether the lexer has more tokens
 	bool has_more_tokens();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<dfa> spec;
 	// a token look ahead so we can avoid having to return a null token value at the end
 	token lookahead_token;
-
 	// Returns the token that is evaluated from this state
 	token create_token(std::string lexeme, state state);
 	// Returns the next char pointer in the stream for the tokenizer to read from
