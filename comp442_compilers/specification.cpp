@@ -188,6 +188,11 @@ specification::specification() {
 }
 
 specification::~specification() {
+	std::cout << "delete specification" << std::endl;
+	if (spec != NULL) {
+		delete spec;
+		spec = NULL;
+	}
 }
 
 void specification::update_token_for_lexeme(token* t) {

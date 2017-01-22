@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	specification spec;
-	lexer lex(spec);
+	lexer lex(&spec);
 	if (lex.set_source("SourceCode.txt")) {
 		while (lex.has_more_tokens()) {
 			token t = lex.next_token();

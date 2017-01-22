@@ -17,10 +17,8 @@ private:
 	const static std::unordered_set<std::string> RESERVED_WORDS;
 	// Holds all the mappings from lexems to token types for our language. Does not include ids/reserved words/ or number tokens
 	const static std::unordered_map<std::string, token_type> TOKEN_MAP;
-
 	// The dfa/state transition table for this spec
 	dfa* spec;
-
 	// Create white space transitions from the from the start state to the end state
 	void whitespace_transitions(state* start, state* end);
 	// Create non zero transitions regex="[0-9]" from the start state to the end state

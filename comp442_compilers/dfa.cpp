@@ -7,7 +7,25 @@ dfa::dfa() {
 }
 
 dfa::~dfa() {
+	std::cout << "delete dfa" << std::endl;
 	// TODO: delete all the states in the map
+	std::unordered_map<int, std::unordered_map<std::string, state*>*>::iterator state_it = state_transition_table.begin();
+	// Delete transitions for each state
+	for (; state_it != state_transition_table.end(); state_it++) {
+		if (state_it->second != NULL) {
+			// Delete the transition map for that state
+			delete state_it->second;
+			// set its pointer to NULL
+			state_it->second = NULL;
+		}
+	}
+
+	// Delete states
+	for (std::vector<state*>::iterator it = states.begin(); it != states.end(); ++it) {
+		delete *it;
+		*it = NULL;
+	}
+		
 }
 
 state* dfa::create_start_state() {
@@ -21,6 +39,7 @@ state* dfa::create_start_state() {
 state* dfa::create_state(bool is_final_state, bool is_backup, token_type type) {
 	// init state with the incremented state identifier and specified is_final_state
 	state* new_state = new state{ ++m_state_count, false, is_final_state, is_backup, type };
+	states.push_back(new_state);
 	// create the transition map for this state
 	std::unordered_map<std::string, state*>* transitions = new std::unordered_map<std::string, state*>;
 	// add the transition map to our state transition table

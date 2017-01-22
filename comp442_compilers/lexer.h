@@ -6,7 +6,7 @@
 class lexer {
 public:
 	// Create the lexer with the specifiec language specification for this lexer to use
-	lexer(specification spec);
+	lexer(specification* spec);
 	~lexer();
 	// Spits out the next token that the lexer reads
 	token next_token();
