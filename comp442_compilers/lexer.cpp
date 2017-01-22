@@ -125,6 +125,7 @@ token lexer::next_token() {
 bool lexer::set_source(std::string path_to_file) {
 	source_file_path = path_to_file;
 	std::ifstream istream(path_to_file);
+	bool read_success = false;
 	if (istream) {
 		// put position of stream to the end of source file
 		istream.seekg(0, istream.end);
@@ -140,10 +141,11 @@ bool lexer::set_source(std::string path_to_file) {
 		istream.close();
 		// lines start at index 1 and not 0 in files
 		current_line_index = 1;
-		return true; // everything was read properly
+		read_success = true;// everything was read properly
 	}
 	istream.close();
-	return false; // file was not read properly
+	next_token();
+	return read_success; // file was not read properly
 	
 }
 
