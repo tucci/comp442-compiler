@@ -14,24 +14,25 @@ token lexer::next_token() {
 	bool should_add_char;
 	// flag to see if we are currently in a comment
 	bool in_comment = false;
-	// Find the lookahead token
+	// flag to see if we created the token and should return it to the caller
 	bool token_created = false;
-	int cmt_start_line;
-	int cmt_start_col;
+	// the line and column index of the comment
+	int cmt_start_line = -1;
+	int cmt_start_col = -1;
+	int cmt_nest_count = 0;
+
 	// the token to return
 	token token;
-	// create init state at state 1
+	// the lexeme for the token we are creating
 	std::string lexeme;
+	// create init state at state 1
 	state current_state = { 1 };
 	// loop until we have created a token
 	do {
 		should_add_char = false;
 		// get the next char in the input
 		char* lookup = next_char();
-		
-		// advance the column in the current line
-		current_column++;
-
+	
 		state* state_lookup;
 		if (lookup != NULL) {
 			// Get the next state from the current state and lookup char
@@ -46,6 +47,14 @@ token lexer::next_token() {
 			// If we do have an else state, we'll go to it and continue
 			if (else_state != NULL) {
 				current_state = *else_state;
+				// Handle nested comments
+				if (in_comment) {
+					// lookahead for comment open
+					if (*lookup == '/' && source.at(source_index) == '*') {
+						// Increment nested comment
+						cmt_nest_count++;
+					} 
+				}
 				if (current_state.token_type == token_type::cmt_start && !in_comment) {
 					// Since multiline comments have multiple lines in them, it would be a nightmare to compute the starting position
 					cmt_start_line = current_line;
@@ -70,8 +79,15 @@ token lexer::next_token() {
 				// if this is not a whitespace character we can add it to our lexeme
 				should_add_char = true;
 			}
-			// get the state for the current state and lookup
-			current_state = *state_lookup;
+			// If we are in a comment and have a comment nest
+			// we need to go to it's previous state and not the final state
+			if (in_comment && cmt_nest_count > 0) {
+				current_state = *spec->table(current_state.state_identifier, dfa::ELSE_TRANSITION);
+			} else {
+				// get the state for the current state and lookup
+				current_state = *state_lookup;
+			}
+			
 		}
 
 		// Add the char to the lexeme or add it if we are in a comment
@@ -80,8 +96,9 @@ token lexer::next_token() {
 			lexeme += *lookup;
 		}
 
+
 		// If we are the final, then we create the token
-		if (current_state.is_final_state) {
+		if (current_state.is_final_state && cmt_nest_count == 0) {
 			if (current_state.token_type == token_type::cmt) {
 				// Create the token for this comment
 				token = create_token(lexeme, current_state, cmt_start_line, cmt_start_col);
@@ -94,6 +111,11 @@ token lexer::next_token() {
 			if (current_state.needs_to_backtrack) {
 				backup_char();
 			}
+		}
+		// lookahead for comment close
+		if (in_comment && source.at(source_index - 2) == '*' && *lookup == '/') {
+			// decrement comment nest
+			cmt_nest_count--;
 		}
 
 		// Check to see if we are at the end of a line
@@ -165,6 +187,8 @@ token lexer::create_token(std::string lexeme, state state, int line, int column)
 }
 
 char* lexer::next_char() {
+	// advance the column in the current line
+	current_column++;
 	if (source_index < source.size()) {
 		// advance the char index in the source file
 		return &source.at(source_index++);
@@ -191,6 +215,3 @@ void lexer::backup_char() {
 bool lexer::is_new_line(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }
-
-
-

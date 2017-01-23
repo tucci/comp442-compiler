@@ -156,7 +156,7 @@ specification::specification() {
 	// Single line comment
 	state* line_cmt_intermediate = spec->create_state(false, false, token_type::cmt_start);
 	spec->add_transition(div_intermediate, "/", line_cmt_intermediate);
-	state* line_cmt = spec->create_state(true, false, token_type::cmt);
+	state* line_cmt = spec->create_state(true, true, token_type::cmt);
 	spec->add_else_transition(line_cmt_intermediate, line_cmt_intermediate);
 	spec->add_transition(line_cmt_intermediate, "\n", line_cmt);
 

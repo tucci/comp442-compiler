@@ -10,7 +10,8 @@
 // TODO: test in lab this week with v120
 // TODO: Figure out if they want a vs project or what
 // TODO: write tests for this
-
+// TODO: have a flag to turn off comment token returning
+// TODO: fix problem where line counts go whack after single line comments
 // TODO: see if u need targetver.h
 #include "targetver.h"
 
