@@ -45,8 +45,7 @@ private:
 	// the data structure that stores the state transition table
 	// where the key to this map is the state identifier
 	// the value to for the specified key, is the transition map for that state
-	std::unordered_map<int, 
-		std::shared_ptr<std::unordered_map<std::string, state*>>> state_transition_table;
+	std::unordered_map<int, std::shared_ptr<std::unordered_map<std::string, state*>>> state_transition_table;
 	std::vector<state*> states;
 };
 

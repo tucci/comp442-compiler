@@ -1,7 +1,12 @@
 for (int i = 0; i < 10; i = i + 1) {
 	if (i < 10) {
-	
+	/*
+	this is a multi line
+	comment and i want to
+	test to see if this
+	works
+	*/
 	} else {
-	
+	// this is a single line comment
 	}
 }

@@ -143,9 +143,15 @@ specification::specification() {
 
 	// Comments
 	// // and /**/ tokens
-	// TODO: comments are a little tricky do do nested comments
 	// you might have to seperate the /* and */ from each other
-
+	state* multi_cmt_intermediate1 = spec->create_state(false, false, token_type::cmt_start);
+	spec->add_transition(div_intermediate, "*", multi_cmt_intermediate1);
+	spec->add_else_transition(multi_cmt_intermediate1, multi_cmt_intermediate1);
+	state* multi_cmt_intermediate2 = spec->create_state();
+	spec->add_transition(multi_cmt_intermediate1, "*", multi_cmt_intermediate2);
+	spec->add_else_transition(multi_cmt_intermediate2, multi_cmt_intermediate1);
+	state* multi_cmt = spec->create_state(true, false, token_type::cmt);
+	spec->add_transition(multi_cmt_intermediate2, "/", multi_cmt);
 
 	// Single line comment
 	state* line_cmt_intermediate = spec->create_state(false, false, token_type::cmt_start);
