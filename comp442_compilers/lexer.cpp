@@ -16,6 +16,8 @@ token lexer::next_token() {
 	bool in_comment = false;
 	// Find the lookahead token
 	bool token_created = false;
+	int cmt_start_line;
+	int cmt_start_col;
 	// the token to return
 	token token;
 	// create init state at state 1
@@ -44,7 +46,10 @@ token lexer::next_token() {
 			// If we do have an else state, we'll go to it and continue
 			if (else_state != NULL) {
 				current_state = *else_state;
-				if (current_state.token_type == token_type::cmt_start) {
+				if (current_state.token_type == token_type::cmt_start && !in_comment) {
+					// Since multiline comments have multiple lines in them, it would be a nightmare to compute the starting position
+					cmt_start_line = current_line;
+					cmt_start_col = current_column - 2; // Where 2 is the length of the comment of "//" or "/*"
 					in_comment = true;
 				}
 			} else {
@@ -69,13 +74,22 @@ token lexer::next_token() {
 			current_state = *state_lookup;
 		}
 
-		if (in_comment || should_add_char) {
+		// Add the char to the lexeme or add it if we are in a comment
+		// We should add chars when we are in a comment because all the characters matter, even the whitespaces
+		if (should_add_char || in_comment) {
 			lexeme += *lookup;
 		}
 
 		// If we are the final, then we create the token
 		if (current_state.is_final_state) {
-			token = create_token(lexeme, current_state);
+			if (current_state.token_type == token_type::cmt) {
+				// Create the token for this comment
+				token = create_token(lexeme, current_state, cmt_start_line, cmt_start_col);
+			} else {
+				// Create the the token from this state
+				token = create_token(lexeme, current_state);
+			}
+			
 			token_created = true;
 			if (current_state.needs_to_backtrack) {
 				backup_char();
@@ -88,8 +102,6 @@ token lexer::next_token() {
 			current_column = 0;
 		}
 	} while (!token_created);
-
-
 	return token;
 }
 
@@ -114,25 +126,41 @@ bool lexer::set_source(std::string path_to_file) {
 		current_line = 1;
 		read_success = true;// everything was read properly
 	}
-	istream.close();
-	return read_success; // file was not read properly
-	
+	istream.close(); // close the stream
+	return read_success;
 }
 
 bool lexer::has_more_tokens() {
+	// If we have no more chars to read, then we are out of tokens to read
 	return source_index < source.size() - 1;
 }
 
 token lexer::create_token(std::string lexeme, state state) {
 	token t;
 	t.lexeme = lexeme;
+	// Set this token's type from the accept state
 	t.type = state.token_type;
 	// Check and update token type if needed
 	specification::update_token_for_lexeme(&t);
 	t.token_line = current_line;
 	// We need token length to compute the starting char index for this token
 	// instead of having the index point to the end of the token in the source file
+	// We don't compute the column for comments here as they are a little more complex
+	// If you want to create a comment token, call the the other create_token
+	// and specify where the comment line and column are
 	t.token_column = current_column - t.lexeme.size();
+	return t;
+}
+token lexer::create_token(std::string lexeme, state state, int line, int column) {
+	// this method is currently used to fix the problem with computing multi line comment start offsets
+	// in order to compute multiline comments starting position
+	// we would need to keep track of how many lines it has and how many columns for each of those lines it has
+	// that is more diffcult than it needs to be. So we will solve this by setting the starting position when we encouter the comment
+	// create token normally
+	token t = create_token(lexeme, state);
+	// adjust the line and column indexes to the specified valus
+	t.token_line = line;
+	t.token_column = column;
 	return t;
 }
 
@@ -141,16 +169,22 @@ char* lexer::next_char() {
 		// advance the char index in the source file
 		return &source.at(source_index++);
 	}
+	// There are no more chars to read
 	return NULL;	
 }
 
 void lexer::backup_char() {
+	// if we are at the start of a line, we need to go back up to the previous line
 	if (current_column == 1) {
+		// go the the previous line
 		current_line--;
+		// go to the end of the previous line
 		current_column = previous_line_column_count;
 	} else {
+		// We are in the middle of the line
 		current_column--;
 	}
+	// go back in the source array
 	source_index--;
 }
 
