@@ -5,7 +5,6 @@ lexer::lexer(specification* spec) {
 }
 
 lexer::~lexer() {
-	std::cout << "delete lexer" << std::endl;
 }
 
 token lexer::next_token() {

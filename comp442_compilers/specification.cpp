@@ -160,8 +160,6 @@ specification::specification() {
 	spec->add_else_transition(line_cmt_intermediate, line_cmt_intermediate);
 	spec->add_transition(line_cmt_intermediate, "\n", line_cmt);
 
-
-
 	// Parenthensis, brackets, braces
 	// ( open paren token
 	state* openpar_intermediate = spec->create_state();
@@ -203,7 +201,6 @@ specification::specification() {
 }
 
 specification::~specification() {
-	std::cout << "delete specification" << std::endl;
 }
 
 void specification::update_token_for_lexeme(token* t) {

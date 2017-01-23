@@ -7,8 +7,6 @@ dfa::dfa() {
 }
 
 dfa::~dfa() {
-	std::cout << "delete dfa" << std::endl;
-
 	// Delete states
 	for (std::vector<state*>::iterator it = states.begin(); it != states.end(); ++it) {
 		delete *it;
