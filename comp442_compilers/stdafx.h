@@ -9,9 +9,10 @@
 // TODO: change current readme to a readme on how to compile the code
 // TODO: test in lab this week with v120
 // TODO: Figure out if they want a vs project or what
-// TODO: write tests for this
+// TODO: write tests
 // TODO: have a flag to turn off comment token returning
-// TODO: fix problem where line counts go whack after single line comments
+// TODO: single line comments with nothing after it has bad line numbering  ie. "//" 
+// TODO: tabs at the end of files create new tokens
 // TODO: see if u need targetver.h
 #include "targetver.h"
 
