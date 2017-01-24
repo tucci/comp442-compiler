@@ -140,7 +140,7 @@ specification::specification() {
 	// Comments
 	// // and /**/ tokens
 	// you might have to seperate the /* and */ from each other
-	state* multi_cmt_intermediate1 = spec->create_state(false, false, token_type::cmt_start);
+	state* multi_cmt_intermediate1 = spec->create_state(false, false, token_type::cmt_multi_start);
 	spec->add_transition(div_intermediate, "*", multi_cmt_intermediate1);
 	spec->add_else_transition(multi_cmt_intermediate1, multi_cmt_intermediate1);
 	state* multi_cmt_intermediate2 = spec->create_state();
@@ -150,7 +150,7 @@ specification::specification() {
 	spec->add_transition(multi_cmt_intermediate2, "/", multi_cmt);
 
 	// Single line comment
-	state* line_cmt_intermediate = spec->create_state(false, false, token_type::cmt_start);
+	state* line_cmt_intermediate = spec->create_state(false, false, token_type::cmt_line_start);
 	spec->add_transition(div_intermediate, "/", line_cmt_intermediate);
 	state* line_cmt = spec->create_state(true, true, token_type::cmt);
 	spec->add_else_transition(line_cmt_intermediate, line_cmt_intermediate);

@@ -34,7 +34,8 @@ enum token_type {
 	closesquare,	// ] close square
 	semicolon,		// ; semi colon, or end of statement
 	cmt,			// comment
-	cmt_start,		// special token to indicate we are at the start of a comment used by lexer
+	cmt_line_start,	// special token to indicate we are at the start of a comment used by lexer
+	cmt_multi_start,// special token to indicate we are at the start of a comment used by lexer
 	// Reserved word tokens
 	if_token,		// if keyword
 	then_token,		// then keyword
@@ -55,9 +56,6 @@ struct token {
 	// the token type for this token.
 	token_type type;
 	int token_line; // the line in the source file this token can be found
-	int token_column;// the character position in that line this token can be found
-	// Question: Do these locations disregard empty lines and line comments?
-	// Answer: No. Lines with comments are not disregared. It shows the exact location in the source file
 };
 
 #endif // !TOKEN_H

@@ -18,10 +18,6 @@ private:
 	
 	// the current line of the source file we are at
 	int current_line;
-	// the current char index for that line of the source file we are at
-	int current_column;
-	// The amount of columns in the previous line
-	int previous_line_column_count;
 	// The file path to the current source file
 	std::string source_file_path;
 	// The buffer to hold the source file
@@ -33,8 +29,6 @@ private:
 
 	// Returns the token that is evaluated from this state
 	token create_token(std::string lexeme, state state);
-	// create a token with the specified line and column. Used for comments
-	token create_token(std::string lexeme, state state, int line, int column);
 	// Returns the next char pointer in the stream for the tokenizer to read from
 	char next_char();
 	// moves the pointer of the current source_index back by one
