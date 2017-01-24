@@ -162,7 +162,15 @@ token lexer::create_token(std::string lexeme, state state) {
 	// Set this token's type from the accept state
 	t.type = state.token_type;
 	// Check and update token type if needed
-	specification::update_token_for_lexeme(&t);
+	// To avoid adding more complexity to our dfa, we will change tokens depending on their lexeme
+	if (t.type == token_type::id) {
+		// Check to see if this identifier is in our token map
+		std::unordered_map<std::string, token_type>::const_iterator in_token_map = specification::TOKEN_MAP.find(t.lexeme);
+		// We will change it from an identifier token to it's respective token
+		if (in_token_map != specification::TOKEN_MAP.end()) {
+			t.type = in_token_map->second;
+		}
+	}
 	t.token_line = current_line;
 	// We need token length to compute the starting char index for this token
 	// instead of having the index point to the end of the token in the source file

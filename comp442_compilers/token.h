@@ -10,7 +10,6 @@ enum token_type {
 	// Tokens part of our language
 	id,				// identifier token
 	num,			// Number token
-	reserved_word,	// Used for reserved words in the language
 	andlog,			// logical and operator
 	orlog,			// logical or operator
 	notlog,			// logical not operator
@@ -35,7 +34,19 @@ enum token_type {
 	closesquare,	// ] close square
 	semicolon,		// ; semi colon, or end of statement
 	cmt,			// comment
-	cmt_start		// special token to indicate we are at the start of a comment used by lexer
+	cmt_start,		// special token to indicate we are at the start of a comment used by lexer
+	// Reserved word tokens
+	if_token,		// if keyword
+	then_token,		// then keyword
+	else_token,		// else keyword
+	for_token,		// for keyword
+	class_token,	// class keyword
+	int_token,		// int keyword
+	float_token,	// float keyword
+	get_token,		// get keyword
+	put_token,		// put keyword
+	return_token,	// return keyword
+	program_token,	// program keyword
 };
 
 struct token {

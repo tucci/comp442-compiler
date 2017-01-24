@@ -1,21 +1,6 @@
 #include "stdafx.h"
 
 
-// A set of all the reserved keyword for the language
-const std::unordered_set<std::string> specification::RESERVED_WORDS = {
-	"if",
-	"then",
-	"else",
-	"for",
-	"class",
-	"int",
-	"float",
-	"get",
-	"put",
-	"return",
-	"program"
-};
-
 // A set of all the operartors for the language
 const std::unordered_map<std::string, token_type> specification::TOKEN_MAP = {
 	{ "and", token_type::andlog },
@@ -41,6 +26,17 @@ const std::unordered_map<std::string, token_type> specification::TOKEN_MAP = {
 	{ "[", token_type::opensquare },
 	{ "]", token_type::closesquare },
 	{ ";", token_type::semicolon },
+	{ "if", token_type::if_token },
+	{ "then", token_type::then_token },
+	{ "else", token_type::else_token },
+	{ "for", token_type::for_token },
+	{ "class", token_type::class_token },
+	{ "int", token_type::int_token },
+	{ "float", token_type::float_token },
+	{ "get", token_type::get_token },
+	{ "put", token_type::put_token },
+	{ "return", token_type::return_token },
+	{ "program", token_type::program_token }
 };
 
 specification::specification() {
@@ -201,26 +197,6 @@ specification::specification() {
 }
 
 specification::~specification() {
-}
-
-void specification::update_token_for_lexeme(token* t) {
-
-	// To avoid adding more complexity to our dfa, we will change tokens depending on their lexeme
-	if (t->type == token_type::id) {
-		// Check to see if this identifier is in our reserved words set
-		std::unordered_set<std::string>::const_iterator in_reserved_words = RESERVED_WORDS.find(t->lexeme);
-		// If it is a reserved word, we will change the token type to a reserved word
-		if (in_reserved_words != RESERVED_WORDS.end()) {
-			t->type = token_type::reserved_word;
-		}
-		// Check to see if this identifier is in our token map
-		std::unordered_map<std::string, token_type>::const_iterator in_token_map = TOKEN_MAP.find(t->lexeme);
-		// If the lexeme is in our token map, then it is a identifer such as "and, or, not"
-		// We will change it from an identifier token to it's respective and/or/not token
-		if (in_token_map != TOKEN_MAP.end()) {
-			t->type = in_token_map->second;
-		}
-	}
 }
 
 std::shared_ptr<dfa> specification::get_spec() {
