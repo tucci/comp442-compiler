@@ -3,8 +3,7 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
 	specification spec;
 	lexer lex(&spec);
 	// TODO: write tokens out to file
@@ -19,6 +18,8 @@ int main()
 	} else {
 		cout << "Source code not found" << endl;
 	}
+
+
 	
 	
     return 0;

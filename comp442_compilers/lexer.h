@@ -36,7 +36,7 @@ private:
 	// create a token with the specified line and column. Used for comments
 	token create_token(std::string lexeme, state state, int line, int column);
 	// Returns the next char pointer in the stream for the tokenizer to read from
-	char* next_char();
+	char next_char();
 	// moves the pointer of the current source_index back by one
 	void backup_char();
 	// Check if the character is a newline character

@@ -10,9 +10,9 @@ enum token_type {
 	// Tokens part of our language
 	id,				// identifier token
 	num,			// Number token
-	andlog,			// logical and operator
-	orlog,			// logical or operator
-	notlog,			// logical not operator
+	and,			// logical and operator
+	or,				// logical or operator
+	not,			// logical not operator
 	dot,			// . dot operator
 	comma,			// , comma operator
 	lt,				// < less than operator

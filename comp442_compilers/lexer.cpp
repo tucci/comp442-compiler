@@ -29,16 +29,19 @@ token lexer::next_token() {
 	// loop until we have created a token
 	do {
 		should_add_char = false;
+
 		// get the next char in the input
-		char* lookup = next_char();
+		char c = next_char();
+		std::string lookup_str;
+		if (c == EOF) {
+			lookup_str = std::to_string(c);
+		} else {
+			lookup_str = std::string(1, c);
+		}
 	
 		state* state_lookup;
-		if (lookup != NULL) {
-			// Get the next state from the current state and lookup char
-			state_lookup = spec->table(current_state.state_identifier, std::string(1, *lookup));
-		} else {
-			state_lookup = NULL;
-		}
+		// Get the next state from the current state and lookup char
+		state_lookup = spec->table(current_state.state_identifier, lookup_str);
 
 		if (state_lookup == NULL) {
 			// Check to see if there is a else transition
@@ -49,7 +52,7 @@ token lexer::next_token() {
 				// Handle nested comments
 				if (in_comment) {
 					// lookahead for comment open
-					if (*lookup == '/' && source.at(source_index) == '*') {
+					if (c == '/' && source.at(source_index) == '*') {
 						// Increment nested comment
 						cmt_nest_count++;
 					} 
@@ -74,7 +77,7 @@ token lexer::next_token() {
 
 		} else {
 			// TODO: figure out a way to handle comments
-			if (!isspace(*lookup)) {
+			if (!isspace(c) && c != EOF) {
 				// if this is not a whitespace character we can add it to our lexeme
 				should_add_char = true;
 			}
@@ -92,7 +95,7 @@ token lexer::next_token() {
 		// Add the char to the lexeme or add it if we are in a comment
 		// We should add chars when we are in a comment because all the characters matter, even the whitespaces
 		if (should_add_char || in_comment) {
-			lexeme += *lookup;
+			lexeme += c;
 		}
 
 
@@ -112,13 +115,13 @@ token lexer::next_token() {
 			}
 		}
 		// lookahead for comment close
-		if (in_comment && source.at(source_index - 2) == '*' && *lookup == '/') {
+		if (in_comment && source.at(source_index - 2) == '*' && c == '/') {
 			// decrement comment nest
 			cmt_nest_count--;
 		}
 
 		// Check to see if we are at the end of a line
-		if (lookup != NULL && is_new_line(*lookup) && !token_created) {
+		if (is_new_line(c) && !token_created) {
 			current_line++;
 			current_column = 0;
 		}
@@ -193,15 +196,15 @@ token lexer::create_token(std::string lexeme, state state, int line, int column)
 	return t;
 }
 
-char* lexer::next_char() {
+char lexer::next_char() {
 	// advance the column in the current line
 	current_column++;
 	if (source_index < source.size()) {
 		// advance the char index in the source file
-		return &source.at(source_index++);
+		return source.at(source_index++);
 	}
 	// There are no more chars to read
-	return NULL;	
+	return EOF;
 }
 
 void lexer::backup_char() {

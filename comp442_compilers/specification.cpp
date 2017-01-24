@@ -3,9 +3,9 @@
 
 // A set of all the operartors for the language
 const std::unordered_map<std::string, token_type> specification::TOKEN_MAP = {
-	{ "and", token_type::andlog },
-	{ "or", token_type::orlog },
-	{ "not", token_type::notlog },
+	{ "and", token_type::and },
+	{ "or", token_type::or },
+	{ "not", token_type::not },
 	{ ".", token_type::dot },
 	{ ",", token_type::comma },
 	{ "<", token_type::lt },
@@ -155,6 +155,7 @@ specification::specification() {
 	state* line_cmt = spec->create_state(true, true, token_type::cmt);
 	spec->add_else_transition(line_cmt_intermediate, line_cmt_intermediate);
 	spec->add_transition(line_cmt_intermediate, "\n", line_cmt);
+	spec->add_transition(line_cmt_intermediate, std::to_string(EOF), line_cmt);
 
 	// Parenthensis, brackets, braces
 	// ( open paren token
