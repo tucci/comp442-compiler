@@ -146,6 +146,7 @@ specification::specification() {
 	state* multi_cmt_intermediate2 = spec->create_state();
 	spec->add_transition(multi_cmt_intermediate1, "*", multi_cmt_intermediate2);
 	spec->add_else_transition(multi_cmt_intermediate2, multi_cmt_intermediate1);
+	spec->add_transition(multi_cmt_intermediate2, "*", multi_cmt_intermediate2);
 	state* multi_cmt = spec->create_state(true, false, token_type::cmt);
 	spec->add_transition(multi_cmt_intermediate2, "/", multi_cmt);
 

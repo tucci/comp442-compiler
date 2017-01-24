@@ -55,7 +55,7 @@ token lexer::next_token() {
 				// Handle nested comments openings
 				if (in_multi_comment) {
 					// lookahead for comment open
-					if (c == '/' && source.at(source_index) == '*') {
+					if (source_index != source.size() && c == '/' && source.at(source_index) == '*') {
 						// Increment nested comment
 						cmt_nest_count++;
 					} 
@@ -150,7 +150,7 @@ bool lexer::set_source(std::string path_to_file) {
 
 bool lexer::has_more_tokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return source_index < source.size() - 1;
+	return !source.empty() && source_index < source.size() - 1;
 }
 
 token lexer::create_token(std::string lexeme, state state) {
