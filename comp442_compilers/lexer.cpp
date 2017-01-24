@@ -168,6 +168,15 @@ token lexer::create_token(std::string lexeme, state state) {
 			t.type = in_token_map->second;
 		}
 	}
+	if (t.type == token_type::num) {
+		// if it is a float we will change it
+		if (t.lexeme.find('.') != std::string::npos) {
+			t.type = token_type::float_token;
+		} else {
+			// if it is an integer we will change it to that
+			t.type = token_type::int_token;
+		}
+	}
 	t.token_line = current_line;
 	return t;
 }
