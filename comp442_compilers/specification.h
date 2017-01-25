@@ -3,10 +3,10 @@
 
 
 // This class is specifically used to set the language specs
-// We set the specification by settings the specs directly into the dfa
+// We set the specification by setting the specs directly into the dfa
 class Specification {
 public:
-	// Holds all the mappings from lexems to token types for our language. Does not include ids/reserved words/ or number tokens
+	// Holds all the mappings from lexemes to token types for our language. Does not include ids or number tokens
 	const static std::unordered_map<std::string, TokenType> TOKEN_MAP;
 	Specification();
 	~Specification();

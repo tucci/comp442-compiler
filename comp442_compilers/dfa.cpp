@@ -56,11 +56,11 @@ bool Dfa::hasState(State state) {
 State* Dfa::table(int fromState, std::string lookupTransition) {
 	std::shared_ptr<std::unordered_map<std::string, State*>> stateTransitions = stateTransitionTable.at(fromState);
 	std::unordered_map<std::string, State*>::iterator found = stateTransitions->find(lookupTransition);
-	// If we dont have a transition for this state, go the else state
+	// If we dont have a transition for this state, return NULL, the caller must handle going to the else state
 	if (found == stateTransitions->end()) {
 		return NULL;
 	}
-	// if we did find something, then go that transition state
+	// if we did find something, then return that transition state
 	return found->second;
 }
 

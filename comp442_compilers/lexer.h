@@ -3,7 +3,7 @@
 
 class Lexer {
 public:
-	// Create the lexer with the specifiec language specification for this lexer to use
+	// Create the lexer with the language specification for this lexer to use
 	Lexer(Specification* spec);
 	~Lexer();
 	// Spits out the next token that the lexer reads
@@ -29,9 +29,9 @@ private:
 
 	// Returns the token that is evaluated from this state
 	Token createToken(std::string lexeme, State state);
-	// Returns the next char pointer in the stream for the tokenizer to read from
+	// Returns the next char in the stream for the tokenizer to read from
 	char nextChar();
-	// moves the pointer of the current sourceIndex back by one
+	// moves the current sourceIndex back by one
 	void backupChar();
 	// Check if the character is a newline character
 	bool isNewLine(char);

@@ -40,8 +40,10 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 };
 
 Specification::Specification() {
-	spec = std::shared_ptr<Dfa>(new Dfa);
 	// Here we create the lanugage elements and specs into the dfa
+	// Create empty dfa
+	spec = std::shared_ptr<Dfa>(new Dfa);
+
 	State* start = spec->createStartState();
 
 	// Do not make the error state be a backup state
@@ -139,7 +141,6 @@ Specification::Specification() {
 
 	// Comments
 	// // and /**/ tokens
-	// you might have to seperate the /* and */ from each other
 	State* multiCmtIntermediate1 = spec->createState(false, false, TokenType::cmt_multi_start);
 	spec->addTransition(divIntermediate, "*", multiCmtIntermediate1);
 	spec->addElseTransition(multiCmtIntermediate1, multiCmtIntermediate1);

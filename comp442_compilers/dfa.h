@@ -10,7 +10,7 @@ struct State {
 	bool isStartState;
 	// Whether this state is a final state
 	bool isFinalState;
-	// Whether this state needs to tell the lexer to backtracking
+	// Whether this state needs to tell the lexer to backtrack
 	// This will usually be true if there is an else transition to this state
 	// Example the else state between < intermediate and < final state use an else transition between them
 	// So the < final state needs to be a back tracking state
@@ -29,9 +29,9 @@ public:
 	const static std::string ELSE_TRANSITION;
 	// Create the starting state for this dfa
 	State* createStartState();
-	// Create the a state to be used in this dfa
+	// Create a state to be used in this dfa
 	State* createState(bool isFinalState=false, bool needsToBacktrack=false, TokenType type=non_token);
-	// add a transition from the from state to the toState using a transition string
+	// add a transition from the fromState to the toState using a transition string
 	bool addTransition(State* fromState, std::string transition, State* toState);
 	// Add an else transition to the two states
 	bool addElseTransition(State* fromState, State* toState);

@@ -45,12 +45,13 @@ Token Lexer::nextToken() {
 		// Get the next state from the current state and lookup char
 		stateLookup = tokenizer->table(currentState.stateIdentifier, lookupStr);
 
-		// If we dont have a stae for this state and lookup
+		// stateLookup == NULL when we dont have a state for this state and lookup
 		if (stateLookup == NULL) {
 			// Check to see if there is a else transition
 			State* elseState = tokenizer->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
 			// If we do have an else state, we'll go to it and continue
 			if (elseState != NULL) {
+				// Move to the else state
 				currentState = *elseState;
 				// Handle nested comments openings
 				if (inMultiComment) {
@@ -87,14 +88,13 @@ Token Lexer::nextToken() {
 			if (inMultiComment && cmtNestCount > 0) {
 				currentState = *tokenizer->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
 			} else {
-				// get the state for the current state and lookup
+				// get the state normally for the current state and lookup
 				currentState = *stateLookup;
 			}
 			
 		}
 
-		// Add the char to the lexeme or add it if we are in a comment
-		// We should add chars when we are in a comment because all the characters matter, even the whitespaces
+		// Add the char to the lexeme
 		if (shouldAddChar) {
 			lexeme += c;
 		}
@@ -158,7 +158,7 @@ Token Lexer::createToken(std::string lexeme, State state) {
 	// Set this token's type from the accept state
 	token.type = state.tokenType;
 	// Check and update token type if needed
-	// To avoid adding more complexity to our dfa, we will change tokens depending on their lexeme
+	// To avoid adding more complexity to our dfa, we will change token types depending on their lexeme
 	if (token.type == TokenType::id) {
 		// Check to see if this identifier is in our token map
 		std::unordered_map<std::string, TokenType>::const_iterator inTokenMap = Specification::TOKEN_MAP.find(token.lexeme);
@@ -184,10 +184,11 @@ Token Lexer::createToken(std::string lexeme, State state) {
 char Lexer::nextChar() {
 	if (sourceIndex < source.size()) {
 		char c = source.at(sourceIndex);
-		// advance the char index in the source file
+		// Move to the next line if we are at a new line char
 		if (sourceIndex != 0 && isNewLine(source.at(sourceIndex - 1))) {
 			currentLine++;
 		}
+		// advance the char index in the source file
 		sourceIndex++;
 		return c;
 	}
