@@ -12,4 +12,73 @@ for (int i = 0; i < 10; i = i + 1) {
 	// this is a single line comment
 	//
 	}
+}/*
+	This class is a simple structure for a person
+**/
+
+class Person {
+		int age;
+		float height;
+
+		Person(int a, float h) {
+			age = a;
+			height = h;
+		}
+
+		int getAge() {
+			return age;
+		}
+
+		int getHeight() {
+			return height;
+		}
+
+
+	};
+
+program {
+	int x = 10;
+	float y = 2.34;
+
+	x = Person(x, y);
+	int x2 = x.getAge();
+	int y2 = x.getHeight();
+
+	int calc;
+	if (x > y) {
+		calc = 1 + 2 - 3 * 4 /  ( 1 / 2 ); // Test comment
+	} else {
+		for (int i = 0; i < 10; i++) {
+			if (x == i) then {
+				put	x;
+			}
+			if (x < 10) then {
+				put y;
+			}
+			if (y > 10) then {
+				put y;
+			} else {
+				if (x + y <> 20) then {
+				
+				}
+			}
+			if (x >= 0 and y <= 10) {
+			
+			}
+			if (x >= 20 or y <= 30) {
+			
+			}
+
+			if (x not 30) {
+			
+			}
+
+		}
+	}
+
+	
+	test[32] = 32;
+	return x + y;
 }
+//
+/** test comment */

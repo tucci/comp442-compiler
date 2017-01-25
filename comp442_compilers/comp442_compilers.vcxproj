@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="errors.txt" />
+    <Text Include="output.txt" />
     <Text Include="ReadMe.txt" />
     <Text Include="SourceCode.txt" />
   </ItemGroup>
