@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 Lexer::Lexer(Specification* spec) {
-	this->spec = spec->getSpec();
+	tokenizer = spec->getSpec();
 }
 
 Lexer::~Lexer() {
@@ -43,12 +43,12 @@ Token Lexer::nextToken() {
 	
 		State* stateLookup;
 		// Get the next state from the current state and lookup char
-		stateLookup = spec->table(currentState.stateIdentifier, lookupStr);
+		stateLookup = tokenizer->table(currentState.stateIdentifier, lookupStr);
 
 		// If we dont have a stae for this state and lookup
 		if (stateLookup == NULL) {
 			// Check to see if there is a else transition
-			State* elseState = spec->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
+			State* elseState = tokenizer->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
 			// If we do have an else state, we'll go to it and continue
 			if (elseState != NULL) {
 				currentState = *elseState;
@@ -85,7 +85,7 @@ Token Lexer::nextToken() {
 			// If we are in a multi comment and have a comment nest
 			// we need to go to it's previous state and not the final state
 			if (inMultiComment && cmtNestCount > 0) {
-				currentState = *spec->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
+				currentState = *tokenizer->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
 			} else {
 				// get the state for the current state and lookup
 				currentState = *stateLookup;

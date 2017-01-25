@@ -14,7 +14,7 @@ public:
 	bool hasMoreTokens();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
-	std::shared_ptr<Dfa> spec;
+	std::shared_ptr<Dfa> tokenizer;
 	
 	// the current line of the source file we are at
 	int currentLine;
