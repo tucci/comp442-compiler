@@ -2,294 +2,294 @@
 
 
 // A set of all the operartors for the language
-const std::unordered_map<std::string, token_type> specification::TOKEN_MAP = {
-	{ "and", token_type::and },
-	{ "or", token_type::or },
-	{ "not", token_type::not },
-	{ ".", token_type::dot },
-	{ ",", token_type::comma },
-	{ "<", token_type::lt },
-	{ "<=", token_type::lesseq },
-	{ "<>", token_type::noteq },
-	{ ">", token_type::gt },
-	{ ">=", token_type::greateq },
-	{ "=", token_type::assgn },
-	{ "==", token_type::comparison},
-	{ "+", token_type::adddop },
-	{ "-", token_type::subtractop },
-	{ "*", token_type::multop },
-	{ "/", token_type::divop },
-	{ "(", token_type::openpar },
-	{ ")", token_type::closepar },
-	{ "{", token_type::openbrace },
-	{ "}", token_type::closebrace },
-	{ "[", token_type::opensquare },
-	{ "]", token_type::closesquare },
-	{ ";", token_type::semicolon },
-	{ "if", token_type::if_token },
-	{ "then", token_type::then_token },
-	{ "else", token_type::else_token },
-	{ "for", token_type::for_token },
-	{ "class", token_type::class_token },
-	{ "int", token_type::int_token },
-	{ "float", token_type::float_token },
-	{ "get", token_type::get_token },
-	{ "put", token_type::put_token },
-	{ "return", token_type::return_token },
-	{ "program", token_type::program_token }
+const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
+	{ "and", TokenType::and },
+	{ "or", TokenType::or },
+	{ "not", TokenType::not },
+	{ ".", TokenType::dot },
+	{ ",", TokenType::comma },
+	{ "<", TokenType::lt },
+	{ "<=", TokenType::lesseq },
+	{ "<>", TokenType::noteq },
+	{ ">", TokenType::gt },
+	{ ">=", TokenType::greateq },
+	{ "=", TokenType::assgn },
+	{ "==", TokenType::comparison},
+	{ "+", TokenType::adddop },
+	{ "-", TokenType::subtractop },
+	{ "*", TokenType::multop },
+	{ "/", TokenType::divop },
+	{ "(", TokenType::openpar },
+	{ ")", TokenType::closepar },
+	{ "{", TokenType::openbrace },
+	{ "}", TokenType::closebrace },
+	{ "[", TokenType::opensquare },
+	{ "]", TokenType::closesquare },
+	{ ";", TokenType::semicolon },
+	{ "if", TokenType::if_token },
+	{ "then", TokenType::then_token },
+	{ "else", TokenType::else_token },
+	{ "for", TokenType::for_token },
+	{ "class", TokenType::class_token },
+	{ "int", TokenType::int_token },
+	{ "float", TokenType::float_token },
+	{ "get", TokenType::get_token },
+	{ "put", TokenType::put_token },
+	{ "return", TokenType::return_token },
+	{ "program", TokenType::program_token }
 };
 
-specification::specification() {
-	spec = std::shared_ptr<dfa>(new dfa);
+Specification::Specification() {
+	spec = std::shared_ptr<Dfa>(new Dfa);
 	// Here we create the lanugage elements and specs into the dfa
-	state* start = spec->create_start_state();
+	State* start = spec->createStartState();
 
 	// Do not make the error state be a backup state
-	state* error = spec->create_state(true, false, token_type::error_token);
+	State* error = spec->createState(true, false, TokenType::error_token);
 	// Error state
-	spec->add_else_transition(start, error);
+	spec->addElseTransition(start, error);
 
 	// Add white space transitions
-	whitespace_transitions(start, start);
+	whitespaceTransitions(start, start);
 	
 	// id state transitions
-	state* id_intermediate = spec->create_state();
-	state* id_state = spec->create_state(true, true, token_type::id);
-	specification::id_transitions(start, id_intermediate);
-	spec->add_else_transition(id_intermediate, id_state);
+	State* idIntermediate = spec->createState();
+	State* idState = spec->createState(true, true, TokenType::id);
+	Specification::idTransitions(start, idIntermediate);
+	spec->addElseTransition(idIntermediate, idState);
 
 	// num state transitions
-	state* num_intermediate1 = spec->create_state();
-	state* num_intermediate2 = spec->create_state();
-	state* num_intermediate3 = spec->create_state();
-	state* num_state = spec->create_state(true, true, token_type::num);
-	specification::num_transitions(start, num_intermediate1, num_intermediate2, num_intermediate3);
-	spec->add_else_transition(num_intermediate1, num_state);
-	spec->add_else_transition(num_intermediate2, num_state);
-	spec->add_else_transition(num_intermediate3, num_state);
+	State* numIntermediate1 = spec->createState();
+	State* numIntermediate2 = spec->createState();
+	State* numIntermediate3 = spec->createState();
+	State* numState = spec->createState(true, true, TokenType::num);
+	Specification::numTransitions(start, numIntermediate1, numIntermediate2, numIntermediate3);
+	spec->addElseTransition(numIntermediate1, numState);
+	spec->addElseTransition(numIntermediate2, numState);
+	spec->addElseTransition(numIntermediate3, numState);
 
 	// Operators
 
 	// . dot token
-	state* dot_intermediate = spec->create_state();
-	spec->add_transition(start, ".", dot_intermediate);
-	state* dot_state = spec->create_state(true, true, token_type::dot);
-	spec->add_else_transition(dot_intermediate, dot_state);
+	State* dotIntermediate = spec->createState();
+	spec->addTransition(start, ".", dotIntermediate);
+	State* dotState = spec->createState(true, true, TokenType::dot);
+	spec->addElseTransition(dotIntermediate, dotState);
 
 	// , comma token
-	state* comma_intermediate = spec->create_state();
-	spec->add_transition(start, ",", comma_intermediate);
-	state* comma_state = spec->create_state(true, true, token_type::comma);
-	spec->add_else_transition(comma_intermediate, comma_state);
+	State* commaIntermediate = spec->createState();
+	spec->addTransition(start, ",", commaIntermediate);
+	State* commaState = spec->createState(true, true, TokenType::comma);
+	spec->addElseTransition(commaIntermediate, commaState);
 
 	// <, <=, <>
-	state* lt_intermediate = spec->create_state();
-	spec->add_transition(start, "<", lt_intermediate);
+	State* ltIntermediate = spec->createState();
+	spec->addTransition(start, "<", ltIntermediate);
 	// < less than token
-	state* lt_state = spec->create_state(true, true, token_type::lt);
-	spec->add_else_transition(lt_intermediate, lt_state);
+	State* ltState = spec->createState(true, true, TokenType::lt);
+	spec->addElseTransition(ltIntermediate, ltState);
 	// <= less than or equal token
-	state* lesseq_state = spec->create_state(true, false, token_type::lesseq);
-	spec->add_transition(lt_intermediate, "=", lesseq_state);
+	State* lesseqState = spec->createState(true, false, TokenType::lesseq);
+	spec->addTransition(ltIntermediate, "=", lesseqState);
 	// <> not equal token
-	state* noteq_state = spec->create_state(true, false, token_type::noteq);
-	spec->add_transition(lt_intermediate, ">", lesseq_state);
+	State* noteqState = spec->createState(true, false, TokenType::noteq);
+	spec->addTransition(ltIntermediate, ">", lesseqState);
 
 	// >, >=
-	state* gt_intermediate = spec->create_state();
-	spec->add_transition(start, ">", gt_intermediate);
+	State* gtIntermediate = spec->createState();
+	spec->addTransition(start, ">", gtIntermediate);
 	// > greater than token
-	state* gt_state = spec->create_state(true, true, token_type::gt);
-	spec->add_else_transition(gt_intermediate, gt_state);
+	State* gtState = spec->createState(true, true, TokenType::gt);
+	spec->addElseTransition(gtIntermediate, gtState);
 	// >= greater than or equal token
-	state* greateq_state = spec->create_state(true, false, token_type::greateq);
-	spec->add_transition(gt_intermediate, "=", greateq_state);
+	State* greateqState = spec->createState(true, false, TokenType::greateq);
+	spec->addTransition(gtIntermediate, "=", greateqState);
 
 	// =, ==
-	state* eq_intermediate = spec->create_state();
-	spec->add_transition(start, "=", eq_intermediate);
+	State* eqIntermediate = spec->createState();
+	spec->addTransition(start, "=", eqIntermediate);
 	// = assignment token
-	state* assgn_state = spec->create_state(true, true, token_type::assgn);
-	spec->add_else_transition(eq_intermediate, assgn_state);
+	State* assgnState = spec->createState(true, true, TokenType::assgn);
+	spec->addElseTransition(eqIntermediate, assgnState);
 	// == comparison token
-	state* comparison_state = spec->create_state(true, false, token_type::comparison);
-	spec->add_transition(eq_intermediate, "=", comparison_state);
+	State* comparisonState = spec->createState(true, false, TokenType::comparison);
+	spec->addTransition(eqIntermediate, "=", comparisonState);
 
 	// +, -, *, /
 	// + addition operator token
-	state* add_intermediate = spec->create_state();
-	spec->add_transition(start, "+", add_intermediate);
-	state* add_state = spec->create_state(true, true, token_type::adddop);
-	spec->add_else_transition(add_intermediate,add_state);
+	State* addIntermediate = spec->createState();
+	spec->addTransition(start, "+", addIntermediate);
+	State* addState = spec->createState(true, true, TokenType::adddop);
+	spec->addElseTransition(addIntermediate,addState);
 	// - subrtaction operator token
-	state* subtract_intermediate = spec->create_state();
-	spec->add_transition(start, "-", subtract_intermediate);
-	state* subtract_state = spec->create_state(true, true, token_type::subtractop);
-	spec->add_else_transition(subtract_intermediate, subtract_state);
+	State* subtractIntermediate = spec->createState();
+	spec->addTransition(start, "-", subtractIntermediate);
+	State* subtractState = spec->createState(true, true, TokenType::subtractop);
+	spec->addElseTransition(subtractIntermediate, subtractState);
 	// multiplication operator token
-	state* mult_intermediate = spec->create_state();
-	spec->add_transition(start, "*", mult_intermediate);
-	state* mult_state = spec->create_state(true, true, token_type::multop);
-	spec->add_else_transition(mult_intermediate, mult_state);
+	State* multIntermediate = spec->createState();
+	spec->addTransition(start, "*", multIntermediate);
+	State* multState = spec->createState(true, true, TokenType::multop);
+	spec->addElseTransition(multIntermediate, multState);
 	// division operator token
-	state* div_intermediate = spec->create_state();
-	spec->add_transition(start, "/", div_intermediate);
-	state* div_state = spec->create_state(true, true, token_type::divop);
-	spec->add_else_transition(div_intermediate, div_state);
+	State* divIntermediate = spec->createState();
+	spec->addTransition(start, "/", divIntermediate);
+	State* divState = spec->createState(true, true, TokenType::divop);
+	spec->addElseTransition(divIntermediate, divState);
 
 	// Comments
 	// // and /**/ tokens
 	// you might have to seperate the /* and */ from each other
-	state* multi_cmt_intermediate1 = spec->create_state(false, false, token_type::cmt_multi_start);
-	spec->add_transition(div_intermediate, "*", multi_cmt_intermediate1);
-	spec->add_else_transition(multi_cmt_intermediate1, multi_cmt_intermediate1);
-	state* multi_cmt_intermediate2 = spec->create_state();
-	spec->add_transition(multi_cmt_intermediate1, "*", multi_cmt_intermediate2);
-	spec->add_else_transition(multi_cmt_intermediate2, multi_cmt_intermediate1);
-	spec->add_transition(multi_cmt_intermediate2, "*", multi_cmt_intermediate2);
-	state* multi_cmt = spec->create_state(true, false, token_type::cmt);
-	spec->add_transition(multi_cmt_intermediate2, "/", multi_cmt);
+	State* multiCmtIntermediate1 = spec->createState(false, false, TokenType::cmt_multi_start);
+	spec->addTransition(divIntermediate, "*", multiCmtIntermediate1);
+	spec->addElseTransition(multiCmtIntermediate1, multiCmtIntermediate1);
+	State* multiCmtIntermediate2 = spec->createState();
+	spec->addTransition(multiCmtIntermediate1, "*", multiCmtIntermediate2);
+	spec->addElseTransition(multiCmtIntermediate2, multiCmtIntermediate1);
+	spec->addTransition(multiCmtIntermediate2, "*", multiCmtIntermediate2);
+	State* multiCmt = spec->createState(true, false, TokenType::cmt);
+	spec->addTransition(multiCmtIntermediate2, "/", multiCmt);
 
 	// Single line comment
-	state* line_cmt_intermediate = spec->create_state(false, false, token_type::cmt_line_start);
-	spec->add_transition(div_intermediate, "/", line_cmt_intermediate);
-	state* line_cmt = spec->create_state(true, true, token_type::cmt);
-	spec->add_else_transition(line_cmt_intermediate, line_cmt_intermediate);
-	spec->add_transition(line_cmt_intermediate, "\n", line_cmt);
-	spec->add_transition(line_cmt_intermediate, std::to_string(EOF), line_cmt);
+	State* lineCmtIntermediate = spec->createState(false, false, TokenType::cmt_line_start);
+	spec->addTransition(divIntermediate, "/", lineCmtIntermediate);
+	State* lineCmt = spec->createState(true, true, TokenType::cmt);
+	spec->addElseTransition(lineCmtIntermediate, lineCmtIntermediate);
+	spec->addTransition(lineCmtIntermediate, "\n", lineCmt);
+	spec->addTransition(lineCmtIntermediate, std::to_string(EOF), lineCmt);
 
 	// Parenthensis, brackets, braces
 	// ( open paren token
-	state* openpar_intermediate = spec->create_state();
-	spec->add_transition(start, "(", openpar_intermediate);
-	state* openpar_state = spec->create_state(true, true, token_type::openpar);
-	spec->add_else_transition(openpar_intermediate, openpar_state);
+	State* openparIntermediate = spec->createState();
+	spec->addTransition(start, "(", openparIntermediate);
+	State* openparState = spec->createState(true, true, TokenType::openpar);
+	spec->addElseTransition(openparIntermediate, openparState);
 	// ) close paren token
-	state* closepar_intermediate = spec->create_state();
-	spec->add_transition(start, ")", closepar_intermediate);
-	state* closepar_state = spec->create_state(true, true, token_type::closepar);
-	spec->add_else_transition(closepar_intermediate, closepar_state);
+	State* closeparIntermediate = spec->createState();
+	spec->addTransition(start, ")", closeparIntermediate);
+	State* closeparState = spec->createState(true, true, TokenType::closepar);
+	spec->addElseTransition(closeparIntermediate, closeparState);
 	// { open brace token
-	state* openbrace_intermediate = spec->create_state();
-	spec->add_transition(start, "{", openbrace_intermediate);
-	state* openbrace_state = spec->create_state(true, true, token_type::openbrace);
-	spec->add_else_transition(openbrace_intermediate, openbrace_state);
+	State* openbraceIntermediate = spec->createState();
+	spec->addTransition(start, "{", openbraceIntermediate);
+	State* openbraceState = spec->createState(true, true, TokenType::openbrace);
+	spec->addElseTransition(openbraceIntermediate, openbraceState);
 	// } close brace token
-	state* closebrace_intermediate = spec->create_state();
-	spec->add_transition(start, "}", closebrace_intermediate);
-	state* closebrace_state = spec->create_state(true, true, token_type::closebrace);
-	spec->add_else_transition(closebrace_intermediate, closebrace_state);
+	State* closebraceIntermediate = spec->createState();
+	spec->addTransition(start, "}", closebraceIntermediate);
+	State* closebraceState = spec->createState(true, true, TokenType::closebrace);
+	spec->addElseTransition(closebraceIntermediate, closebraceState);
 	// [ open square token
-	state* opensquare_intermediate = spec->create_state();
-	spec->add_transition(start, "[", opensquare_intermediate);
-	state* opensquare_state = spec->create_state(true, true, token_type::opensquare);
-	spec->add_else_transition(opensquare_intermediate, opensquare_state);
+	State* opensquareIntermediate = spec->createState();
+	spec->addTransition(start, "[", opensquareIntermediate);
+	State* opensquareState = spec->createState(true, true, TokenType::opensquare);
+	spec->addElseTransition(opensquareIntermediate, opensquareState);
 	// ] close square token
-	state* closesquare_intermediate = spec->create_state();
-	spec->add_transition(start, "]", closesquare_intermediate);
-	state* closesquare_state = spec->create_state(true, true, token_type::closesquare);
-	spec->add_else_transition(closesquare_intermediate, closesquare_state);
+	State* closesquareIntermediate = spec->createState();
+	spec->addTransition(start, "]", closesquareIntermediate);
+	State* closesquareState = spec->createState(true, true, TokenType::closesquare);
+	spec->addElseTransition(closesquareIntermediate, closesquareState);
 
 	// ; semi colon token
-	state* semicolon_intermediate = spec->create_state();
-	spec->add_transition(start, ";", semicolon_intermediate);
-	state* semicolon_state = spec->create_state(true, true, token_type::semicolon);
-	spec->add_else_transition(semicolon_intermediate, semicolon_state);
+	State* semicolonIntermediate = spec->createState();
+	spec->addTransition(start, ";", semicolonIntermediate);
+	State* semicolonState = spec->createState(true, true, TokenType::semicolon);
+	spec->addElseTransition(semicolonIntermediate, semicolonState);
 	
 }
 
-specification::~specification() {
+Specification::~Specification() {
 }
 
-std::shared_ptr<dfa> specification::get_spec() {
+std::shared_ptr<Dfa> Specification::getSpec() {
 	return spec;
 }
 
 
-void specification::whitespace_transitions(state* start, state* end) {
-	spec->add_transition(start, " ", start);
-	spec->add_transition(start, "\t", start);
-	spec->add_transition(start, "\n", start);
-	spec->add_transition(start, "\v", start);
-	spec->add_transition(start, "\r", start);
-	spec->add_transition(start, "\f", start);
-	spec->add_transition(start, "\r\n", start);
+void Specification::whitespaceTransitions(State* start, State* end) {
+	spec->addTransition(start, " ", start);
+	spec->addTransition(start, "\t", start);
+	spec->addTransition(start, "\n", start);
+	spec->addTransition(start, "\v", start);
+	spec->addTransition(start, "\r", start);
+	spec->addTransition(start, "\f", start);
+	spec->addTransition(start, "\r\n", start);
 }
 
-void specification::nonzero_transitions(state* start, state* end) {
+void Specification::nonzeroTransitions(State* start, State* end) {
 	std::string rule = "123456789";
 	for (int i = 0; i < rule.size(); i++) {
 		// create transitions 1 - 9 from the start state and end state
 		// this will create 9 transitions
-		spec->add_transition(start, rule.substr(i, 1), end);
+		spec->addTransition(start, rule.substr(i, 1), end);
 	}
 }
 
-void specification::digit_transitions(state* start, state* end) {
+void Specification::digitTransitions(State* start, State* end) {
 	std::string rule = "0123456789";
 	for (int i = 0; i < rule.size(); i++) {
 		// create transitions 0 - 9 from the start state and end state
 		// this will create 10 transitions
-		spec->add_transition(start, rule.substr(i, 1), end);
+		spec->addTransition(start, rule.substr(i, 1), end);
 	}
 }
 
-void specification::letter_transitions(state* start, state* end) {
+void Specification::letterTransitions(State* start, State* end) {
 	std::string rule = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (int i = 0; i < rule.size(); i++) {
 		// create transitions a - z and A - Z from the start state and end state
 		// this will create 26 * 2 transitions
-		spec->add_transition(start, rule.substr(i, 1), end);
+		spec->addTransition(start, rule.substr(i, 1), end);
 	}
 }
 
-void specification::float_transitions(state* start, state* end) {
-	state* intermediate1 = spec->create_state();
-	state* intermediate2 = spec->create_state();
-	integer_transitions(start, intermediate1, intermediate2);
-	fraction_transitions(intermediate1, end);
+void Specification::floatTransitions(State* start, State* end) {
+	State* intermediate1 = spec->createState();
+	State* intermediate2 = spec->createState();
+	integerTransitions(start, intermediate1, intermediate2);
+	fractionTransitions(intermediate1, end);
 }
 
-void specification::fraction_transitions(state* start, state* end) {
-	state* intermediate1 = spec->create_state();
-	spec->add_transition(start, ".", intermediate1);
-	digit_transitions(intermediate1, end);
+void Specification::fractionTransitions(State* start, State* end) {
+	State* intermediate1 = spec->createState();
+	spec->addTransition(start, ".", intermediate1);
+	digitTransitions(intermediate1, end);
 	// if all the end transitions have already been created. we dont want to recreate them
 	// we will just link the new intermediate to the same end
 	// This can happen when there are two fraction tranistions coming out of two states
 	// this is to avoid duplicate intermediate states
-	if (spec->table(end->state_identifier, "0") == NULL) {
-		nonzero_transitions(end, end);
-		state* intermediate2 = spec->create_state();
-		spec->add_transition(end, "0", intermediate2);
-		spec->add_transition(intermediate2, "0", intermediate2);
-		nonzero_transitions(intermediate2, end);
+	if (spec->table(end->stateIdentifier, "0") == NULL) {
+		nonzeroTransitions(end, end);
+		State* intermediate2 = spec->createState();
+		spec->addTransition(end, "0", intermediate2);
+		spec->addTransition(intermediate2, "0", intermediate2);
+		nonzeroTransitions(intermediate2, end);
 	}
 }
 
-void specification::integer_transitions(state* start, state* end, state* end2) {
-	spec->add_transition(start, "0", end2);
-	nonzero_transitions(start, end);
-	digit_transitions(end, end);
+void Specification::integerTransitions(State* start, State* end, State* end2) {
+	spec->addTransition(start, "0", end2);
+	nonzeroTransitions(start, end);
+	digitTransitions(end, end);
 }
 
-void specification::num_transitions(state* start, state* end, state* end2, state* end3) {
-	nonzero_transitions(start, end);
-	digit_transitions(end, end);
-	spec->add_transition(start, "0", end2);
+void Specification::numTransitions(State* start, State* end, State* end2, State* end3) {
+	nonzeroTransitions(start, end);
+	digitTransitions(end, end);
+	spec->addTransition(start, "0", end2);
 	// Question: will this create duplicate inner states to be created
 	// Answer: No. this is handled internally.
-	fraction_transitions(end, end3);
-	fraction_transitions(end2, end3);
+	fractionTransitions(end, end3);
+	fractionTransitions(end2, end3);
 }
 
-void specification::alphanum_transitions(state* start, state* end) {
-	spec->add_transition(start, "_", end);
-	letter_transitions(start, end);
-	digit_transitions(start, end);
+void Specification::alphanumTransitions(State* start, State* end) {
+	spec->addTransition(start, "_", end);
+	letterTransitions(start, end);
+	digitTransitions(start, end);
 }
 
-void specification::id_transitions(state* start, state* end) {
-	letter_transitions(start, end);
-	alphanum_transitions(end, end);
+void Specification::idTransitions(State* start, State* end) {
+	letterTransitions(start, end);
+	alphanumTransitions(end, end);
 }

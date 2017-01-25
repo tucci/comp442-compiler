@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-enum token_type {
+enum TokenType {
 	// Special tokens
 	non_token,		// this means this state is an intermediate state
 					// special token to tell the lexer that this is not a token and should carry on
@@ -52,13 +52,13 @@ enum token_type {
 
 
 // Simple data structure to hold the data about our token
-struct token {
+struct Token {
 	// the lexeme for this token
 	std::string lexeme;
 	// the token type for this token. This refers to the enum value
-	token_type type;
+	TokenType type;
 	// the line in the source file this token can be found
-	int token_line; 
+	int tokenLine; 
 };
 
 #endif // !TOKEN_H

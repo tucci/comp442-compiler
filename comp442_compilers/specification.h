@@ -4,43 +4,43 @@
 
 // This class is specifically used to set the language specs
 // We set the specification by settings the specs directly into the dfa
-class specification {
+class Specification {
 public:
 	// Holds all the mappings from lexems to token types for our language. Does not include ids/reserved words/ or number tokens
-	const static std::unordered_map<std::string, token_type> TOKEN_MAP;
-	specification();
-	~specification();
+	const static std::unordered_map<std::string, TokenType> TOKEN_MAP;
+	Specification();
+	~Specification();
 	// Returns the dfa for this specification
-	std::shared_ptr<dfa> get_spec();
+	std::shared_ptr<Dfa> getSpec();
 private:
 	// The dfa/state transition table for this spec
-	std::shared_ptr<dfa> spec;
+	std::shared_ptr<Dfa> spec;
 	// Create white space transitions from the from the start state to the end state
-	void whitespace_transitions(state* start, state* end);
+	void whitespaceTransitions(State* start, State* end);
 	// Create non zero transitions regex="[0-9]" from the start state to the end state
-	void nonzero_transitions(state* start, state* end);
+	void nonzeroTransitions(State* start, State* end);
 	// Create non digit transitions regex="[1-9]" from the start state to the end state
-	void digit_transitions(state* start, state* end);
+	void digitTransitions(State* start, State* end);
 	// Create letter transitions regex="[a-z|A-Z]" from the start state to the end state
-	void letter_transitions(state* start, state* end);
+	void letterTransitions(State* start, State* end);
 	// Create fraction transitions regex=".0|.digit*" from the start state to the end state
-	void fraction_transitions(state* start, state* end);
+	void fractionTransitions(State* start, State* end);
 	// Create float transitions regex="integer fraction" from the start state to the end state
-	void float_transitions(state* start, state* end);
+	void floatTransitions(State* start, State* end);
 	// Create integer transitions regex="integer fraction" from the start state to the end state and end state 2
 	// The integer transition requires 2 ends states. So you must supply 2 end states
 	// If you want to create a bigger machine with this transition
 	// make sure to connect both end states to the new starting state of the new machine
-	void integer_transitions(state* start, state* end, state* end2);
+	void integerTransitions(State* start, State* end, State* end2);
 	//Create num transitions regex="integer|float" from the start state to the end state
 	// The num transition requires 3 ends states. So you must supply 3 end states
 	// If you want to create a bigger machine with this transition
 	// make sure to connect all end states to the new starting state of the new machine
-	void num_transitions(state* start, state* end, state* end2, state* end3);
+	void numTransitions(State* start, State* end, State* end2, State* end3);
 	//Create alphanum transitions regex="letter|digit|_*" from the start state to the end state
-	void alphanum_transitions(state* start, state* end);
+	void alphanumTransitions(State* start, State* end);
 	//Create id transitions regex="letter alphanum*" from the start state to the end state
-	void id_transitions(state* start, state* end);
+	void idTransitions(State* start, State* end);
 };
 
 #endif // !SPECIFICATION_H

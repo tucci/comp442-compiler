@@ -5,38 +5,38 @@ using namespace std;
 
 int main() {
 
-	bool write_to_file = true;
+	bool writeToFile = true;
 	ofstream output;
 	ofstream error;
 
-	if (write_to_file) {
+	if (writeToFile) {
 		output.open("output.txt");
 		error.open("errors.txt");
 	}
 
-	specification spec;
-	lexer lex(&spec);
-	lex.set_source("SourceCode.txt");
+	Specification spec;
+	Lexer lex(&spec);
+	lex.setSource("SourceCode.txt");
 
-	while (lex.has_more_tokens()) {
-		token t = lex.next_token();
-		string token_output = "lexeme: " + t.lexeme +  "\t\ttype: " + to_string(t.type) + "\t\tline number: " + to_string(t.token_line) + "\n";
+	while (lex.hasMoreTokens()) {
+		Token token = lex.nextToken();
+		string tokenOutput = "lexeme: " + token.lexeme +  "\t\ttype: " + to_string(token.type) + "\t\tline number: " + to_string(token.tokenLine) + "\n";
 
-		if (write_to_file) {
+		if (writeToFile) {
 			// write to output/error file
-			if (t.type == token_type::error_token) {
-				error << token_output;
+			if (token.type == TokenType::error_token) {
+				error << tokenOutput;
 			} else {
-				output << token_output;
+				output << tokenOutput;
 			}
 		} else {
 			// Write to console
-			cout << token_output;
+			cout << tokenOutput;
 		}
 	}
 
 
-	if (write_to_file) {
+	if (writeToFile) {
 		output.close();
 		error.close();
 	}

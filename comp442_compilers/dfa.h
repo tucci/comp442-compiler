@@ -3,50 +3,50 @@
 
 
 
-struct state {
+struct State {
 	// integer value to hold the identifier for this state (ie. state 1, state 2, ...)
-	int state_identifier;
+	int stateIdentifier;
 	// Whether this state is a start state
-	bool is_start_state;
+	bool isStartState;
 	// Whether this state is a final state
-	bool is_final_state;
+	bool isFinalState;
 	// Whether this state needs to tell the lexer to backtracking
 	// This will usually be true if there is an else transition to this state
 	// Example the else state between < intermediate and < final state use an else transition between them
 	// So the < final state needs to be a back tracking state
 	// However you may not want this for the error state.
 	// You must explicitly set this state when you create a state
-	bool needs_to_backtrack;
+	bool needsToBacktrack;
 	// the token type for the lexeme it accepts
-	token_type token_type;
+	TokenType tokenType;
 };
 
-class dfa {
+class Dfa {
 public:
-	dfa();
-	~dfa();
+	Dfa();
+	~Dfa();
 	// constant identifier to be used in the state transition table to use when no onther lookup is there
 	const static std::string ELSE_TRANSITION;
 	// Create the starting state for this dfa
-	state* create_start_state();
+	State* createStartState();
 	// Create the a state to be used in this dfa
-	state* create_state(bool is_final_state=false, bool needs_to_backtrack=false, token_type type=non_token);
-	// add a transition from the from state to the to_state using a transition string
-	bool add_transition(state* from_state, std::string transition, state* to_state);
+	State* createState(bool isFinalState=false, bool needsToBacktrack=false, TokenType type=non_token);
+	// add a transition from the from state to the toState using a transition string
+	bool addTransition(State* fromState, std::string transition, State* toState);
 	// Add an else transition to the two states
-	bool add_else_transition(state* from_state, state* to_state);
-	// Get the transition state from the from_state identifier using lookup_transition input
-	state* table(int from_state, std::string lookup_transition);
+	bool addElseTransition(State* fromState, State* toState);
+	// Get the transition state from the fromState identifier using lookupTransition input
+	State* table(int fromState, std::string lookupTransition);
 private:
 	// the count for how many states we have
-	int m_state_count;
+	int mStateCount;
 	// Check to see if the dfa has the current state
-	bool has_state(state state);
+	bool hasState(State state);
 	// the data structure that stores the state transition table
 	// where the key to this map is the state identifier
 	// the value to for the specified key, is the transition map for that state
-	std::unordered_map<int, std::shared_ptr<std::unordered_map<std::string, state*>>> state_transition_table;
-	std::vector<state*> states;
+	std::unordered_map<int, std::shared_ptr<std::unordered_map<std::string, State*>>> stateTransitionTable;
+	std::vector<State*> states;
 };
 
 #endif
