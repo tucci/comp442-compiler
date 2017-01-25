@@ -293,7 +293,3 @@ void specification::id_transitions(state* start, state* end) {
 	letter_transitions(start, end);
 	alphanum_transitions(end, end);
 }
-
-
-
-

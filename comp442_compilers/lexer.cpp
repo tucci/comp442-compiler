@@ -68,7 +68,7 @@ token lexer::next_token() {
 				// If we don't have en else state, then there is an error in the source code
 				// and we should handle this
 
-				// TODO: Figure out if we need this bit of code
+				// TODO: write error handling
 				// this is used right now to test states that dont have else transitions
 				// Question: How should we handle the error in the code?
 				// Possible solutions: just move on to the next char?
@@ -77,7 +77,6 @@ token lexer::next_token() {
 			}
 
 		} else {
-			// TODO: figure out a way to handle comments
 			if (!isspace(c) && c != EOF) {
 				// if this is not a whitespace character we can add it to our lexeme
 				should_add_char = true;
@@ -168,6 +167,7 @@ token lexer::create_token(std::string lexeme, state state) {
 			t.type = in_token_map->second;
 		}
 	}
+	// Convert num types to their respective int/float tokens
 	if (t.type == token_type::num) {
 		// if it is a float we will change it
 		if (t.lexeme.find('.') != std::string::npos) {
@@ -199,10 +199,6 @@ void lexer::backup_char() {
 	// go back in the source array
 	if (source_index != 0 && source_index < source.size()) {
 		 char c = source.at(source_index);
-		 // Handle case where we backup to the previous line
-		 if (is_new_line(c)) {
-			 current_line--;
-		 }
 		 source_index--;
 	}
 
