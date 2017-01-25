@@ -50,12 +50,15 @@ enum token_type {
 	program_token,	// program keyword
 };
 
+
+// Simple data structure to hold the data about our token
 struct token {
 	// the lexeme for this token
 	std::string lexeme;
-	// the token type for this token.
+	// the token type for this token. This refers to the enum value
 	token_type type;
-	int token_line; // the line in the source file this token can be found
+	// the line in the source file this token can be found
+	int token_line; 
 };
 
 #endif // !TOKEN_H
