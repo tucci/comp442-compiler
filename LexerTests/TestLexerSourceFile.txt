@@ -1,3 +1,7 @@
+/*
+	This source file should not be touched. This is used in all the tests
+	Changing this file would make the tests fail
+*/
 for (int i = 0; i < 10; i = i + 1) {
 	if (i < 10) {
 	/*

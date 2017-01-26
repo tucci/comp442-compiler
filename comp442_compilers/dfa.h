@@ -37,16 +37,23 @@ public:
 	bool addElseTransition(State* fromState, State* toState);
 	// Get the transition state from the fromState identifier using lookupTransition input
 	State* table(int fromState, std::string lookupTransition);
+	// Check to see if the dfa has the current state
+	bool hasState(State state);
+	// Returns the state that this input leads to
+	State* stateFromInput(std::string input);
+	// Check to see if the given input is accepted in our dfa
+	bool acceptsInput(std::string);
+	// Returns the starting state for this dfa
+	State* getStartingState();
 private:
 	// the count for how many states we have
 	int mStateCount;
-	// Check to see if the dfa has the current state
-	bool hasState(State state);
 	// the data structure that stores the state transition table
 	// where the key to this map is the state identifier
 	// the value to for the specified key, is the transition map for that state
 	std::unordered_map<int, std::shared_ptr<std::unordered_map<std::string, State*>>> stateTransitionTable;
 	std::vector<State*> states;
+	State* startingState;
 };
 
 #endif

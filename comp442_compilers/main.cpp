@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 
-	bool writeToFile = true;
+	bool writeToFile = false;
 	ofstream output;
 	ofstream error;
 
@@ -14,7 +14,7 @@ int main() {
 		error.open("errors.txt");
 	}
 
-	Specification spec;
+	Specification spec(true);
 	Lexer lex(&spec);
 	lex.setSource("SourceCode.txt");
 

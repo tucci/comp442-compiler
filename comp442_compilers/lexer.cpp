@@ -159,24 +159,7 @@ Token Lexer::createToken(std::string lexeme, State state) {
 	token.type = state.tokenType;
 	// Check and update token type if needed
 	// To avoid adding more complexity to our dfa, we will change token types depending on their lexeme
-	if (token.type == TokenType::id) {
-		// Check to see if this identifier is in our token map
-		std::unordered_map<std::string, TokenType>::const_iterator inTokenMap = Specification::TOKEN_MAP.find(token.lexeme);
-		// We will change it from an identifier token to it's respective token
-		if (inTokenMap != Specification::TOKEN_MAP.end()) {
-			token.type = inTokenMap->second;
-		}
-	}
-	// Convert num types to their respective int/float tokens
-	if (token.type == TokenType::num) {
-		// if it is a float we will change it
-		if (token.lexeme.find('.') != std::string::npos) {
-			token.type = TokenType::float_token;
-		} else {
-			// if it is an integer we will change it to that
-			token.type = TokenType::int_token;
-		}
-	}
+	Specification::updateTokenType(&token);
 	token.tokenLine = currentLine;
 	return token;
 }

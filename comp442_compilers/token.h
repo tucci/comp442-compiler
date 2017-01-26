@@ -33,7 +33,7 @@ enum TokenType {
 	opensquare,		// [ open square
 	closesquare,	// ] close square
 	semicolon,		// ; semi colon, or end of statement
-	cmt,			// comment
+	cmt,			// comment, these will be stripped off by the lexer. so there will never comment tokens given to the user
 	cmt_line_start,	// special token to indicate we are at the start of a comment used by lexer
 	cmt_multi_start,// special token to indicate we are at the start of a comment used by lexer
 	// Reserved word tokens

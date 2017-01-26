@@ -8,13 +8,16 @@ class Specification {
 public:
 	// Holds all the mappings from lexemes to token types for our language. Does not include ids or number tokens
 	const static std::unordered_map<std::string, TokenType> TOKEN_MAP;
-	Specification();
+	// If use default, it will use the spec provided. if false, the spec will be empty
+	Specification(bool useDefault);
 	~Specification();
 	// Returns the dfa for this specification
 	std::shared_ptr<Dfa> getSpec();
-private:
-	// The dfa/state transition table for this spec
-	std::shared_ptr<Dfa> spec;
+	// Returns the token type for the given input
+	// Used in testing
+	TokenType getTokenTypeForInput(std::string input);
+	// Updates the token type depending on the lexeme
+	static void updateTokenType(Token* token);
 	// Create white space transitions from the from the start state to the end state
 	void whitespaceTransitions(State* start, State* end);
 	// Create non zero transitions regex="[0-9]" from the start state to the end state
@@ -41,6 +44,9 @@ private:
 	void alphanumTransitions(State* start, State* end);
 	//Create id transitions regex="letter alphanum*" from the start state to the end state
 	void idTransitions(State* start, State* end);
+private:
+	// The dfa/state transition table for this spec
+	std::shared_ptr<Dfa> spec;
 };
 
 #endif // !SPECIFICATION_H

@@ -4,6 +4,7 @@ const std::string Dfa::ELSE_TRANSITION = "ELSE_TRANSITION";
 
 Dfa::Dfa() {
 	mStateCount = 0;
+	startingState = NULL;
 }
 
 Dfa::~Dfa() {
@@ -16,11 +17,19 @@ Dfa::~Dfa() {
 }
 
 State* Dfa::createStartState() {
-	// create as it were a normal state
-	State* startState = createState(false);
+	if (startingState == NULL) {
+		// This is the first time creating the start state
+		startingState = createState(false);
+	} else {
+		// Set the old starting state to false
+		startingState->isStartState = false;
+		// We are creating another starting state
+		startingState = createState(false);
+	}	
+
 	// set this state to a start state
-	startState->isStartState = true;
-	return startState;
+	startingState->isStartState = true;
+	return startingState;
 }
 
 State* Dfa::createState(bool isFinalState, bool needsToBacktrack, TokenType type) {
@@ -62,5 +71,50 @@ State* Dfa::table(int fromState, std::string lookupTransition) {
 	}
 	// if we did find something, then return that transition state
 	return found->second;
+}
+
+State* Dfa::stateFromInput(std::string input) {
+	bool isAccepted = false;
+	int str_index = 0;
+	std::string lookupTransition;
+	State* currentState = startingState;
+
+
+	while (!isAccepted && str_index <= input.length()) {
+		lookupTransition = input.substr(str_index, 1);
+		State* nextState = table(currentState->stateIdentifier, lookupTransition);
+
+		if (nextState != NULL) {
+			// Move to next state
+			currentState = nextState;
+		} else {
+			// Check if we have an else state
+			State* elseState = table(currentState->stateIdentifier, ELSE_TRANSITION);
+			if (elseState == NULL) {
+				// No else state. dfa doenst accept this input
+				return NULL;
+			}
+			// Move to else state
+			currentState = elseState;
+		}
+
+		if (currentState != NULL) {
+			str_index++;
+			if (currentState->isFinalState && str_index >= input.length()) {
+				return currentState;
+			}
+		} else {
+			return NULL;
+		}
+	}
+	return NULL;
+}
+
+bool Dfa::acceptsInput(std::string testString) {
+	return stateFromInput(testString) != NULL;
+}
+
+State* Dfa::getStartingState() {
+	return startingState;
 }
 

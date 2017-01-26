@@ -17,13 +17,13 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="SourceCode.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="output.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </Text>
     <Text Include="errors.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="output.txt">
+      <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
