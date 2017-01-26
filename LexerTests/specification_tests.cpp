@@ -86,10 +86,11 @@ public:
 		Assert::IsFalse(tokenizer->acceptsInput("01.30"));
 		// Should accept x.0
 		Assert::IsTrue(tokenizer->acceptsInput("1.0"));
-		// Should not accept 0.0
-		Assert::IsFalse(tokenizer->acceptsInput("0.0"));
-		// Should not accept 0.x, The spec doesnt allow for this. but it is considered a fraction
-		Assert::IsFalse(tokenizer->acceptsInput("0.3"));
+		// Should also accept 0.0
+		Assert::IsTrue(tokenizer->acceptsInput("0.0"));
+		Assert::IsTrue(tokenizer->acceptsInput("0.3"));
+		Assert::IsFalse(tokenizer->acceptsInput("0.30"));
+
 		Assert::IsTrue(tokenizer->acceptsInput("1.1"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.9"));
 		Assert::IsTrue(tokenizer->acceptsInput("4.0009"));
@@ -175,6 +176,8 @@ public:
 		State* end3 = tokenizer->createState(true);
 		spec.numTransitions(start, end, end2, end3);
 
+
+		Assert::IsTrue(tokenizer->acceptsInput("0"));
 		// Floats
 		// Should not end with zero
 		Assert::IsFalse(tokenizer->acceptsInput("1.30"));
@@ -182,11 +185,10 @@ public:
 		Assert::IsFalse(tokenizer->acceptsInput("01.30"));
 		// Should accept x.0
 		Assert::IsTrue(tokenizer->acceptsInput("1.0"));
-
-		// Should not accept 0.0
+		// Should accept 0.0
 		Assert::IsTrue(tokenizer->acceptsInput("0.0"));
 
-		// Should not accept 0.x, The spec doesnt allow for this. but it is considered a fraction
+		// Should accept 0.x
 		Assert::IsTrue(tokenizer->acceptsInput("0.3"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.1"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.9"));
@@ -197,7 +199,6 @@ public:
 		Assert::IsTrue(tokenizer->acceptsInput("12.3"));
 
 		Assert::IsFalse(tokenizer->acceptsInput("0434343.12323232"));
-		Assert::IsTrue(tokenizer->acceptsInput("0"));
 		Assert::IsFalse(tokenizer->acceptsInput("000"));
 		Assert::IsFalse(tokenizer->acceptsInput("000.000"));
 

@@ -281,6 +281,7 @@ void Specification::floatTransitions(State* start, State* end) {
 	State* intermediate2 = spec->createState();
 	integerTransitions(start, intermediate1, intermediate2);
 	fractionTransitions(intermediate1, end);
+	fractionTransitions(intermediate2, end);
 }
 
 void Specification::fractionTransitions(State* start, State* end) {

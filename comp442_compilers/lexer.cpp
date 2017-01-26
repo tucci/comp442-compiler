@@ -32,10 +32,8 @@ Token Lexer::nextToken() {
 		// get the next char in the input
 		char c = nextChar();
 		std::string lookupStr;
-		// TODO: this may be confusing on first glance. Give a comment to tell the teacher why this is here
-		// this is used to fix the problem with single line comments
-		// However this might break other things
 		if (c == EOF) {
+			// Convrt EOF = -1, to its string
 			lookupStr = std::to_string(c);
 		} else {
 			lookupStr = std::string(1, c);
