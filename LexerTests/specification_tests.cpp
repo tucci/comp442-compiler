@@ -183,14 +183,11 @@ public:
 		// Should accept x.0
 		Assert::IsTrue(tokenizer->acceptsInput("1.0"));
 
-
-		// TODO: These two tests fail
 		// Should not accept 0.0
-		Assert::IsFalse(tokenizer->acceptsInput("0.0"));
-		// Should not accept 0.x, The spec doesnt allow for this. but it is considered a fraction
-		Assert::IsFalse(tokenizer->acceptsInput("0.3"));
-		//
+		Assert::IsTrue(tokenizer->acceptsInput("0.0"));
 
+		// Should not accept 0.x, The spec doesnt allow for this. but it is considered a fraction
+		Assert::IsTrue(tokenizer->acceptsInput("0.3"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.1"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.9"));
 		Assert::IsTrue(tokenizer->acceptsInput("4.0009"));

@@ -111,7 +111,8 @@ State* Dfa::stateFromInput(std::string input) {
 }
 
 bool Dfa::acceptsInput(std::string testString) {
-	return stateFromInput(testString) != NULL;
+	State* state = stateFromInput(testString);
+	return state != NULL && state->tokenType != TokenType::error_token;
 }
 
 State* Dfa::getStartingState() {
