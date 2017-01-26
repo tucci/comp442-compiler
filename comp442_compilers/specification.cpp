@@ -39,6 +39,48 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "program", TokenType::program_token }
 };
 
+const std::unordered_map<TokenType, std::string> Specification::TOKEN_PRINT_MAP = {
+	{ TokenType::non_token, "non_token" },
+	{ TokenType::error_token, "error_token" },
+	{ TokenType::id, "id" },
+	{ TokenType::int_value, "int_value" },
+	{ TokenType::float_value, "float_value" },
+	{ TokenType::and, "and"},
+	{ TokenType:: or, "or" },
+	{ TokenType::not, "not" },
+	{ TokenType::dot, "dot" },
+	{ TokenType::comma, "comma" },
+	{ TokenType::lt, "lt" },
+	{ TokenType::lesseq, "lesseq" },
+	{ TokenType::noteq, "noteq" },
+	{ TokenType::gt, "gt" },
+	{ TokenType::greateq, "greateq" },
+	{ TokenType::assgn, "assgn" },
+	{ TokenType::comparison, "comparison" },
+	{ TokenType::adddop, "addop" },
+	{ TokenType::subtractop, "subtractop" },
+	{ TokenType::multop, "multop"},
+	{ TokenType::divop, "divop" },
+	{ TokenType::openpar, "openpar" },
+	{ TokenType::closepar, "closepar"},
+	{ TokenType::openbrace, "openbrace" },
+	{ TokenType::closebrace, "closebrace" },
+	{ TokenType::opensquare, "opensquare" },
+	{ TokenType::closesquare, "closesquare" },
+	{ TokenType::semicolon, "semicolon" },
+	{ TokenType::if_token, "if_token" },
+	{ TokenType::then_token, "then_token" },
+	{ TokenType::else_token, "else_token" },
+	{ TokenType::for_token, "for_token"  },
+	{ TokenType::class_token, "class_token" },
+	{ TokenType::int_token, "int_token" },
+	{ TokenType::float_token, "float_token" },
+	{ TokenType::get_token, "get_token" },
+	{ TokenType::put_token, "put_token" },
+	{ TokenType::return_token, "return_token" },
+	{ TokenType::program_token, "program_token" }
+};
+
 Specification::Specification(bool useDefault) {
 	// Here we create the lanugage elements and specs into the dfa
 	// Create empty dfa
@@ -230,10 +272,10 @@ void Specification::updateTokenType(Token* token) {
 	if (token->type == TokenType::num) {
 		// if it is a float we will change it
 		if (token->lexeme.find('.') != std::string::npos) {
-			token->type = TokenType::float_token;
+			token->type = TokenType::float_value;
 		} else {
 			// if it is an integer we will change it to that
-			token->type = TokenType::int_token;
+			token->type = TokenType::int_value;
 		}
 	}
 }

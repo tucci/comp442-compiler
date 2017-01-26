@@ -6,10 +6,11 @@ enum TokenType {
 	non_token,		// this means this state is an intermediate state
 					// special token to tell the lexer that this is not a token and should carry on
 	error_token,	// error token, specifiying that there was no token found
-
 	// Tokens part of our language
 	id,				// identifier token
 	num,			// Number token
+	int_value,		// integer token that holds values. Not the int keyword
+	float_value,	// float token that holds values. Not the float keyword
 	and,			// logical and operator
 	or,				// logical or operator
 	not,			// logical not operator

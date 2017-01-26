@@ -14,7 +14,6 @@
 // TODO: give picture of dfa
 // TODO: change current readme to a readme on how to compile the code
 // TODO: create instructions and documenation. this includes lexicial errors and how it recovers
-// TODO: need a fraction token. numbers such as 0.3 will never get accepted
 // TODO: see if u need targetver.h
 #include "targetver.h"
 

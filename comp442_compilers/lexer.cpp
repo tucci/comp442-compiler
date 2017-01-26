@@ -102,7 +102,7 @@ Token Lexer::nextToken() {
 			// Create the the token from this state
 			token = createToken(lexeme, currentState);
 			tokenCreated = true;
-			if (currentState.needsToBacktrack) {
+			if (currentState.needsToBacktrack && c != EOF) {
 				backupChar();
 			}
 		}
@@ -147,7 +147,7 @@ bool Lexer::setSource(std::string pathToFile) {
 
 bool Lexer::hasMoreTokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return !source.empty() && sourceIndex < source.size() - 1;
+	return !source.empty() && sourceIndex <= source.size() - 1;
 }
 
 Token Lexer::createToken(std::string lexeme, State state) {
@@ -179,8 +179,7 @@ char Lexer::nextChar() {
 
 void Lexer::backupChar() {
 	// go back in the source array
-	if (sourceIndex != 0 && sourceIndex < source.size()) {
-		 char c = source.at(sourceIndex);
+	if (sourceIndex != 0) {
 		 sourceIndex--;
 	}
 
