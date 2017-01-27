@@ -23,7 +23,7 @@ Token Lexer::nextToken() {
 	// the lexeme for the token we are creating
 	std::string lexeme;
 	// create init state at state 1
-	State currentState = { 1 };
+	State currentState = *tokenizer->getStartingState();
 	// loop until we have created a token
 	do {
 		// We should add chars to tokens such as id's or numbers
@@ -64,15 +64,24 @@ Token Lexer::nextToken() {
 					}
 				}
 			} else {
-				// If we don't have en else state, then there is an error in the source code
-				// and we should handle this
-
 				// TODO: write error handling
-				// this is used right now to test states that dont have else transitions
-				// Question: How should we handle the error in the code?
-				// Possible solutions: just move on to the next char?
-				// Possible solutions: create an error token and give line number?
-				std::cout << "error";
+				// If we don't have en else state, then there is an error in the source code and we should handle this
+				ErrorType errorType;
+				
+				// Check to see if we are in the start state. If there is an error in the start state
+				// Then it means there was no symbol that was found. Meaning this is an unknown symbol
+				if (currentState.isStartState) {
+					lexeme = lookupStr;
+					errorType = error_unkown_symbol;
+				}
+				// Check to see if this is a float errors
+				else if (lexeme.at(lexeme.length() - 1) == '.') {
+					errorType = error_after_float_period;
+				}
+				
+				handleError(&token, lexeme, errorType);
+
+				return token;
 			}
 
 		} else {
@@ -187,4 +196,38 @@ void Lexer::backupChar() {
 
 bool Lexer::isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
+}
+
+
+
+void Lexer::handleError(Token* token, std::string lexeme, ErrorType errorType) {
+
+	switch (errorType) {
+		case error_unkown_symbol: {
+			// Create the error token
+			token->lexeme = lexeme;
+			token->tokenLine = currentLine;
+			token->type = TokenType::error_token;
+			token->error = TokenError{"Unknown symbol", ErrorType::error_unkown_symbol};
+			break;
+		}
+		case error_after_float_period: {
+
+			// Remove the last char in the lexeme. in this case it is a .
+			lexeme.pop_back();
+			// Backup so that next time we call nextToken, it will start from the .
+			backupChar();
+			backupChar();
+			// Create the current integer token
+			token->lexeme = lexeme;
+			token->tokenLine = currentLine;
+			token->type = TokenType::int_token;
+			// Do not set an error token here. We recover nicely and move on
+			break;
+		}
+		default: {
+			break;
+		}
+	}
+
 }

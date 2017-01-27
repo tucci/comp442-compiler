@@ -7,10 +7,7 @@
 #define STDAFX_H
 
 
-// TODO: Figure out if they want a vs project or what
-// TODO: tabs at the end of files create new tokens
-// TODO: write documentation and what in the spec has changed
-// TODO: change current readme to a readme on how to compile the code
+// TODO: tabs at the end of files create new tokensode
 // TODO: create instructions and documenation. this includes lexicial errors and how it recovers
 // TODO: see if u need targetver.h
 #include "targetver.h"

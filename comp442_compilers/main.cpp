@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 
-	bool writeToFile = true;
+	bool writeToFile = false;
 	ofstream output;
 	ofstream error;
 
@@ -20,19 +20,16 @@ int main() {
 
 	while (lex.hasMoreTokens()) {
 		Token token = lex.nextToken();
-		std::string tokenTypeString = Specification::TOKEN_PRINT_MAP.at(token.type);
-		string tokenOutput = "lexeme: " + token.lexeme +  "\t\ttype: " + tokenTypeString + "\t\tline number: " + to_string(token.tokenLine) + "\n";
-
+	
 		if (writeToFile) {
 			// write to output/error file
 			if (token.type == TokenType::error_token) {
-				error << tokenOutput;
+				error << token;
 			} else {
-				output << tokenOutput;
+				output << token;
 			}
-		} else {
-			// Write to console
-			cout << tokenOutput;
+		} else {			
+			cout << token;
 		}
 	}
 

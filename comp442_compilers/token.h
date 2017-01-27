@@ -51,6 +51,18 @@ enum TokenType {
 	program_token,	// program keyword
 };
 
+// A simple list of types of errors that can occur while scanning the source code
+enum ErrorType {
+	error_unkown_symbol,
+	error_after_float_period
+};
+
+// A simple data structure holding the error message and type
+struct TokenError {
+	std::string errorMessage;
+	ErrorType type;
+};
+
 
 // Simple data structure to hold the data about our token
 struct Token {
@@ -59,7 +71,11 @@ struct Token {
 	// the token type for this token. This refers to the enum value
 	TokenType type;
 	// the line in the source file this token can be found
-	int tokenLine; 
+	int tokenLine;
+	// The error data structure in case this token is an error token
+	TokenError error;
+	// Override output for a token
+	friend std::ostream& operator << (std::ostream& o, Token& token);
 };
 
 #endif // !TOKEN_H

@@ -1,6 +1,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+
 class Lexer {
 public:
 	// Create the lexer with the language specification for this lexer to use
@@ -35,6 +36,8 @@ private:
 	void backupChar();
 	// Check if the character is a newline character
 	bool isNewLine(char);
+	// 
+	void handleError(Token* token, std::string lexeme, ErrorType errorType);
 };
 
 #endif

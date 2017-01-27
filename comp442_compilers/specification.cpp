@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 // A set of all the operartors for the language
 const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "and", TokenType::and },
@@ -92,10 +91,10 @@ Specification::Specification(bool useDefault) {
 
 		State* start = spec->createStartState();
 
-		// Do not make the error state be a backup state
-		State* error = spec->createState(true, false, TokenType::error_token);
-		// Error state
-		spec->addElseTransition(start, error);
+		//// Do not make the error state be a backup state
+		//State* error = spec->createState(true, false, TokenType::error_token);
+		//// Error state
+		//spec->addElseTransition(start, error);
 
 		// Add white space transitions
 		whitespaceTransitions(start, start);
