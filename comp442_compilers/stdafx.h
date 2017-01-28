@@ -5,10 +5,7 @@
 
 #ifndef STDAFX_H
 #define STDAFX_H
-
-
-// TODO: tabs at the end of files create new tokensode
-// TODO: create instructions and documenation. this includes lexicial errors and how it recovers
+// TODO: write tests
 // TODO: see if u need targetver.h
 #include "targetver.h"
 
