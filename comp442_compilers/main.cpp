@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 
-	bool writeToFile = false;
+	bool writeToFile = true;
 	ofstream output;
 	ofstream error;
 
@@ -37,6 +37,7 @@ int main() {
 	if (writeToFile) {
 		output.close();
 		error.close();
+		std::cout << "Successfully Wrote to output.txt and errors.txt" << std::endl;
 	}
 	
 

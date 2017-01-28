@@ -8,7 +8,13 @@ Lexer::~Lexer() {
 }
 
 Token Lexer::nextToken() {
+	Token token = lookaheadToken;
+	lookaheadToken = getLookaheadToken();
+	return token;
+}
 
+Token Lexer::getLookaheadToken() {
+	
 	// flag to see if we should add the transition char to the current lexeme we are building
 	bool shouldAddChar;
 	// flag to see if we are currently in a multi comment
@@ -51,7 +57,11 @@ Token Lexer::nextToken() {
 			if (elseState != NULL) {
 				// Move to the else state
 				currentState = *elseState;
-
+				if (c == EOF) {
+					Token token;
+					token.type = TokenType::non_token;
+					return token;
+				}
 				if (currentState.tokenType == TokenType::error_token) {				
 					// there is an error in the source code and we should handle this
 					handleError(&token, lexeme, &currentState, lookupStr);
@@ -111,7 +121,7 @@ Token Lexer::nextToken() {
 
 	// Since we dont want to return comment tokens, we'll return the next token
 	if (token.type == TokenType::cmt) {
-		return nextToken();
+		return getLookaheadToken();
 	}
 	return token;
 }
@@ -135,6 +145,7 @@ bool Lexer::setSource(std::string pathToFile) {
 		istream.close();
 		// lines start at index 1 and not 0 in files
 		currentLine = 1;
+		nextToken();
 		readSuccess = true;// everything was read properly
 	}
 	istream.close(); // close the stream
@@ -143,7 +154,7 @@ bool Lexer::setSource(std::string pathToFile) {
 
 bool Lexer::hasMoreTokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return !source.empty() && sourceIndex <= source.size() - 1;
+	return lookaheadToken.type != TokenType::non_token;
 }
 
 Token Lexer::createToken(std::string lexeme, State state) {

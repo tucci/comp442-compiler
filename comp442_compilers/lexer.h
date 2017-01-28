@@ -16,7 +16,9 @@ public:
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<Dfa> tokenizer;
-	
+
+	// The token that is returned back from nextToken
+	Token lookaheadToken;
 	// the current line of the source file we are at
 	int currentLine;
 	// The file path to the current source file
@@ -28,6 +30,8 @@ private:
 	// the current index of the source buffer we are indexing into
 	int sourceIndex;
 
+	// This does all the actual work of getting the token
+	Token getLookaheadToken();
 	// Returns the token that is evaluated from this state
 	Token createToken(std::string lexeme, State state);
 	// Returns the next char in the stream for the tokenizer to read from
