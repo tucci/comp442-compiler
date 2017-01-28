@@ -8,6 +8,34 @@ Lexer::~Lexer() {
 }
 
 Token Lexer::nextToken() {
+	
+	Token currentToken;
+	// Next token works by always keeping a reference to a lookahead token
+	// this is done so that when driver code/parser keeps calling next_token()
+	// it doesn't get a null token at the end
+	// Keeping a lookahead token ensures that hasMoreTokens() will always supply it with actual tokens
+	// and spit out a nullable token at the end of stream indicating that this is the last token
+
+	// nextToken() basically sets the current token to return to the lookahed token we alread had
+	// then it finds the lookahead token and caches it for the next call to nextToken()
+	// then once we found the lookahead token, we return the current token
+
+	// if this is not the first call to next_token
+	// we should set the current token to the lookahead token we already found last time we called next_token
+	if (lookaheadToken.type != TokenType::non_token) {
+		// set the current token to the lookahead token
+		// we found previously
+		currentToken = lookaheadToken;
+	} else {
+		// this is the first call to next_token()
+		// We need to set this to a non token type
+		// because the first time we call next_token()
+		// we need to identidy that we don't have a lookahead token
+		currentToken = { "", TokenType::non_token };
+	}
+
+	// the token to return
+	Token token;
 
 	// flag to see if we should add the transition char to the current lexeme we are building
 	bool shouldAddChar;
@@ -18,8 +46,6 @@ Token Lexer::nextToken() {
 	// How many multi line comments we have. if cmt nest cout == 0, then we've matched any inner nested comments
 	int cmtNestCount = 0;
 
-	// the token to return
-	Token token;
 	// the lexeme for the token we are creating
 	std::string lexeme;
 	// create init state at state 1
@@ -51,6 +77,11 @@ Token Lexer::nextToken() {
 			if (elseState != NULL) {
 				// Move to the else state
 				currentState = *elseState;
+				// Handle file ending
+				if (c == EOF) {
+					outOfTokens = true;
+					return currentToken;
+				}
 
 				if (currentState.tokenType == TokenType::error_token) {				
 					// there is an error in the source code and we should handle this
@@ -113,7 +144,20 @@ Token Lexer::nextToken() {
 	if (token.type == TokenType::cmt) {
 		return nextToken();
 	}
-	return token;
+
+
+	
+	// Set the lookahead token to the one we just found
+	lookaheadToken = token;
+	
+	// If there is no current token
+	// then this means this is the first time we are calling next_token()
+	// which means we have no current token because there doesn't exist a lookahead token
+	// so we will just return the lookahead token
+	if (currentToken.type == TokenType::non_token) {
+		return lookaheadToken;
+	}
+	return currentToken;
 }
 
 bool Lexer::setSource(std::string pathToFile) {
@@ -135,6 +179,7 @@ bool Lexer::setSource(std::string pathToFile) {
 		istream.close();
 		// lines start at index 1 and not 0 in files
 		currentLine = 1;
+		nextToken();
 		readSuccess = true;// everything was read properly
 	}
 	istream.close(); // close the stream
@@ -143,7 +188,7 @@ bool Lexer::setSource(std::string pathToFile) {
 
 bool Lexer::hasMoreTokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return !source.empty() && sourceIndex <= source.size() - 1;
+	return !outOfTokens;
 }
 
 Token Lexer::createToken(std::string lexeme, State state) {

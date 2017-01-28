@@ -1,3 +1,25 @@
+~`!@#$%^&?\|
+0.s
+1.00
+2.0
+3.a
+4.2a
+5.0a
+6.03a
+7.00000000003a
+8.30
+0.a1
+0.1a
+1.00a
+2.0a
+3.003a
+4.10a
+
+
+/*
+	This source file should not be touched. This is used in all the tests
+	Changing this file would make the tests fail
+*/
 for (int i = 0; i < 10; i = i + 1) {
 	if (i < 10) {
 	/*
@@ -80,3 +102,10 @@ program {
 	test[32] = 32;
 	return x + y;
 }
+
+
+
+
+
+// end it here
+/** test **/

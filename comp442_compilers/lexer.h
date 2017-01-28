@@ -16,7 +16,10 @@ public:
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<Dfa> tokenizer;
-	
+	// The lookahead token in the source file
+	Token lookaheadToken;
+	// Whether we are out of tokens
+	bool outOfTokens;
 	// the current line of the source file we are at
 	int currentLine;
 	// The file path to the current source file
