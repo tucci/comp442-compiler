@@ -82,14 +82,20 @@ public:
 
 		// Should not end with zero
 		Assert::IsFalse(tokenizer->acceptsInput("1.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("1.300"));
+		Assert::IsFalse(tokenizer->acceptsInput("1.3000"));
 		// Should not start with zero
-		Assert::IsFalse(tokenizer->acceptsInput("01.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("01.30"));;
+		Assert::IsFalse(tokenizer->acceptsInput("01.300"));;
+		Assert::IsFalse(tokenizer->acceptsInput("01.3000"));
 		// Should accept x.0
 		Assert::IsTrue(tokenizer->acceptsInput("1.0"));
 		// Should also accept 0.0
 		Assert::IsTrue(tokenizer->acceptsInput("0.0"));
 		Assert::IsTrue(tokenizer->acceptsInput("0.3"));
 		Assert::IsFalse(tokenizer->acceptsInput("0.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("0.300"));
+		Assert::IsFalse(tokenizer->acceptsInput("0.3000"));
 
 		Assert::IsTrue(tokenizer->acceptsInput("1.1"));
 		Assert::IsTrue(tokenizer->acceptsInput("1.9"));
@@ -181,12 +187,19 @@ public:
 		// Floats
 		// Should not end with zero
 		Assert::IsFalse(tokenizer->acceptsInput("1.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("1.300"));
+		Assert::IsFalse(tokenizer->acceptsInput("1.3000"));
 		// Should not start with zero
-		Assert::IsFalse(tokenizer->acceptsInput("01.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("01.30"));;
+		Assert::IsFalse(tokenizer->acceptsInput("01.300"));;
+		Assert::IsFalse(tokenizer->acceptsInput("01.3000"));
 		// Should accept x.0
 		Assert::IsTrue(tokenizer->acceptsInput("1.0"));
-		// Should accept 0.0
+		// Should also accept 0.0
 		Assert::IsTrue(tokenizer->acceptsInput("0.0"));
+		Assert::IsTrue(tokenizer->acceptsInput("0.3"));
+		Assert::IsFalse(tokenizer->acceptsInput("0.30"));
+		Assert::IsFalse(tokenizer->acceptsInput("0.300"));
 
 		// Should accept 0.x
 		Assert::IsTrue(tokenizer->acceptsInput("0.3"));

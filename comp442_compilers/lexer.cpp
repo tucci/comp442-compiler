@@ -51,6 +51,12 @@ Token Lexer::nextToken() {
 			if (elseState != NULL) {
 				// Move to the else state
 				currentState = *elseState;
+
+				if (currentState.tokenType == TokenType::error_token) {				
+					// there is an error in the source code and we should handle this
+					handleError(&token, lexeme, &currentState, lookupStr);
+					return token;
+				}
 				// Handle nested comments openings
 				if (inMultiComment) {
 					// lookahead for comment open
@@ -63,25 +69,6 @@ Token Lexer::nextToken() {
 						inMultiComment = true;
 					}
 				}
-			} else {
-				// TODO: write error handling
-				// If we don't have en else state, then there is an error in the source code and we should handle this
-				ErrorType errorType;
-				
-				// Check to see if we are in the start state. If there is an error in the start state
-				// Then it means there was no symbol that was found. Meaning this is an unknown symbol
-				if (currentState.isStartState) {
-					lexeme = lookupStr;
-					errorType = error_unkown_symbol;
-				}
-				// Check to see if this is a float errors
-				else if (lexeme.at(lexeme.length() - 1) == '.') {
-					errorType = error_after_float_period;
-				}
-				
-				handleError(&token, lexeme, errorType);
-
-				return token;
 			}
 
 		} else {
@@ -200,19 +187,18 @@ bool Lexer::isNewLine(char c) {
 
 
 
-void Lexer::handleError(Token* token, std::string lexeme, ErrorType errorType) {
+void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 
-	switch (errorType) {
-		case error_unkown_symbol: {
-			// Create the error token
-			token->lexeme = lexeme;
+	switch (errorState->errorType) {
+		case unkown_symbol: {
+			// Create the error token. This is a not symbol in our alphabet
+			token->lexeme = lookup;
 			token->tokenLine = currentLine;
 			token->type = TokenType::error_token;
-			token->error = TokenError{"Unknown symbol", ErrorType::error_unkown_symbol};
+			token->error = TokenError{"Unknown symbol", ErrorType::unkown_symbol};
 			break;
 		}
-		case error_after_float_period: {
-
+		case incomplete_float: {
 			// Remove the last char in the lexeme. in this case it is a .
 			lexeme.pop_back();
 			// Backup so that next time we call nextToken, it will start from the .
@@ -222,7 +208,21 @@ void Lexer::handleError(Token* token, std::string lexeme, ErrorType errorType) {
 			token->lexeme = lexeme;
 			token->tokenLine = currentLine;
 			token->type = TokenType::int_token;
-			// Do not set an error token here. We recover nicely and move on
+			// Recover from this error
+			// We are not going to tokens such as "3.a" as an error because we don't know anything about the language
+			// Instead we are going to turn it into 3 tokens such as 3	.	a. Perhaphs the language has number literal functions
+			break;
+		}
+		case invalid_float: {
+				// Float that ends with 0 error. Does not follow the specification
+				if (lookup != std::to_string(EOF)) {
+					// Backup so that next time we call nextToken the next token will be recovered
+					backupChar();
+				}
+				token->lexeme = lexeme;
+				token->tokenLine = currentLine;
+				token->type = TokenType::error_token;
+				token->error = TokenError{ "Invalid float", ErrorType::invalid_float};
 			break;
 		}
 		default: {

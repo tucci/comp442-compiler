@@ -91,10 +91,11 @@ Specification::Specification(bool useDefault) {
 
 		State* start = spec->createStartState();
 
-		//// Do not make the error state be a backup state
-		//State* error = spec->createState(true, false, TokenType::error_token);
-		//// Error state
-		//spec->addElseTransition(start, error);
+		// Do not make the error state be a backup state
+		State* error = spec->createState(true, false, TokenType::error_token);
+		error->errorType = ErrorType::unkown_symbol;
+		// Error state
+		spec->addElseTransition(start, error);
 
 		// Add white space transitions
 		whitespaceTransitions(start, start);
@@ -114,6 +115,19 @@ Specification::Specification(bool useDefault) {
 		spec->addElseTransition(numIntermediate1, numState);
 		spec->addElseTransition(numIntermediate2, numState);
 		spec->addElseTransition(numIntermediate3, numState);
+		// Quick hack to get internal intermediate state for the fractions
+		State* fractionIntermediate1 = spec->table(numIntermediate1->stateIdentifier, ".");
+		State* fractionIntermediate2 = spec->table(numIntermediate2->stateIdentifier, ".");
+		State* fractionIntermediate3 = spec->table(spec->table(fractionIntermediate2->stateIdentifier, "0")->stateIdentifier, "0");
+		State* errorStateForFloat = spec->createState(true, false, TokenType::error_token);
+		State* errorStateForFloat2 = spec->createState(true, false, TokenType::error_token);
+		errorStateForFloat->errorType = ErrorType::incomplete_float;
+		errorStateForFloat2->errorType = ErrorType::invalid_float;
+		// Attach else error states
+		spec->addElseTransition(fractionIntermediate1, errorStateForFloat);
+		spec->addElseTransition(fractionIntermediate2, errorStateForFloat);
+		spec->addElseTransition(fractionIntermediate3, errorStateForFloat2);
+		// End hack
 
 		// Operators
 

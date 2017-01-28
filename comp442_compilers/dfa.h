@@ -19,6 +19,8 @@ struct State {
 	bool needsToBacktrack;
 	// the token type for the lexeme it accepts
 	TokenType tokenType;
+	// Used for when this state is an error state
+	ErrorType errorType;
 };
 
 class Dfa {

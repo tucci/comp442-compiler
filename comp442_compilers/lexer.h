@@ -36,8 +36,8 @@ private:
 	void backupChar();
 	// Check if the character is a newline character
 	bool isNewLine(char);
-	// 
-	void handleError(Token* token, std::string lexeme, ErrorType errorType);
+	// Handle the error for this state
+	void handleError(Token* token, std::string lexeme, State* errorType, std::string lookup);
 };
 
 #endif
