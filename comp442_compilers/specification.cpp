@@ -14,7 +14,7 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ ">=", TokenType::greateq },
 	{ "=", TokenType::assgn },
 	{ "==", TokenType::comparison},
-	{ "+", TokenType::adddop },
+	{ "+", TokenType::addop },
 	{ "-", TokenType::subtractop },
 	{ "*", TokenType::multop },
 	{ "/", TokenType::divop },
@@ -56,7 +56,7 @@ const std::unordered_map<TokenType, std::string> Specification::TOKEN_PRINT_MAP 
 	{ TokenType::greateq, "greateq" },
 	{ TokenType::assgn, "assgn" },
 	{ TokenType::comparison, "comparison" },
-	{ TokenType::adddop, "addop" },
+	{ TokenType::addop, "addop" },
 	{ TokenType::subtractop, "subtractop" },
 	{ TokenType::multop, "multop"},
 	{ TokenType::divop, "divop" },
@@ -180,7 +180,7 @@ Specification::Specification(bool useDefault) {
 		// + addition operator token
 		State* addIntermediate = spec->createState();
 		spec->addTransition(start, "+", addIntermediate);
-		State* addState = spec->createState(true, true, TokenType::adddop);
+		State* addState = spec->createState(true, true, TokenType::addop);
 		spec->addElseTransition(addIntermediate, addState);
 		// - subrtaction operator token
 		State* subtractIntermediate = spec->createState();
@@ -199,7 +199,7 @@ Specification::Specification(bool useDefault) {
 		spec->addElseTransition(divIntermediate, divState);
 
 		// Comments
-		// // and /**/ tokens
+		// multi line comment tokens
 		State* multiCmtIntermediate1 = spec->createState(false, false, TokenType::cmt_multi_start);
 		spec->addTransition(divIntermediate, "*", multiCmtIntermediate1);
 		spec->addElseTransition(multiCmtIntermediate1, multiCmtIntermediate1);
@@ -209,6 +209,11 @@ Specification::Specification(bool useDefault) {
 		spec->addTransition(multiCmtIntermediate2, "*", multiCmtIntermediate2);
 		State* multiCmt = spec->createState(true, false, TokenType::cmt);
 		spec->addTransition(multiCmtIntermediate2, "/", multiCmt);
+		// Comments that dont close error
+		State* multicmtNoCloseError = spec->createState(false, false, TokenType::error_token);
+		multicmtNoCloseError->errorType = ErrorType::mulitcomment_error;
+		spec->addTransition(multiCmtIntermediate1, std::to_string(EOF), multicmtNoCloseError);
+		spec->addTransition(multiCmtIntermediate2, std::to_string(EOF), multicmtNoCloseError);
 
 		// Single line comment
 		State* lineCmtIntermediate = spec->createState(false, false, TokenType::cmt_line_start);

@@ -23,7 +23,7 @@ enum TokenType {
 	greateq,		// >= greater than or equal operator
 	assgn,			// = assignment operator
 	comparison,		// == comparison operator
-	adddop,			// + addition operator
+	addop,			// + addition operator
 	subtractop,		// - subtraction operator
 	multop,			// * multiplication operator
 	divop,			// / division operator
@@ -56,6 +56,7 @@ enum ErrorType {
 	unknown_symbol, // Error for symbols our tokenizer doesnt understand
 	invalid_float, // Error for when floats don't follow the specification. I.e 1.00
 	incomplete_float, // Error for floats that are in form 3.a. This is not an error, but it is a flag to tell the lexer to recover from this
+	mulitcomment_error
 };
 
 // A simple data structure holding the error message and type

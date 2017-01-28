@@ -23,6 +23,8 @@ Token Lexer::getLookaheadToken() {
 	bool tokenCreated = false;
 	// How many multi line comments we have. if cmt nest cout == 0, then we've matched any inner nested comments
 	int cmtNestCount = 0;
+	// On which line the mulit line comment is on
+	int multilineCmtLineStart = -1;
 
 	// the token to return
 	Token token;
@@ -76,6 +78,7 @@ Token Lexer::getLookaheadToken() {
 					} 
 				} else {
 					if (currentState.tokenType == TokenType::cmt_multi_start && !inMultiComment) {
+						multilineCmtLineStart = currentLine;
 						inMultiComment = true;
 					}
 				}
@@ -95,6 +98,12 @@ Token Lexer::getLookaheadToken() {
 				// get the state normally for the current state and lookup
 				currentState = *stateLookup;
 			}
+			if (currentState.errorType == ErrorType::mulitcomment_error) {
+				token.tokenLine = multilineCmtLineStart;
+				handleError(&token, lexeme, &currentState, lookupStr);
+				return token;
+			}
+			
 			
 		}
 
@@ -234,6 +243,14 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 				token->tokenLine = currentLine;
 				token->type = TokenType::error_token;
 				token->error = TokenError{ "Invalid float", ErrorType::invalid_float};
+			break;
+		}
+		case mulitcomment_error: {
+			if (token->tokenLine == -1) {
+				token->tokenLine = currentLine;
+			}
+			token->type = TokenType::error_token;
+			token->error = TokenError{ "Mulit-line comment not closed", ErrorType::mulitcomment_error };
 			break;
 		}
 		default: {
