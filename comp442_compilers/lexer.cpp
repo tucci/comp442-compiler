@@ -59,7 +59,7 @@ Token Lexer::getLookaheadToken() {
 			if (elseState != NULL) {
 				// Move to the else state
 				currentState = *elseState;
-				if (c == EOF) {
+				if (currentState.tokenType == TokenType::error_token && c == EOF) {
 					Token token;
 					token.type = TokenType::non_token;
 					return token;

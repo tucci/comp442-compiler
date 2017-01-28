@@ -1,86 +1,58 @@
-/*
-	This source file should not be touched. This is used in all the tests
-	Changing this file would make the tests fail
-*/
-for (int i = 0; i < 10; i = i + 1) {
-	if (i < 10) {
-	/*
-	this is a multi line
-	comment and i want to
-	// does this work as well
-	/* /* */ */
-	test to see if this
-	works
-	*/
-	} else {
-	// this is a single line comment
-	//
-	}
-}/*
-	This class is a simple structure for a person
-**/
+// Invalid symbol test
+~`!@#$%^&?\|
 
-class Person {
-		int age;
-		float height;
-
-		Person(int a, float h) {
-			age = a;
-			height = h;
-		}
-
-		int getAge() {
-			return age;
-		}
-
-		int getHeight() {
-			return height;
-		}
+// Float errors and recovery
+0.s
+1.00
+2.0
+3.a
+4.2a
+5.0a
+6.03a
+7.00000000003a
+8.30
+0.a1
+0.1a
+1.00a
+2.0a
+3.003a
+4.10a
 
 
-	};
-
-program {
-	int x = 10;
-	float y = 2.34;
-
-	x = Person(x, y);
-	int x2 = x.getAge();
-	int y2 = x.getHeight();
-
-	int calc;
-	if (x > y) {
-		calc = 1 + 2 - 3 * 4 /  ( 1 / 2 ); // Test comment
-	} else {
-		/** test comment */
-		for (int i = 0; i < 10; i++) {
-			if (x == i) then {
-				put	x;
-			}
-			if (x < 10) then {
-				put y;
-			}
-			if (y > 10) then {
-				put y;
-			} else {
-				if (x + y <> 20) then {
-				
-				}
-			}
-			if (x >= 0 and y <= 10) {
-			
-			}
-			if (x >= 20 or y <= 30) {
-			
-			}
-
-			if (x not 30) {
-			
-			}
-
-		}
-	}
-	//	
-	test[32] = 32;
-	return x + y;
+// Symbol test and Reserved word tests
+==
+<>
+<
+>
+<=
+>=
+;
+,
+.
++
+-
+*
+/
+=
+and and_ andtest
+not not_ nottest
+or or_ ortest
+(
+)
+{
 }
+[
+]
+
+if if_ iftest
+then then_ thentest
+else else_ elsetest
+for for_ fortest
+class class_ classtest
+int int_ inttest
+float float_ floattest
+get get_ gettest
+put put_ puttest
+return return_ returntest
+program program_ programtest
+
