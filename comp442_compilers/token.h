@@ -53,10 +53,9 @@ enum TokenType {
 
 // A simple list of types of errors that can occur while scanning the source code
 enum ErrorType {
-	unkown_symbol, // Error for symbols our tokenizer doesnt understand
+	unknown_symbol, // Error for symbols our tokenizer doesnt understand
 	invalid_float, // Error for when floats don't follow the specification. I.e 1.00
 	incomplete_float, // Error for floats that are in form 3.a. This is not an error, but it is a flag to tell the lexer to recover from this
-	
 };
 
 // A simple data structure holding the error message and type

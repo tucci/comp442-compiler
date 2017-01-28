@@ -190,12 +190,12 @@ bool Lexer::isNewLine(char c) {
 void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 
 	switch (errorState->errorType) {
-		case unkown_symbol: {
+		case unknown_symbol: {
 			// Create the error token. This is a not symbol in our alphabet
 			token->lexeme = lookup;
 			token->tokenLine = currentLine;
 			token->type = TokenType::error_token;
-			token->error = TokenError{"Unknown symbol", ErrorType::unkown_symbol};
+			token->error = TokenError{"Unknown symbol", ErrorType::unknown_symbol};
 			break;
 		}
 		case incomplete_float: {

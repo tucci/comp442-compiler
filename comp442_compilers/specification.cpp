@@ -93,7 +93,7 @@ Specification::Specification(bool useDefault) {
 
 		// Do not make the error state be a backup state
 		State* error = spec->createState(true, false, TokenType::error_token);
-		error->errorType = ErrorType::unkown_symbol;
+		error->errorType = ErrorType::unknown_symbol;
 		// Error state
 		spec->addElseTransition(start, error);
 
