@@ -17,14 +17,8 @@ Token Lexer::getLookaheadToken() {
 	
 	// flag to see if we should add the transition char to the current lexeme we are building
 	bool shouldAddChar;
-	// flag to see if we are currently in a multi comment
-	bool inMultiComment = false;
 	// flag to see if we created the token and should return it to the lexer
 	bool tokenCreated = false;
-	// How many multi line comments we have. if cmt nest cout == 0, then we've matched any inner nested comments
-	int cmtNestCount = 0;
-	// On which line the mulit line comment is on
-	int multilineCmtLineStart = -1;
 
 	// the token to return
 	Token token;
@@ -69,19 +63,6 @@ Token Lexer::getLookaheadToken() {
 					handleError(&token, lexeme, &currentState, lookupStr);
 					return token;
 				}
-				// Handle nested comments openings
-				if (inMultiComment) {
-					// lookahead for comment open
-					if (sourceIndex != source.size() && c == '/' && source.at(sourceIndex) == '*') {
-						// Increment nested comment
-						cmtNestCount++;
-					} 
-				} else {
-					if (currentState.tokenType == TokenType::cmt_multi_start && !inMultiComment) {
-						multilineCmtLineStart = currentLine;
-						inMultiComment = true;
-					}
-				}
 			}
 
 		} else {
@@ -90,21 +71,15 @@ Token Lexer::getLookaheadToken() {
 				shouldAddChar = true;
 			}
 
-			// If we are in a multi comment and have a comment nest
-			// we need to go to it's previous state and not the final state
-			if (inMultiComment && cmtNestCount > 0) {
-				currentState = *tokenizer->table(currentState.stateIdentifier, Dfa::ELSE_TRANSITION);
-			} else {
-				// get the state normally for the current state and lookup
-				currentState = *stateLookup;
+			// get the state normally for the current state and lookup
+			currentState = *stateLookup;
+			if (currentState.tokenType == TokenType::cmt_multi_start) {
+				token.tokenLine = currentLine;
+				handleComment(&token, &currentState);
+				if (currentState.errorType == ErrorType::mulitcomment_error) {
+					return token;
+				}
 			}
-			if (currentState.errorType == ErrorType::mulitcomment_error) {
-				token.tokenLine = multilineCmtLineStart;
-				handleError(&token, lexeme, &currentState, lookupStr);
-				return token;
-			}
-			
-			
 		}
 
 		// Add the char to the lexeme
@@ -113,18 +88,13 @@ Token Lexer::getLookaheadToken() {
 		}
 
 		// If we are the final, then we create the token
-		if (currentState.isFinalState && cmtNestCount == 0) {
+		if (currentState.isFinalState) {
 			// Create the the token from this state
 			token = createToken(lexeme, currentState);
 			tokenCreated = true;
 			if (currentState.needsToBacktrack && c != EOF) {
 				backupChar();
 			}
-		}
-		// lookahead for comment close
-		if (inMultiComment && source.at(sourceIndex - 2) == '*' && c == '/') {
-			// decrement comment nest
-			cmtNestCount--;
 		}
 	} while (!tokenCreated);
 
@@ -258,4 +228,67 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 		}
 	}
 
+}
+
+
+void Lexer::handleComment(Token* token, State* currentState) {
+	std::stack<char> cmtStack;
+	cmtStack.push('/');
+	cmtStack.push('*');
+	char c;
+	std::string lookup;
+	bool inMulitCmt = true;
+	State* state;
+	while(inMulitCmt) {
+		c = nextChar();
+		if (c == EOF) {
+			// Convrt EOF = -1, to its string
+			lookup = std::to_string(c);
+		} else {
+			lookup = std::string(1, c);
+		}
+
+		if (!cmtStack.empty()) {
+			char top = cmtStack.top();
+			if (c == '/') {
+				if (top == '*') {cmtStack.push('/');}
+				else if (top == '/') {cmtStack.pop();}
+			}
+			if (c == '*') {
+				if (top == '*') {
+					if (source.at(sourceIndex - 1) == '*' && source.at(sourceIndex) == '/') {
+						cmtStack.pop();
+					}
+					
+				}
+				else if (top == '/') {cmtStack.push('*');}
+			}
+			
+		} else {
+			inMulitCmt = false;
+		}
+
+
+		state = tokenizer->table(currentState->stateIdentifier, lookup);
+		if (state == NULL) {
+			state = tokenizer->table(currentState->stateIdentifier, Dfa::ELSE_TRANSITION);
+		} else {
+			*currentState = *state;
+			if (currentState->tokenType == TokenType::cmt && cmtStack.empty()) {
+				token->type = TokenType::cmt;
+				inMulitCmt = false;
+				break;
+			}
+			if (currentState->errorType == ErrorType::mulitcomment_error) {
+				handleError(token, "", currentState, "");
+				inMulitCmt = false;
+				break;
+			}
+		}
+	}
+	
+
+
+		
+		
 }

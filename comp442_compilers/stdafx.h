@@ -12,6 +12,7 @@
 // external libs
 #include <string>
 #include <unordered_map>
+#include <stack>
 #include <iostream>
 #include <memory>
 #include <fstream>

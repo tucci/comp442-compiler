@@ -214,6 +214,7 @@ Specification::Specification(bool useDefault) {
 		multicmtNoCloseError->errorType = ErrorType::mulitcomment_error;
 		spec->addTransition(multiCmtIntermediate1, std::to_string(EOF), multicmtNoCloseError);
 		spec->addTransition(multiCmtIntermediate2, std::to_string(EOF), multicmtNoCloseError);
+		spec->addTransition(multiCmt, std::to_string(EOF), multicmtNoCloseError);
 
 		// Single line comment
 		State* lineCmtIntermediate = spec->createState(false, false, TokenType::cmt_line_start);
