@@ -5,8 +5,7 @@
 
 #ifndef STDAFX_H
 #define STDAFX_H
-// TODO: write tests
-// TODO: see if u need targetver.h
+
 #include "targetver.h"
 
 // external libs

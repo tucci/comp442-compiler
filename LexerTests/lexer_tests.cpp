@@ -37,6 +37,7 @@ public:
 		for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
 			Assert::AreNotEqual(static_cast<int>(TokenType::cmt), static_cast<int>(it->type));
 		}
+		Assert::IsTrue(tokens.at(104).error.type == mulitcomment_error);
 	};
 
 

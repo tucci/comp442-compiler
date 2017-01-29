@@ -56,3 +56,26 @@ put put_ puttest
 return return_ returntest
 program program_ programtest
 
+/**/
+/* */
+/*test*/
+/* test */
+/***/
+/****/
+/************/
+/** whdhdhd */
+/* /* */ */
+/* /* /* */ */ */
+/* /* /* fdsfdfd */ */ */
+/*/**/*/
+/*/* */*/
+
+/*/*/
+/*
+/* /*
+/* /* */
+/* /* /* */
+This is inside nested comments
+
+
+
