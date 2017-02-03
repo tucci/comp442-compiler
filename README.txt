@@ -12,3 +12,11 @@ If you use Visual Studio 2012 v120, then
 
 Or follow instructions here
 https://msdn.microsoft.com/en-CA/library/ff770576.aspx
+
+
+To run the tests
+on 32bit machine: Go to Test>Test Settings > Processor Architecture > x86
+on 64bit machine: Go to Test>Test Settings > Processor Architecture > x64
+
+Or follow instructions here
+https://msdn.microsoft.com/en-us/library/ee782531.aspx
