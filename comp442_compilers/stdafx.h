@@ -3,14 +3,24 @@
 // are changed infrequently
 //
 
-#pragma once
+#ifndef STDAFX_H
+#define STDAFX_H
 
 #include "targetver.h"
 
-#include <stdio.h>
+// external libs
+#include <string>
+#include <unordered_map>
+#include <stack>
 #include <iostream>
-#include <tchar.h>
+#include <memory>
+#include <fstream>
+
+// Our files
+#include "token.h"
+#include "dfa.h"
+#include "specification.h"
+#include "lexer.h"
 
 
-
-// TODO: reference additional headers your program requires here
+#endif // !STDAFX_H

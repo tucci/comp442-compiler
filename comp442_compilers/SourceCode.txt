@@ -1,0 +1,81 @@
+// Invalid symbol test
+~`!@#$%^&?\|
+
+// Float errors and recovery
+0.s
+1.00
+2.0
+3.a
+4.2a
+5.0a
+6.03a
+7.00000000003a
+8.30
+0.a1
+0.1a
+1.00a
+2.0a
+3.003a
+4.10a
+
+
+// Symbol test and Reserved word tests
+==
+<>
+<
+>
+<=
+>=
+;
+,
+.
++
+-
+*
+/
+=
+and and_ andtest
+not not_ nottest
+or or_ ortest
+(
+)
+{
+}
+[
+]
+
+if if_ iftest
+then then_ thentest
+else else_ elsetest
+for for_ fortest
+class class_ classtest
+int int_ inttest
+float float_ floattest
+get get_ gettest
+put put_ puttest
+return return_ returntest
+program program_ programtest
+
+/**/
+/* */
+/*test*/
+/* test */
+/***/
+/****/
+/************/
+/** whdhdhd */
+/* /* */ */
+/* /* /* */ */ */
+/* /* /* fdsfdfd */ */ */
+/*/**/*/
+/*/* */*/
+
+/*/*/
+/*
+/* /*
+/* /* */
+/* /* /* */
+Doesnt work
+
+
+

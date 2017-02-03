@@ -15,63 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-    <Text Include="SourceCode.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="errors.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="output.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dfa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="specification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\comp442_compilers\token.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="dfa_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dfa.cpp">
+    <ClCompile Include="lexer_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="token.cpp">
+    <ClCompile Include="specification_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lexer.cpp">
+    <ClCompile Include="..\comp442_compilers\dfa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="specification.cpp">
+    <ClCompile Include="..\comp442_compilers\lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\specification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="comp442_compilers.rc">
+    <Text Include="TestLexerSourceFile.txt">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    </Text>
   </ItemGroup>
 </Project>
