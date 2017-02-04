@@ -3,7 +3,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace LexerTests
+namespace Tests
 {		
 	TEST_CLASS(DfaTest)
 	{
@@ -162,7 +162,6 @@ namespace LexerTests
 			// See if we get a NULL from a transition that doesnt exist
 			Assert::IsNull(actual);
 		}
-
 
 		TEST_METHOD(acceptsInputTest1) {
 			Dfa dfa;

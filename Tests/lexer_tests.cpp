@@ -15,7 +15,7 @@ std::string GetDirectoryName(std::string path) {
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace LexerTests {
+namespace Tests {
 	TEST_CLASS(LexerTest) {
 public:
 	// Note the TestLexerSourceFile.txt should never be changed

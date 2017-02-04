@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "comp442_compilers", "comp442_compilers\comp442_compilers.vcxproj", "{33A8180D-2913-4ED8-AF91-CC780AFF4A3B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LexerTests", "LexerTests\LexerTests.vcxproj", "{63A477BC-AB4E-49D8-8B45-37F7A960B77D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{63A477BC-AB4E-49D8-8B45-37F7A960B77D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
