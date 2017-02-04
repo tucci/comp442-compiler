@@ -5,6 +5,7 @@
 class Symbol {
 
 public:
+	~Symbol();
 	// Get the name of this symbol
 	std::string getName();
 	// Get if this symbol is a terminal symbol
@@ -15,10 +16,9 @@ protected:
 	// Constructor as protected to allow subclasses to override this
 	// this is an abstract class
 	Symbol(std::string name, bool isTerminal);
-	~Symbol();
 	// The name of this symbol
-	std::string name;
+	std::string mName;
 	// Whether this symbol is a terminal symbol
-	bool isTerminalSymbol;
+	bool mIsTerminalSymbol;
 };
 #endif // !SYMBOL_H

@@ -153,6 +153,7 @@
     <ClInclude Include="dfa.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="NonTerminal.h" />
+    <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="specification.h" />
     <ClInclude Include="stdafx.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NonTerminal.cpp" />
+    <ClCompile Include="Production.cpp" />
     <ClCompile Include="specification.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

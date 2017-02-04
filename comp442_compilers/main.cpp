@@ -40,15 +40,14 @@ int main() {
 	//	std::cout << "Successfully Wrote to output.txt and errors.txt" << std::endl;
 	//}
 	
-	Terminal t("s");
-	NonTerminal n("<test>");
+	Terminal x("x");
+	NonTerminal a("A");
+	NonTerminal b("C");
+	NonTerminal n("S");
+	std::vector<Symbol> prod = { x,a,b };
+	Production p(n, prod);
+	cout << p;
 
-	cout << t << " " << t.isTerminal() << endl;
-	cout << n << " " << n.isTerminal() << endl;
-
-
-	
-	
     return 0;
 }
 

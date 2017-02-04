@@ -66,7 +66,10 @@
       <Filter>Header Files\grammar</Filter>
     </ClInclude>
     <ClInclude Include="NonTerminal.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Production.h">
+      <Filter>Header Files\grammar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +98,10 @@
       <Filter>Source Files\grammar</Filter>
     </ClCompile>
     <ClCompile Include="NonTerminal.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Production.cpp">
+      <Filter>Source Files\grammar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

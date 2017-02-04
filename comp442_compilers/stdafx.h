@@ -26,6 +26,6 @@
 #include "Symbol.h"
 #include "Terminal.h"
 #include "NonTerminal.h"
-
+#include "Production.h"
 
 #endif // !STDAFX_H

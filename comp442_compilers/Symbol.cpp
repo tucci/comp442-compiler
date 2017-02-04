@@ -2,23 +2,23 @@
 
 
 Symbol::Symbol(std::string name, bool isTerminal) {
-	this->name = name;
-	this->isTerminalSymbol = isTerminal;
+	mName = name;
+	mIsTerminalSymbol = isTerminal;
 }
 
 Symbol::~Symbol() {
 }
 
 std::string Symbol::getName() {
-	return name;
+	return mName;
 }
 
 bool Symbol::isTerminal() {
-	return isTerminalSymbol;
+	return mIsTerminalSymbol;
 }
 
 std::ostream& operator <<(std::ostream& os, const Symbol& s) {
 	// <symbolname>
-	os << "<" << s.name << ">";
+	os << "<" << s.mName << ">";
 	return os;
 }
