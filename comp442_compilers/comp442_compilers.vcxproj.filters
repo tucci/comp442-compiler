@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\lexer">
+      <UniqueIdentifier>{b8e97826-7bb0-4196-852c-5fb834ffbdc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lexer">
+      <UniqueIdentifier>{38029843-98b4-4550-94ff-2e73de518d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\grammar">
+      <UniqueIdentifier>{4115b1a6-a6d7-460e-85ef-a313ca0b59ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\grammar">
+      <UniqueIdentifier>{255e34a4-595f-47c3-bd94-eb475821ddcd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -30,22 +42,31 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dfa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="specification.h">
+    <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="dfa.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="specification.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbol.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Terminal.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="NonTerminal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,16 +77,25 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dfa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lexer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\lexer</Filter>
     </ClCompile>
     <ClCompile Include="specification.cpp">
+      <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="dfa.cpp">
+      <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Terminal.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="NonTerminal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

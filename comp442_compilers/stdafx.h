@@ -22,5 +22,10 @@
 #include "specification.h"
 #include "lexer.h"
 
+// Grammar
+#include "Symbol.h"
+#include "Terminal.h"
+#include "NonTerminal.h"
+
 
 #endif // !STDAFX_H
