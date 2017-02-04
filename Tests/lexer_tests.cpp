@@ -33,7 +33,7 @@ public:
 	}
 
 	
-	TEST_METHOD(lexerTestNoComments) {
+	TEST_METHOD(lexer_TestNoComments) {
 		for (std::vector<Token>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
 			Assert::AreNotEqual(static_cast<int>(TokenType::cmt), static_cast<int>(it->type));
 		}
@@ -41,7 +41,7 @@ public:
 	};
 
 
-	TEST_METHOD(lexerInvalidSymbolTest) {
+	TEST_METHOD(lexer_InvalidSymbolTest) {
 		Assert::IsTrue(tokens.at(0).error.type == unknown_symbol);
 		Assert::IsTrue(tokens.at(1).error.type == unknown_symbol);
 		Assert::IsTrue(tokens.at(2).error.type == unknown_symbol);
@@ -69,7 +69,7 @@ public:
 
 	};
 
-	TEST_METHOD(lexerFloatErrorsAndRecovery) {
+	TEST_METHOD(lexer_FloatErrorsAndRecovery) {
 		// Recovery
 		Assert::IsTrue(tokens.at(12).type == int_token && tokens.at(12).lexeme == "0" && tokens.at(12).tokenLine == 5);
 		Assert::IsTrue(tokens.at(13).type == dot && tokens.at(13).lexeme == "." && tokens.at(13).tokenLine == 5);
@@ -118,7 +118,7 @@ public:
 		Assert::IsTrue(tokens.at(41).type == id && tokens.at(41).lexeme == "a" && tokens.at(41).tokenLine == 19);
 	};
 
-	TEST_METHOD(lexerOperators) {
+	TEST_METHOD(lexer_Operators) {
 		Assert::IsTrue(tokens.at(42).type == comparison && tokens.at(42).lexeme == "==" && tokens.at(42).tokenLine == 23);
 		Assert::IsTrue(tokens.at(43).type == noteq && tokens.at(43).lexeme == "<>" && tokens.at(43).tokenLine == 24);
 		Assert::IsTrue(tokens.at(44).type == lt && tokens.at(44).lexeme == "<" && tokens.at(44).tokenLine == 25);
@@ -150,7 +150,7 @@ public:
 		Assert::IsTrue(tokens.at(70).type == closesquare && tokens.at(70).lexeme == "]" && tokens.at(70).tokenLine == 45);
 	};
 
-	TEST_METHOD(lexerReservedWords) {
+	TEST_METHOD(lexer_ReservedWords) {
 		Assert::IsTrue(tokens.at(71).type == if_token && tokens.at(71).lexeme == "if" && tokens.at(71).tokenLine == 47);
 		Assert::IsTrue(tokens.at(72).type == id && tokens.at(72).lexeme == "if_" && tokens.at(72).tokenLine == 47);
 		Assert::IsTrue(tokens.at(73).type == id && tokens.at(73).lexeme == "iftest" && tokens.at(73).tokenLine == 47);

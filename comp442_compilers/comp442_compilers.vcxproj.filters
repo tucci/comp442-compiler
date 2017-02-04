@@ -27,7 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
     <Text Include="SourceCode.txt">
       <Filter>Resource Files</Filter>
     </Text>

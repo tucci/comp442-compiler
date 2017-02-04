@@ -47,10 +47,25 @@
     <ClCompile Include="..\comp442_compilers\specification.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Symbol_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\NonTerminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestLexerSourceFile.txt">
       <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="..\comp442_compilers\ReadMe.txt">
+      <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
 </Project>
