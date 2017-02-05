@@ -39,14 +39,24 @@ int main() {
 	//	error.close();
 	//	std::cout << "Successfully Wrote to output.txt and errors.txt" << std::endl;
 	//}
+
+
+
+	std::vector<Symbol> startProduction;
 	
-	Terminal x("x");
-	NonTerminal a("A");
-	NonTerminal b("C");
-	NonTerminal n("S");
-	std::vector<Symbol> prod = { x,a,b };
-	Production p(n, prod);
-	cout << p;
+	NonTerminal s("S");
+	Terminal t("t");
+	startProduction.push_back(t);
+	startProduction.push_back(s);
+	Production start(s,startProduction);
+
+	Grammar g(start);
+	cout << g << endl;
+	
+
+	
+	
+	
 
     return 0;
 }

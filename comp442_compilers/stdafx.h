@@ -11,6 +11,7 @@
 // external libs
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <stack>
 #include <iostream>
 #include <memory>
@@ -27,5 +28,6 @@
 #include "Terminal.h"
 #include "NonTerminal.h"
 #include "Production.h"
+#include "Grammar.h"
 
 #endif // !STDAFX_H

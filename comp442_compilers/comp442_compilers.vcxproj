@@ -145,12 +145,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="a2_sample.txt" />
     <Text Include="errors.txt" />
     <Text Include="output.txt" />
     <Text Include="SourceCode.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dfa.h" />
+    <ClInclude Include="Grammar.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="NonTerminal.h" />
     <ClInclude Include="Production.h" />
@@ -164,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dfa.cpp" />
+    <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NonTerminal.cpp" />

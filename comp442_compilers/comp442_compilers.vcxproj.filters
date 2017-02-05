@@ -36,6 +36,9 @@
     <Text Include="output.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="a2_sample.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -71,6 +74,9 @@
     <ClInclude Include="Production.h">
       <Filter>Header Files\grammar</Filter>
     </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -102,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="Production.cpp">
       <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Grammar.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

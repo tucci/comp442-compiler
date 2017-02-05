@@ -7,7 +7,7 @@ class Symbol {
 public:
 	~Symbol();
 	// Get the name of this symbol
-	std::string getName();
+	std::string getName() const;
 	// Get if this symbol is a terminal symbol
 	bool isTerminal();
 	// Overide << for easier print outs

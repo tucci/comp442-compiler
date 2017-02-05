@@ -7,7 +7,7 @@ namespace Tests {
 	TEST_CLASS(ProductionTest) {
 public:
 
-	TEST_METHOD(Production_creationTest) {
+	TEST_METHOD(Production_creationNormalTest) {
 		Terminal x("x");
 		NonTerminal a("A");
 		NonTerminal b("B");
@@ -20,10 +20,20 @@ public:
 		Assert::IsTrue(prod.at(2).getName() == b.getName());
 	};
 
-	TEST_METHOD(Production_creationNoNonTerminalTest) {
-		
+	TEST_METHOD(Production_creationEmptyProductionTest) {
+		// Here we want it thrown an exception
+		NonTerminal S("S");
+		std::vector<Symbol> prod;
+		bool expectionThrown;
+		try {
+			Production p(S, prod);
+			expectionThrown = false;
+		} catch (std::exception e) {
+			expectionThrown = true;
+		}
+		// We should get an exception if the production is empty
+		Assert::IsTrue(expectionThrown);
 	};
-
 
 	};
 }

@@ -8,4 +8,18 @@ public:
 	~NonTerminal();
 };
 
+namespace std {
+	template<>
+	struct hash<NonTerminal> {
+		size_t
+			operator()(const NonTerminal& s) const {
+			return std::hash<string>()(s.getName());
+		}
+	};
+}
+
+inline bool operator==(const NonTerminal& p1, const NonTerminal& p2) {
+	return p1.getName() == p2.getName();
+}
+
 #endif 
