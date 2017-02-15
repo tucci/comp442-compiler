@@ -1,0 +1,80 @@
+prog            -> classDeclList progBody 
+classDeclList   -> classDecl classDeclList 
+classDeclList   -> EPSILON 
+classDecl       -> class id { varFuncDefList } ;
+varFuncDefList  -> varDecl varFuncDefList
+varFuncDefList  -> funcDef varFuncDefList
+varFuncDefList  -> EPSILON 
+progBody        -> program funcBody ; funcDefList 
+funcHead        -> type id ( fParams ) 
+funcDef         -> funcHead funcBody ; 
+funcDefList     -> funcDef funcDefList 
+funcDefList     -> EPSILON 
+funcBody        -> { varDeclList statementList } 
+varDecl         -> type id arraySizeList ; 
+varDeclList     -> varDecl varDeclList 
+varDeclList     -> EPSILON 
+statement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
+statement       -> if ( expr ) then statBlock else statBlock ; 
+statement       -> get ( variable ) ; 
+statement       -> put ( expr ) ; 
+statement       -> return ( expr ) ; 
+statement       -> assignStat ; 
+statementList   -> statement statementList 
+statementList   -> EPSILON 
+assignStat      -> variable assignOp expr 
+statBlock       -> { statementList } 
+statBlock       -> statement 
+statBlock       -> EPSILON 
+expr            -> arithExpr 
+expr            -> relExpr 
+relExpr         -> arithExpr relOp arithExpr 
+arithExpr       -> term 
+arithExpr       -> arithExpr addOp term 
+sign            -> + 
+sign            -> - 
+term            -> factor 
+term            -> term multOp factor 
+factor          -> idnestList id ( aParams ) 
+factor          -> ( arithExpr ) 
+factor          -> num 
+factor          -> not factor 
+factor          -> variable 
+factor          -> sign factor 
+variable        -> idnestList id indiceList 
+idnest          -> id indiceList . 
+idnestList      -> idnest idnestList 
+idnestList      -> EPSILON 
+indice          -> [ arithExpr ] 
+indiceList      -> indice indiceList 
+indiceList      -> EPSILON 
+arraySize       -> [ integer ] 
+arraySizeList   -> arraySize arraySizeList 
+arraySizeList   -> EPSILON 
+type            -> float 
+type            -> id 
+type            -> int 
+fParams         -> type id arraySizeList fParamsTailList 
+fParams         -> EPSILON 
+aParams         -> expr aParamsTailList 
+aParams         -> EPSILON 
+fParamsTail     -> , type id arraySizeList 
+fParamsTailList -> fParamsTail fParamsTailList 
+fParamsTailList -> EPSILON 
+aParamsTail     -> , expr 
+aParamsTailList -> aParamsTail aParamsTailList 
+aParamsTailList -> EPSILON 
+assignOp        -> = 
+relOp           -> < 
+relOp           -> <= 
+relOp           -> <> 
+relOp           -> == 
+relOp           -> > 
+relOp           -> >= 
+addOp           -> + 
+addOp           -> - 
+addOp           -> or 
+multOp          -> * 
+multOp          -> / 
+multOp          -> and 
+
