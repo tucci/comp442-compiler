@@ -1,36 +1,44 @@
 prog            -> classDeclList progBody 
 progBody        -> program funcBody ; funcDefList 
-
 classDeclList   -> classDecl classDeclList 
 classDeclList   -> EPSILON 
 classDecl       -> class id { varFuncDefList } ; 
-
 varFuncDefList -> type id varFuncDefListRest varFuncDefList
 varFuncDefList -> EPSILON
 varFuncDefListRest -> varDeclRest
 varFuncDefListRest -> funcDefRest
-
 funcDef         -> type id funcDefRest
 funcDefRest     -> ( fParams ) funcBody ;
-
 funcDefList     -> funcDef funcDefList 
 funcDefList     -> EPSILON 
-funcBody        -> { varDeclList statementList } 
+
+funcBody        -> { varStatementList } 
+varStatementList -> id varStatementListRest varStatementList
+varStatementList -> varDeclNoId varStatementList
+varStatementList -> noIdStartStatement varStatementList
+varStatementList -> EPSILON
+
+varStatementListRest -> id varDeclRest 
+varStatementListRest -> assignStatRest ;
+
 
 varDecl         -> type id varDeclRest
+varDeclNoId     -> typeNoId id varDeclRest
 varDeclRest     -> arraySizeList ; 
 varDeclList     -> varDecl varDeclList 
 varDeclList     -> EPSILON 
 
-statement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
-statement       -> if ( expr ) then statBlock else statBlock ; 
-statement       -> get ( variable ) ; 
-statement       -> put ( expr ) ; 
-statement       -> return ( expr ) ; 
+noIdStartStatement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
+noIdStartStatement       -> if ( expr ) then statBlock else statBlock ; 
+noIdStartStatement       -> get ( variable ) ; 
+noIdStartStatement       -> put ( expr ) ; 
+noIdStartStatement       -> return ( expr ) ; 
+statement -> noIdStartStatement
 statement       -> assignStat ; 
 statementList   -> statement statementList 
 statementList   -> EPSILON 
-assignStat      -> variable assignOp expr 
+assignStat      -> variable assignStatRest
+assignStatRest -> assignOp expr 
 statBlock       -> { statementList } 
 statBlock       -> statement 
 statBlock       -> EPSILON 
@@ -59,9 +67,10 @@ indiceList      -> EPSILON
 arraySize       -> [ integer ] 
 arraySizeList   -> arraySize arraySizeList 
 arraySizeList   -> EPSILON 
-type            -> float 
-type            -> id 
-type            -> int 
+typeNoId -> float
+typeNoId -> int
+type            -> typeNoId 
+type            -> id
 fParams         -> type id arraySizeList fParamsTailList 
 fParams         -> EPSILON 
 aParams         -> expr aParamsTailList 
