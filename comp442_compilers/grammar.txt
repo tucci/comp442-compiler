@@ -85,11 +85,11 @@ aParamsTailList -> aParamsTail aParamsTailList
 aParamsTailList -> EPSILON 
 assignOp        -> = 
 relOp           -> < 
-relOp           -> <= 
-relOp           -> <> 
-relOp           -> == 
+relOp           -> < = 
+relOp           -> < > 
+relOp           -> = = 
 relOp           -> > 
-relOp           -> >= 
+relOp           -> > = 
 addOp           -> + 
 addOp           -> - 
 addOp           -> or 
