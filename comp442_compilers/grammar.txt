@@ -29,10 +29,12 @@ varDeclList     -> varDecl varDeclList
 varDeclList     -> EPSILON 
 
 noIdStartStatement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
-noIdStartStatement       -> if ( expr ) then statBlock else statBlock ; 
+noIdStartStatement       -> if ( expr ) then statBlock elseBlock ; 
 noIdStartStatement       -> get ( variable ) ; 
 noIdStartStatement       -> put ( expr ) ; 
-noIdStartStatement       -> return ( expr ) ; 
+noIdStartStatement       -> return ( expr ) ;
+elseBlock -> else statBlock
+elseBlock -> EPSILON
 statement -> noIdStartStatement
 statement       -> assignStat ; 
 statementList   -> statement statementList 
