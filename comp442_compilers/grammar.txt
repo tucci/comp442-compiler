@@ -46,17 +46,15 @@ statBlock       -> { statementList }
 statBlock       -> statement 
 statBlock       -> EPSILON 
 
-
 expr            -> arithExpr exprRest
 exprRest 		-> relOp arithExpr | EPSILON
 relExpr         -> arithExpr relOp arithExpr
-
-arithExpr       -> term 
-arithExpr       -> arithExpr addOp term 
+arithExpr       -> term arithExprRest
+arithExprRest 	-> addOp term arithExprRest | EPSILON
 sign            -> + 
 sign            -> - 
-term            -> factor 
-term            -> term multOp factor 
+term            -> factor termRest
+termRest 		-> multOp factor termRest | EPSILON
 factor          -> ( arithExpr ) 
 factor          -> num 
 factor          -> not factor 
@@ -106,4 +104,3 @@ addOp           -> or
 multOp          -> * 
 multOp          -> / 
 multOp          -> and 
-
