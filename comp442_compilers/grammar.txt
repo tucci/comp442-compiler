@@ -55,12 +55,16 @@ sign            -> +
 sign            -> - 
 term            -> factor 
 term            -> term multOp factor 
-factor          -> idnestList id ( aParams ) 
 factor          -> ( arithExpr ) 
 factor          -> num 
 factor          -> not factor 
-factor          -> variable 
 factor          -> sign factor 
+
+
+factor -> id factorIdRest
+factorIdRest -> indiceList factorIdRestRest
+factorIdRest -> ( aParams )
+factorIdRestRest ->  . idnestList  id factorIdRest | EPSILON
 
 variable        -> idnestList id indiceList 
 idnest          -> id indiceList . 
