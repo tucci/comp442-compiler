@@ -46,9 +46,11 @@ statBlock       -> { statementList }
 statBlock       -> statement 
 statBlock       -> EPSILON 
 
-expr            -> arithExpr 
-expr            -> relExpr 
-relExpr         -> arithExpr relOp arithExpr 
+
+expr            -> arithExpr exprRest
+exprRest 		-> relOp arithExpr | EPSILON
+relExpr         -> arithExpr relOp arithExpr
+
 arithExpr       -> term 
 arithExpr       -> arithExpr addOp term 
 sign            -> + 
