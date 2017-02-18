@@ -83,13 +83,12 @@ fParamsTailList -> EPSILON
 aParamsTail     -> , expr 
 aParamsTailList -> aParamsTail aParamsTailList 
 aParamsTailList -> EPSILON 
-assignOp        -> = 
-relOp           -> < 
-relOp           -> < = 
-relOp           -> < > 
-relOp           -> = = 
-relOp           -> > 
-relOp           -> > = 
+assignOp          	 -> = 
+relOp             	 -> < relOpLessThanRest
+relOpLessThanRest 	 -> = | > | EPSILON
+relOp           	 -> = = 
+relOp           	 -> > relOpGreaterThanRest
+relOpGreaterThanRest -> = | EPSILON
 addOp           -> + 
 addOp           -> - 
 addOp           -> or 
