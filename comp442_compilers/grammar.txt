@@ -1,33 +1,35 @@
 prog            -> classDeclList progBody 
-progBody        -> program funcBody ; funcDefList 
+classDecl       -> class id { varFuncDefList } ; 
 classDeclList   -> classDecl classDeclList 
 classDeclList   -> EPSILON 
-classDecl       -> class id { varFuncDefList } ; 
-varFuncDefList -> type id varFuncDefListRest varFuncDefList
-varFuncDefList -> EPSILON
-varFuncDefListRest -> varDeclRest
-varFuncDefListRest -> funcDefRest
+progBody        -> program funcBody ; funcDefList 
+
 funcDef         -> type id funcDefRest
 funcDefRest     -> ( fParams ) funcBody ;
 funcDefList     -> funcDef funcDefList 
 funcDefList     -> EPSILON 
-
 funcBody        -> { varStatementList } 
-varStatementList -> id varStatementListRest varStatementList
-varStatementList -> varDeclNoId varStatementList
-varStatementList -> noIdStartStatement varStatementList
-varStatementList -> EPSILON
-
-varStatementListRest -> id varDeclRest 
-varStatementListRest -> assignStatRest ;
-
 
 varDecl         -> type id varDeclRest
 varDeclNoId     -> typeNoId id varDeclRest
 varDeclRest     -> arraySizeList ; 
-varDeclList     -> varDecl varDeclList 
-varDeclList     -> EPSILON 
 
+varFuncDefList -> type id varFuncDefListRest varFuncDefList
+varFuncDefList -> EPSILON
+varFuncDefListRest -> varDeclRest
+varFuncDefListRest -> funcDefRest
+
+varStatementList -> id varStatementListRest varStatementList
+varStatementList -> varDeclNoId varStatementList
+varStatementList -> noIdStartStatement varStatementList
+varStatementList -> EPSILON
+varStatementListRest -> id varDeclRest 
+varStatementListRest -> assignStatRest ;
+
+statement -> noIdStartStatement
+statement       -> assignStat ; 
+statementList   -> statement statementList 
+statementList   -> EPSILON 
 noIdStartStatement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
 noIdStartStatement       -> if ( expr ) then statBlock elseBlock ; 
 noIdStartStatement       -> get ( variable ) ; 
@@ -35,15 +37,15 @@ noIdStartStatement       -> put ( expr ) ;
 noIdStartStatement       -> return ( expr ) ;
 elseBlock -> else statBlock
 elseBlock -> EPSILON
-statement -> noIdStartStatement
-statement       -> assignStat ; 
-statementList   -> statement statementList 
-statementList   -> EPSILON 
-assignStat      -> variable assignStatRest
-assignStatRest -> assignOp expr 
+assignStat      -> id assignStatRest
+assignStat      -> assignStatRest
+assignStatRest -> indiceList assignStatRestRest
+assignStatRestRest ->  . variable assignOp expr 
+assignStatRestRest ->  assignOp expr 
 statBlock       -> { statementList } 
 statBlock       -> statement 
 statBlock       -> EPSILON 
+
 expr            -> arithExpr 
 expr            -> relExpr 
 relExpr         -> arithExpr relOp arithExpr 
@@ -59,6 +61,7 @@ factor          -> num
 factor          -> not factor 
 factor          -> variable 
 factor          -> sign factor 
+
 variable        -> idnestList id indiceList 
 idnest          -> id indiceList . 
 idnestList      -> idnest idnestList 
@@ -69,20 +72,24 @@ indiceList      -> EPSILON
 arraySize       -> [ integer ] 
 arraySizeList   -> arraySize arraySizeList 
 arraySizeList   -> EPSILON 
+
 typeNoId -> float
 typeNoId -> int
 type            -> typeNoId 
 type            -> id
+
 fParams         -> type id arraySizeList fParamsTailList 
 fParams         -> EPSILON 
-aParams         -> expr aParamsTailList 
-aParams         -> EPSILON 
 fParamsTail     -> , type id arraySizeList 
 fParamsTailList -> fParamsTail fParamsTailList 
 fParamsTailList -> EPSILON 
+
+aParams         -> expr aParamsTailList 
+aParams         -> EPSILON 
 aParamsTail     -> , expr 
 aParamsTailList -> aParamsTail aParamsTailList 
 aParamsTailList -> EPSILON 
+
 assignOp          	 -> = 
 relOp             	 -> < relOpLessThanRest
 relOpLessThanRest 	 -> = | > | EPSILON
