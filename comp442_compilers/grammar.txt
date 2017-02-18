@@ -59,12 +59,11 @@ factor          -> ( arithExpr )
 factor          -> num 
 factor          -> not factor 
 factor          -> sign factor 
-
-
 factor -> id factorIdRest
 factorIdRest -> indiceList factorIdRestRest
 factorIdRest -> ( aParams )
-factorIdRestRest ->  . idnestList  id factorIdRest | EPSILON
+factorIdRestRest ->  . id idnestList factorIdRest 
+factorIdRestRest ->  EPSILON
 
 variable        -> idnestList id indiceList 
 idnest          -> id indiceList . 
