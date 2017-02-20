@@ -2,9 +2,6 @@
 
 
 using namespace std;
-#include <string>
-#include <iostream>
-#include <sstream>
 
 
 void createCode(std::string filename) {
@@ -18,13 +15,15 @@ void createCode(std::string filename) {
 		inputStream << inputFile.rdbuf();
 		inputFile.close();
 
-		// Read the first line to get the type
+		
 		std::string line;
 		while (std::getline(inputStream, line, '\n')) {
 			int splitIndex = line.find("->");
 			std::string splitLine = line.substr(0, splitIndex);
 			if (!splitLine.empty()) {
-				cout << "NonTerminal " << splitLine << " =" << "g.addNonTerminal(\"" << splitLine << "\");" << endl;
+				cout << line << endl;
+				//cout << "NonTerminal " << splitLine << " =" << "g.addNonTerminal(\"" << splitLine << "\");" << endl;
+				//cout << trim(line.substr(splitIndex + 2)) << endl;
 
 			}
 			
@@ -42,7 +41,9 @@ void createCode(std::string filename) {
 
 int main() {
 
-	//createCode("grammar.txt");
+	Grammar g("grammar.txt", "prog");
+
+	cout << g;
 
 	//bool writeToFile = false;
 	//ofstream output;
@@ -90,7 +91,6 @@ int main() {
 
 	//Grammar g(start);
 
-	//// TODO: generate grammar from json file
 	//NonTerminal term("<term>");
 	//NonTerminal multop("<multop>");
 	//NonTerminal factor("<factor>");
@@ -156,7 +156,7 @@ int main() {
 	g.addProduction(r9);
 	cout << g << endl;*/
 
-	Grammar g;
+	/*Grammar g;
 
 	Terminal classTerminal = g.addTerminal("class");
 	Terminal idTerminal = g.addTerminal("id");
@@ -257,7 +257,7 @@ int main() {
 	NonTerminal addOp = g.addNonTerminal("addOp");
 	NonTerminal multOp = g.addNonTerminal("multOp");
 
-	g.addProduction(prog, { classDeclList, progBody });
+	g.addProduction(prog, { classDeclList, progBody });*/
 
 	cout << g;
 

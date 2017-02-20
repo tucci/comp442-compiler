@@ -6,6 +6,7 @@
 class Symbol {
 
 public:
+	static const Symbol EPSILON;
 	
 
 	~Symbol();

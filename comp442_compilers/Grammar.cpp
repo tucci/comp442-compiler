@@ -15,7 +15,6 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 
 		std::string line;
 
-
 		// Store rhs for second pass to store terminals and productions
 		std::vector<std::string> rhsList;
 
@@ -34,18 +33,20 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 				rhsList.push_back(trim(line.substr(splitIndex + 2)));
 			}
 		}
+
 		// Second pass: loop over all rhs for each prodution to find non terminals
 		for (std::vector<std::string>::iterator it = rhsList.begin(); it != rhsList.end(); ++it) {
 			std::vector<std::string> split = simpleSplit(*it);
 			// loop over rhs split
 			for (std::vector<std::string>::iterator st = split.begin(); st != split.end(); ++st) {
-				if (!isNonTerminal(*st)) {
-					// TODO filter out EPSILON
+				// Make sure we dont add non terminals and epislon to the terminal string
+				if (!isNonTerminal(*st) && !isEpsilon(*st)) {
 					addTerminal(*st);
 				}
 			}
 		}
 
+		// Final pass to create all the productions
 		while (std::getline(finalPassInputStream, line, '\n')) {
 			if (!line.empty()){
 			// Split the rule on ->
@@ -61,14 +62,12 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 				for (std::vector<std::string>::iterator st = rhsProductionStrVec.begin(); st != rhsProductionStrVec.end(); ++st) {
 					production.push_back(stringToSymbol(*st));
 				}
+
+				// Create the production and add it to our grammar
 				addProduction(nonTerminal, production);
 			}
 		}
 		
-
-
-
-
 	} catch (std::ifstream::failure e) {
 		std::cout << "Error reading sample file";
 	}
@@ -128,7 +127,14 @@ bool Grammar::isNonTerminal(const std::string& nonTerminalString) {
 	}	
 }
 
+bool Grammar::isEpsilon(const std::string& symbolString) {
+	return symbolString == Symbol::EPSILON.getName();
+}
+
 Symbol Grammar::stringToSymbol(const std::string& symbolString) {
+	if (isEpsilon(symbolString)) {
+		return Symbol::EPSILON;
+	}
 	// Check if this is a non terminal symbol
 	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(symbolString));
 	auto got = mNonTerminalSymbols.find(nonTerminal);
@@ -146,3 +152,4 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 		return *got->get();
 	}
 }
+

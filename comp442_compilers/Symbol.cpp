@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+const Symbol Symbol::EPSILON("EPSILON", false);
+
 
 Symbol::Symbol(std::string name, bool isTerminal) {
 	mName = name;

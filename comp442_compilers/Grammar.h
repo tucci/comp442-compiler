@@ -20,7 +20,9 @@ private:
 	std::unordered_set<std::shared_ptr<NonTerminal>, SymbolHasher, SymbolEqual> mNonTerminalSymbols;
 
 	bool isNonTerminal(const std::string& nonTerminalString);
+	bool isEpsilon(const std::string& symbolString);
 	Symbol stringToSymbol(const std::string& symbolString);
+
 };
 
 #endif // !GRAMMAR_H
