@@ -3,9 +3,9 @@
 Parser::Parser(const Lexer& lexer, const Grammar& grammar) {
 	this->lexer = lexer;
 	this->grammar = grammar;
-	generateFirstSet();
-	generateFollowSet();
-	generateParseTable();
+	buildFirstSet();
+	buildFollowSet();
+	buildParseTable();
 }
 
 
@@ -68,15 +68,15 @@ bool Parser::inSet(const Terminal& symbol, const std::unordered_set<Terminal, Sy
 }
 
 
-void Parser::generateFirstSet() {
+void Parser::buildFirstSet() {
 
 }
 
-void Parser::generateFollowSet() {
+void Parser::buildFollowSet() {
 
 }
 
-void Parser::generateParseTable() {
+void Parser::buildParseTable() {
 	std::vector<std::shared_ptr<Production>> productions = grammar.getProductions();
 	for (std::vector<std::shared_ptr<Production>>::iterator it = productions.begin(); it != productions.end(); ++it) {
 		

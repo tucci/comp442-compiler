@@ -4,7 +4,7 @@
 
 class Parser {
 public:
-	
+	// Create a parser from a given lexer and grammar
 	Parser(const Lexer& lexer, const Grammar& grammar);
 	~Parser();
 	// Parse method
@@ -27,9 +27,9 @@ private:
 	// Data structure to hold our parse stack
 	std::stack<Symbol> parseStack;
 
-	void generateFirstSet();
-	void generateFollowSet();
-	void generateParseTable();
+	void buildFirstSet();
+	void buildFollowSet();
+	void buildParseTable();
 	void skipErrors();
 	void inverseRHSMultiplePush(const Production& rhs);
 	bool inSet(const Terminal& symbol, const std::unordered_set<Terminal, SymbolHasher, SymbolEqual>& symbolSet);

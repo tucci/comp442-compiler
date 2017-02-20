@@ -7,9 +7,12 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 	// Read grammar from file
 	std::ifstream inputFile;
 	try {
+		// Read the grammar from a file
 		inputFile.open(filename);
+		// Create the stream for our first pass
 		std::stringstream firstPassInputStream;
 		firstPassInputStream << inputFile.rdbuf();
+		// Create the stream for our final pass
 		std::stringstream finalPassInputStream(firstPassInputStream.str());
 		inputFile.close();
 
@@ -56,13 +59,11 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 			// Get the rhs as a vector of strings
 			std::vector<std::string> rhsProductionStrVec = simpleSplit(trim(line.substr(splitIndex + 2)));
 
-			
 				// Convert the string symbols to Symbol objects
 				std::vector<Symbol> production;
 				for (std::vector<std::string>::iterator st = rhsProductionStrVec.begin(); st != rhsProductionStrVec.end(); ++st) {
 					production.push_back(stringToSymbol(*st));
 				}
-
 				// Create the production and add it to our grammar
 				addProduction(nonTerminal, production);
 			}
@@ -77,9 +78,11 @@ Grammar::~Grammar() {
 }
 
 const NonTerminal& Grammar::addNonTerminal(const std::string& nonTerminalString, bool isStartSymbol) {
+	// Creates a new non terminal and adds it to our non terminal set
 	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(nonTerminalString));
 	mNonTerminalSymbols.emplace(nonTerminal);
 	nonTerminal = *mNonTerminalSymbols.find(nonTerminal);
+	// If this is a starting symbol, we'll assign the starting symbol to it
 	if (isStartSymbol) {
 		mStartSymbol = nonTerminal;
 	}
@@ -87,6 +90,7 @@ const NonTerminal& Grammar::addNonTerminal(const std::string& nonTerminalString,
 }
 
 const Terminal& Grammar::addTerminal(const std::string& terminalString) {
+	// Creates a new terminal and adds it to our terminal set
 	std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(terminalString));
 	mTerminalSymbols.emplace(terminal);
 	terminal = *mTerminalSymbols.find(terminal);
@@ -94,6 +98,7 @@ const Terminal& Grammar::addTerminal(const std::string& terminalString) {
 }
 
 const Production& Grammar::addProduction(const NonTerminal& symbol, std::vector<Symbol> production) {
+	// Creates a new production and adds it to our production list
 	std::shared_ptr<Production> productionRule = std::shared_ptr<Production>(new Production(symbol, production));
 	mProductions.push_back(productionRule);
 	productionRule = mProductions.at(mProductions.size() - 1);
@@ -109,6 +114,7 @@ const NonTerminal& Grammar::getStartSymbol() {
 }
 
 std::ostream& operator <<(std::ostream& os, Grammar& g) {
+	// Outputs all productions for this grammar
 	for (std::vector<std::shared_ptr<Production>>::iterator it = g.mProductions.begin(); it != g.mProductions.end(); ++it) {
 		os << *it->get() << std::endl;
 	}

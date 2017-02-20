@@ -1,14 +1,10 @@
 #include "stdafx.h"
 
 
-Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production)
-	:mNonTerminal(nonTerminal)
-	, mProduction(production)
-{
-	// Throw an error if there is no productions
-	// TODO: maybe create if we want epsilon as empty production
+Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production) :mNonTerminal(nonTerminal), mProduction(production) {
+	// If you want an epsilon production, you must explicity add Symbol::EPSILON to the production vector
 	if (production.empty()) {
-		throw std::exception("Production list cannot be empty");
+		throw std::exception("Production list cannot be empty. EPSILON must be explictly added.");
 	}
 }
 

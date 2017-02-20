@@ -6,6 +6,7 @@
 class Symbol {
 
 public:
+	// Special symbols to hold epsilon/end of file symbols
 	static const Symbol EPSILON;
 	static const Symbol END_OF_FILE;
 	

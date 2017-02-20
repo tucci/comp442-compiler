@@ -5,7 +5,7 @@
 class Compiler {
 public:
 	Compiler();
-	
+	~Compiler();
 	// Method used to turn the source code into the target code
 	// This will be implemented in further assignments
 	// Currently this is just a stub method
@@ -13,8 +13,8 @@ public:
 	// Sets the source file for our compiler to compiler
 	void setSourceFile(std::string sourceFile);
 	// Checks the syntax of the source fie
-	bool checkSyntax();
-	~Compiler();
+	bool analyzeSyntax();
+	// TODO add method to output analysis and errors
 private:
 	// The specfication for the token
 	std::unique_ptr<Specification> spec;

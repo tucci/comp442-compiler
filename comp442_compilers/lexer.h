@@ -48,7 +48,7 @@ private:
 	bool isNewLine(char);
 	// Handle the error for this state
 	void handleError(Token* token, std::string lexeme, State* errorType, std::string lookup);
-
+	// Method to handle comments while tokenizing
 	void handleComment(Token* token, State* state);
 };
 
