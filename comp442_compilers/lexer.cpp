@@ -13,6 +13,7 @@ Lexer::~Lexer() {
 Token Lexer::nextToken() {
 	Token token = lookaheadToken;
 	lookaheadToken = getLookaheadToken();
+	outputTokens.push_back(lookaheadToken);
 	return token;
 }
 
@@ -112,6 +113,7 @@ bool Lexer::setSource(std::string pathToFile) {
 	sourceFilePath = pathToFile;
 	std::ifstream istream(pathToFile);
 	bool readSuccess = false;
+	outputTokens.clear();
 	if (istream) {
 		// put position of stream to the end of source file
 		istream.seekg(0, istream.end);
@@ -294,4 +296,24 @@ void Lexer::handleComment(Token* token, State* currentState) {
 
 		
 		
+}
+
+void Lexer::writeTokensToFile() {
+	std::ofstream output;
+	std::ofstream error;
+	output.open("lexerOutput.txt");
+	error.open("lexerErrors.txt");
+
+
+	for (std::vector<Token>::iterator it = outputTokens.begin(); it != outputTokens.end(); ++it) {
+		if (it->type == TokenType::error_token) {
+			error << *it;
+		} else {
+			output << *it;
+		}
+	}
+
+	output.close();
+	error.close();
+	std::cout << "Successfully Wrote to output.txt and errors.txt" << std::endl;
 }

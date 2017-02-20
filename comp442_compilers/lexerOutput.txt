@@ -1,0 +1,12 @@
+lexeme: bepop		type: id		line number: 1
+lexeme: hello		type: id		line number: 1
+lexeme: this		type: id		line number: 1
+lexeme: is		type: id		line number: 1
+lexeme: a		type: id		line number: 1
+lexeme: test		type: id		line number: 1
+lexeme: 6		type: int_token		line number: 1
+lexeme: .		type: dot		line number: 1
+lexeme: x		type: id		line number: 1
+lexeme: bla		type: id		line number: 1
+lexeme: bla		type: id		line number: 1
+lexeme: 		type: non_token		line number: -858993460
