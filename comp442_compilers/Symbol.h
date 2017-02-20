@@ -7,6 +7,7 @@ class Symbol {
 
 public:
 	static const Symbol EPSILON;
+	static const Symbol END_OF_FILE;
 	
 
 	~Symbol();

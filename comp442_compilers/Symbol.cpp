@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 const Symbol Symbol::EPSILON("EPSILON", false);
+const Symbol Symbol::END_OF_FILE("$", false);
 
 
 Symbol::Symbol(std::string name, bool isTerminal) {
