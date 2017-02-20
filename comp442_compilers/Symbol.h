@@ -33,22 +33,42 @@ protected:
 // Taken from http://stackoverflow.com/questions/15810620/unordered-map-with-custom-hashing-equal-functions-functions-dont-get-called
 class SymbolHasher {
 public:
+	// Used when we have sets/maps with shared pointers
 	size_t operator() (const std::shared_ptr<Symbol> key) const {
-		std::string stringKey = key.get()->getName();
+		const std::string stringKey = key.get()->getName();
+		return hashFunc(stringKey);
+	}
+	// Used when we have sets/maps with non pointer data
+	size_t operator() (const Symbol& key) const {
+		const std::string stringKey = key.getName();
+		return hashFunc(stringKey);
+	}
+
+private:
+	// The base hashing function
+	size_t hashFunc(const std::string& key) const {
 		size_t hash = 0;
-		for (size_t i = 0; i< stringKey.size(); i++) {
-			hash += (71 * hash + stringKey[i]) % 5;
+		for (size_t i = 0; i< key.size(); i++) {
+			hash += (71 * hash + key[i]) % 5;
 		}
 		return hash;
 	}
 };
 class SymbolEqual {
 public:
+	// Used when we have sets/maps with shared pointers
 	bool operator() (const std::shared_ptr<Symbol> s1, const std::shared_ptr<Symbol>& s2) const {
+		return equal(s1->getName(), s2->getName());
+	}
 
-		std::string s1Name = s1.get()->getName();
-		std::string s2Name = s2.get()->getName();
-		return !(s1Name.compare(s2Name));
+	// Used when we have sets/maps with non pointer data
+	bool operator() (const Symbol& s1, const Symbol& s2) const {
+		return equal(s1.getName(), s2.getName());
+	}
+private:
+	// The base equal function
+	bool equal(const std::string& s1, const std::string& s2) const {
+		return !(s1.compare(s2));
 	}
 };
 

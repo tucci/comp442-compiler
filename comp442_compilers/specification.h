@@ -14,7 +14,7 @@ public:
 	const static std::unordered_map<TokenType, std::string> TOKEN_PRINT_MAP;
 
 	// If use default, it will use the spec provided. if false, the spec will be empty
-	Specification(bool useDefault);
+	Specification(bool useDefault = true);
 	~Specification();
 	// Returns the dfa for this specification
 	std::shared_ptr<Dfa> getSpec();

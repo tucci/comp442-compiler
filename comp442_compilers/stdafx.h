@@ -10,18 +10,23 @@
 
 // external libs
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
-#include <iostream>
 #include <memory>
-#include <fstream>
 
-// Our files
+// Our classes
 #include "token.h"
 #include "dfa.h"
 #include "specification.h"
 #include "lexer.h"
+// Helper classes
+#include "StringUtils.h"
+
 
 // Grammar
 #include "Symbol.h"
@@ -29,5 +34,7 @@
 #include "NonTerminal.h"
 #include "Production.h"
 #include "Grammar.h"
+#include "Parser.h"
+#include "Compiler.h"
 
 #endif // !STDAFX_H

@@ -21,7 +21,7 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 		// First pass gets all the non terminals
 		while (std::getline(firstPassInputStream, line, '\n')) {
 			// Split the rule on ->
-			int splitIndex = line.find("->");
+			size_t splitIndex = line.find("->");
 			// Gets the lhs non terminal
 			std::string nonTerminal = trim(line.substr(0, splitIndex));
 			if (!nonTerminal.empty()) {
@@ -50,7 +50,7 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 		while (std::getline(finalPassInputStream, line, '\n')) {
 			if (!line.empty()){
 			// Split the rule on ->
-			int splitIndex = line.find("->");
+			size_t splitIndex = line.find("->");
 			// Gets the lhs non terminal
 			std::string nonTerminal = trim(line.substr(0, splitIndex));
 			// Get the rhs as a vector of strings
@@ -143,7 +143,7 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 		std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(symbolString));
 		auto got = mTerminalSymbols.find(terminal);
 		if (got == mTerminalSymbols.end()) {
-		
+			throw std::exception("symbolString is not a valid symbol");
 		} else {
 			return *got->get();
 		}

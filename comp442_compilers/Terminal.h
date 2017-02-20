@@ -9,20 +9,5 @@ public:
 };
 
 
-//namespace std {
-//	template<>
-//	struct hash<Terminal> {
-//		size_t
-//			operator()(const Terminal& s) const {
-//			return std::hash<string>()(s.getName());
-//		}
-//	};
-//}
-
-
-inline bool operator==(Terminal& p1, Terminal& p2) {
-	return p1.getName() == p2.getName();
-}
-
 
 #endif

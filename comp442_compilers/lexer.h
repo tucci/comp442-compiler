@@ -4,6 +4,7 @@
 
 class Lexer {
 public:
+	Lexer();
 	// Create the lexer with the language specification for this lexer to use
 	Lexer(Specification* spec);
 	~Lexer();
@@ -26,7 +27,8 @@ private:
 	// The buffer to hold the source file
 	std::vector<char> source;
 	// the size of the source file in bytes
-	int sourceSize;
+	// use streamoff to avoid data loss
+	std::streamoff sourceSize;
 	// the current index of the source buffer we are indexing into
 	int sourceIndex;
 

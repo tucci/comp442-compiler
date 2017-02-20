@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+Lexer::Lexer() {
+}
+
 Lexer::Lexer(Specification* spec) {
 	tokenizer = spec->getSpec();
 }
