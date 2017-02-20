@@ -3,15 +3,16 @@
 
 class Production {
 public:
-	Production(NonTerminal& nonTerminal, std::vector<Symbol>& production);
+	Production();
+	Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production);
 	~Production();
 	NonTerminal getNonTerminal();
 	std::vector<Symbol> getProduction();
 	// Overide << for easier print outs
-	friend std::ostream& operator<<(std::ostream& os, Production& p);
+	friend std::ostream& operator<<(std::ostream& os, const Production& p);
 private:
-	NonTerminal& mNonTerminal;
-	std::vector<Symbol>& mProduction;
+	const NonTerminal mNonTerminal;
+	const std::vector<Symbol> mProduction;
 };
 
 #endif

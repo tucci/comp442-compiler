@@ -20,7 +20,7 @@ namespace std {
 }
 
 
-inline bool operator==(const Terminal& p1, const Terminal& p2) {
+inline bool operator==(Terminal& p1, Terminal& p2) {
 	return p1.getName() == p2.getName();
 }
 

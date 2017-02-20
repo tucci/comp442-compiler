@@ -9,7 +9,7 @@ Symbol::Symbol(std::string name, bool isTerminal) {
 Symbol::~Symbol() {
 }
 
-std::string Symbol::getName() const {
+const std::string& Symbol::getName() const {
 	return mName;
 }
 

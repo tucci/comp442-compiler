@@ -18,7 +18,7 @@ namespace std {
 	};
 }
 
-inline bool operator==(const NonTerminal& p1, const NonTerminal& p2) {
+inline bool operator==(NonTerminal& p1, NonTerminal& p2)  {
 	return p1.getName() == p2.getName();
 }
 

@@ -1,51 +1,46 @@
 #include "stdafx.h"
-#include "Grammar.h"
 
-Grammar::Grammar(Production& startProduction) : mStartSymbol(startProduction.getNonTerminal()) {
-	addProduction(startProduction);
+Grammar::Grammar() {
 }
-
 
 Grammar::~Grammar() {
 }
 
-void Grammar::addProduction(Production& prod) {
-	
-	// Add this new production rule to our production list
-	mProductions.push_back(prod);
-
-	// Add the non terminal symbol for thr production in the set
-	mNonTerminalSymbols.emplace(prod.getNonTerminal());
-	// Add rhs symbols to the sets
-	std::vector<Symbol> productions = prod.getProduction();
-	// Loop over symbols in rhs
-	for (std::vector<Symbol>::iterator it = productions.begin(); it != productions.end(); ++it) {
-		// If the symbol is a terminal symbol we add it to the terminal symbol set
-		if (it->isTerminal()) {
-			addTerminal(static_cast<Terminal&>(*it));
-		} else {
-			// If the symbol is a non terminal symbol we add it to the non terminal symbol set
-			addNonTerminal(static_cast<NonTerminal&>(*it));
-		}
-	}
-}
-
-void Grammar::addNonTerminal(NonTerminal& nonTerminal) {
+const NonTerminal& Grammar::addNonTerminal(std::string nonTerminalString, bool isStartSymbol) {
+	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(nonTerminalString));
 	mNonTerminalSymbols.emplace(nonTerminal);
+	nonTerminal = *mNonTerminalSymbols.find(nonTerminal);
+	if (isStartSymbol) {
+		mStartSymbol = nonTerminal;
+	}
+	return *nonTerminal;
 }
 
-void Grammar::addTerminal(Terminal& terminal) {
+const Terminal& Grammar::addTerminal(std::string terminalString) {
+	std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(terminalString));
 	mTerminalSymbols.emplace(terminal);
+	terminal = *mTerminalSymbols.find(terminal);
+	return *terminal;
 }
 
-NonTerminal Grammar::getStartSymbol() {
-	return mStartSymbol;
+const Production& Grammar::addProduction(const NonTerminal& symbol, std::vector<Symbol> production) {
+	std::shared_ptr<Production> productionRule = std::shared_ptr<Production>(new Production(symbol, production));
+	mProductions.push_back(productionRule);
+	productionRule = mProductions.at(mProductions.size() - 1);
+	return *productionRule;	
+}
+
+const NonTerminal& Grammar::getStartSymbol() {
+	return *mStartSymbol;
+}
+
+ const std::vector<std::shared_ptr<Production>>& Grammar::getProductions() {
+	return mProductions;
 }
 
 std::ostream& operator <<(std::ostream& os, Grammar& g) {
-
-	for (std::vector<Production>::iterator it = g.mProductions.begin(); it != g.mProductions.end(); ++it) {
-		os << *it << std::endl;
+	for (std::vector<std::shared_ptr<Production>>::iterator it = g.mProductions.begin(); it != g.mProductions.end(); ++it) {
+		os << *it->get() << std::endl;
 	}
 	return os;
 }
