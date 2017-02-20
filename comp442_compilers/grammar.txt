@@ -1,107 +1,118 @@
-prog            -> classDeclList progBody 
-classDecl       -> class id { varFuncDefList } ; 
-classDeclList   -> classDecl classDeclList 
-classDeclList   -> EPSILON 
-progBody        -> program funcBody ; funcDefList 
+prog			-> classDeclList progBody 
+classDecl		-> class id { varFuncDefList } ; 
+classDeclList		-> classDecl classDeclList 
+classDeclList		-> EPSILON 
+progBody		-> program funcBody ; funcDefList 
 
-funcDef         -> type id funcDefRest
-funcDefRest     -> ( fParams ) funcBody ;
-funcDefList     -> funcDef funcDefList 
-funcDefList     -> EPSILON 
-funcBody        -> { varStatementList } 
+funcDef			-> type id funcDefRest
+funcDefRest		-> ( fParams ) funcBody ;
+funcDefList		-> funcDef funcDefList 
+funcDefList		-> EPSILON 
+funcBody		-> { varStatementList } 
 
-varDecl         -> type id varDeclRest
-varDeclNoId     -> typeNoId id varDeclRest
-varDeclRest     -> arraySizeList ; 
+varDecl			-> type id varDeclRest
+varDeclNoId		-> typeNoId id varDeclRest
+varDeclRest		-> arraySizeList ; 
 
-varFuncDefList -> type id varFuncDefListRest varFuncDefList
-varFuncDefList -> EPSILON
-varFuncDefListRest -> varDeclRest
-varFuncDefListRest -> funcDefRest
+varFuncDefList		-> type id varFuncDefListRest varFuncDefList
+varFuncDefList		-> EPSILON
+varFuncDefListRest	-> varDeclRest
+varFuncDefListRest	-> funcDefRest
 
-varStatementList -> id varStatementListRest varStatementList
-varStatementList -> varDeclNoId varStatementList
-varStatementList -> noIdStartStatement varStatementList
-varStatementList -> EPSILON
-varStatementListRest -> id varDeclRest 
-varStatementListRest -> assignStatRest ;
+varStatementList	-> id varStatementListRest varStatementList
+varStatementList	-> varDeclNoId varStatementList
+varStatementList	-> noIdStartStatement varStatementList
+varStatementList	-> EPSILON
+varStatementListRest	-> id varDeclRest 
+varStatementListRest	-> assignStatRest ;
 
-statement -> noIdStartStatement
-statement       -> assignStat ; 
-statementList   -> statement statementList 
-statementList   -> EPSILON 
-noIdStartStatement       -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
-noIdStartStatement       -> if ( expr ) then statBlock elseBlock ; 
-noIdStartStatement       -> get ( variable ) ; 
-noIdStartStatement       -> put ( expr ) ; 
-noIdStartStatement       -> return ( expr ) ;
-elseBlock -> else statBlock
-elseBlock -> EPSILON
-assignStat      -> id assignStatRest
-assignStat      -> assignStatRest
-assignStatRest -> indiceList assignStatRestRest
-assignStatRestRest ->  . variable assignOp expr 
-assignStatRestRest ->  assignOp expr 
-statBlock       -> { statementList } 
-statBlock       -> statement 
-statBlock       -> EPSILON 
+statement		-> noIdStartStatement
+statement		-> assignStat ; 
+statementList		-> statement statementList 
+statementList		-> EPSILON 
+noIdStartStatement      -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
+noIdStartStatement      -> if ( expr ) then statBlock elseBlock ; 
+noIdStartStatement      -> get ( variable ) ; 
+noIdStartStatement      -> put ( expr ) ; 
+noIdStartStatement      -> return ( expr ) ;
+elseBlock		-> else statBlock
+elseBlock		-> EPSILON
+assignStat		-> id assignStatRest
+assignStat		-> assignStatRest
+assignStatRest		-> indiceList assignStatRestRest
+assignStatRestRest	-> . variable assignOp expr 
+assignStatRestRest	-> assignOp expr 
+statBlock		-> { statementList } 
+statBlock		-> statement 
+statBlock		-> EPSILON 
 
-expr            -> arithExpr exprRest
-exprRest 		-> relOp arithExpr | EPSILON
-relExpr         -> arithExpr relOp arithExpr
-arithExpr       -> term arithExprRest
-arithExprRest 	-> addOp term arithExprRest | EPSILON
-sign            -> + 
-sign            -> - 
-term            -> factor termRest
-termRest 		-> multOp factor termRest | EPSILON
-factor          -> ( arithExpr ) 
-factor          -> num 
-factor          -> not factor 
-factor          -> sign factor 
-factor -> id factorRest
-factorRest -> dotidnest factorRest | ( aParams ) | indice factorRestRest | EPSILON
-factorRestRest -> indice factorRestRest | dotidnest factorRest
-factorRestRest -> EPSILON
+expr			-> arithExpr exprRest
+exprRest 		-> relOp arithExpr 
+exprRest 		-> EPSILON
+relExpr			-> arithExpr relOp arithExpr
+arithExpr		-> term arithExprRest
+arithExprRest 		-> addOp term arithExprRest
+arithExprRest 		-> EPSILON
+sign			-> + 
+sign			-> - 
+term			-> factor termRest
+termRest 		-> multOp factor termRest
+termRest		-> EPSILON
+factor			-> ( arithExpr ) 
+factor			-> num 
+factor			-> not factor 
+factor			-> sign factor 
+factor			-> id factorRest
+factorRest		-> dotidnest factorRest 
+factorRest		-> ( aParams )
+factorRest		-> indice factorRestRest 
+factorRest		-> EPSILON
+factorRestRest		-> indice factorRestRest 
+factorRestRest		-> dotidnest factorRest
+factorRestRest		-> EPSILON
 
-variable        -> id dotidIndiceList
+variable		-> id dotidIndiceList
 dotidnest		-> . id
-dotidIndice		-> dotidnest | indice
-dotidIndiceList	-> dotidIndice dotidIndiceList
-dotidIndiceList	-> EPSILON 
-indice          -> [ arithExpr ] 
-indiceList      -> indice indiceList 
-indiceList      -> EPSILON 
-arraySize       -> [ integer ] 
-arraySizeList   -> arraySize arraySizeList 
-arraySizeList   -> EPSILON 
+dotidIndice		-> dotidnest
+dotidIndice		-> indice
+dotidIndiceList		-> dotidIndice dotidIndiceList
+dotidIndiceList		-> EPSILON 
+indice			-> [ arithExpr ] 
+indiceList		-> indice indiceList 
+indiceList		-> EPSILON 
+arraySize		-> [ integer ] 
+arraySizeList		-> arraySize arraySizeList 
+arraySizeList		-> EPSILON 
 
-typeNoId -> float
-typeNoId -> int
-type            -> typeNoId 
-type            -> id
+typeNoId		-> float
+typeNoId		-> int
+type			-> typeNoId 
+type			-> id
 
-fParams         -> type id arraySizeList fParamsTailList 
-fParams         -> EPSILON 
-fParamsTail     -> , type id arraySizeList 
-fParamsTailList -> fParamsTail fParamsTailList 
-fParamsTailList -> EPSILON 
+fParams			-> type id arraySizeList fParamsTailList 
+fParams			-> EPSILON 
+fParamsTail		-> , type id arraySizeList 
+fParamsTailList		-> fParamsTail fParamsTailList 
+fParamsTailList		-> EPSILON 
 
-aParams         -> expr aParamsTailList 
-aParams         -> EPSILON 
-aParamsTail     -> , expr 
-aParamsTailList -> aParamsTail aParamsTailList 
-aParamsTailList -> EPSILON 
+aParams			-> expr aParamsTailList 
+aParams			-> EPSILON 
+aParamsTail		-> , expr 
+aParamsTailList		-> aParamsTail aParamsTailList 
+aParamsTailList		-> EPSILON 
 
-assignOp          	 -> = 
-relOp             	 -> < relOpLessThanRest
-relOpLessThanRest 	 -> = | > | EPSILON
-relOp           	 -> = = 
-relOp           	 -> > relOpGreaterThanRest
-relOpGreaterThanRest -> = | EPSILON
-addOp           -> + 
-addOp           -> - 
-addOp           -> or 
-multOp          -> * 
-multOp          -> / 
-multOp          -> and 
+assignOp          	-> = 
+relOp             	-> < relOpLessThanRest
+relOpLessThanRest 	-> =
+relOpLessThanRest	-> >
+relOpLessThanRest	-> EPSILON 
+relOp           	-> = = 
+relOp           	-> > relOpGreaterThanRest
+relOpGreaterThanRest	-> =
+relOpGreaterThanRest	-> EPSILON
+addOp			-> + 
+addOp			-> - 
+addOp			-> or 
+multOp			-> * 
+multOp			-> / 
+multOp			-> and 

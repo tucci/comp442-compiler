@@ -26,4 +26,29 @@ protected:
 	// Whether this symbol is a terminal symbol
 	bool mIsTerminalSymbol;
 };
+
+
+// Taken from http://stackoverflow.com/questions/15810620/unordered-map-with-custom-hashing-equal-functions-functions-dont-get-called
+class SymbolHasher {
+public:
+	size_t operator() (const std::shared_ptr<Symbol> key) const {
+		std::string stringKey = key.get()->getName();
+		size_t hash = 0;
+		for (size_t i = 0; i< stringKey.size(); i++) {
+			hash += (71 * hash + stringKey[i]) % 5;
+		}
+		return hash;
+	}
+};
+class SymbolEqual {
+public:
+	bool operator() (const std::shared_ptr<Symbol> s1, const std::shared_ptr<Symbol>& s2) const {
+
+		std::string s1Name = s1.get()->getName();
+		std::string s2Name = s2.get()->getName();
+		return !(s1Name.compare(s2Name));
+	}
+};
+
 #endif // !SYMBOL_H
+

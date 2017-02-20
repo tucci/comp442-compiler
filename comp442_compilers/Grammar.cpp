@@ -3,10 +3,81 @@
 Grammar::Grammar() {
 }
 
+Grammar::Grammar(std::string filename, std::string startSymbol) {
+	// Read grammar from file
+	std::ifstream inputFile;
+	try {
+		inputFile.open(filename);
+		std::stringstream firstPassInputStream;
+		firstPassInputStream << inputFile.rdbuf();
+		std::stringstream finalPassInputStream(firstPassInputStream.str());
+		inputFile.close();
+
+		std::string line;
+
+
+		// Store rhs for second pass to store terminals and productions
+		std::vector<std::string> rhsList;
+
+		// First pass gets all the non terminals
+		while (std::getline(firstPassInputStream, line, '\n')) {
+			// Split the rule on ->
+			int splitIndex = line.find("->");
+			// Gets the lhs non terminal
+			std::string nonTerminal = trim(line.substr(0, splitIndex));
+			if (!nonTerminal.empty()) {
+				// Checks to see if the current non terminal is the start symbol
+				bool isStartSymbol = nonTerminal == startSymbol;
+				// Add the non terminal to the grammar
+				addNonTerminal(nonTerminal, isStartSymbol);
+				// push the rhs for this production to be used in the second pass
+				rhsList.push_back(trim(line.substr(splitIndex + 2)));
+			}
+		}
+		// Second pass: loop over all rhs for each prodution to find non terminals
+		for (std::vector<std::string>::iterator it = rhsList.begin(); it != rhsList.end(); ++it) {
+			std::vector<std::string> split = simpleSplit(*it);
+			// loop over rhs split
+			for (std::vector<std::string>::iterator st = split.begin(); st != split.end(); ++st) {
+				if (!isNonTerminal(*st)) {
+					// TODO filter out EPSILON
+					addTerminal(*st);
+				}
+			}
+		}
+
+		while (std::getline(finalPassInputStream, line, '\n')) {
+			if (!line.empty()){
+			// Split the rule on ->
+			int splitIndex = line.find("->");
+			// Gets the lhs non terminal
+			std::string nonTerminal = trim(line.substr(0, splitIndex));
+			// Get the rhs as a vector of strings
+			std::vector<std::string> rhsProductionStrVec = simpleSplit(trim(line.substr(splitIndex + 2)));
+
+			
+				// Convert the string symbols to Symbol objects
+				std::vector<Symbol> production;
+				for (std::vector<std::string>::iterator st = rhsProductionStrVec.begin(); st != rhsProductionStrVec.end(); ++st) {
+					production.push_back(stringToSymbol(*st));
+				}
+				addProduction(nonTerminal, production);
+			}
+		}
+		
+
+
+
+
+	} catch (std::ifstream::failure e) {
+		std::cout << "Error reading sample file";
+	}
+}
+
 Grammar::~Grammar() {
 }
 
-const NonTerminal& Grammar::addNonTerminal(std::string nonTerminalString, bool isStartSymbol) {
+const NonTerminal& Grammar::addNonTerminal(const std::string& nonTerminalString, bool isStartSymbol) {
 	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(nonTerminalString));
 	mNonTerminalSymbols.emplace(nonTerminal);
 	nonTerminal = *mNonTerminalSymbols.find(nonTerminal);
@@ -16,7 +87,7 @@ const NonTerminal& Grammar::addNonTerminal(std::string nonTerminalString, bool i
 	return *nonTerminal;
 }
 
-const Terminal& Grammar::addTerminal(std::string terminalString) {
+const Terminal& Grammar::addTerminal(const std::string& terminalString) {
 	std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(terminalString));
 	mTerminalSymbols.emplace(terminal);
 	terminal = *mTerminalSymbols.find(terminal);
@@ -43,4 +114,35 @@ std::ostream& operator <<(std::ostream& os, Grammar& g) {
 		os << *it->get() << std::endl;
 	}
 	return os;
+}
+
+
+bool Grammar::isNonTerminal(const std::string& nonTerminalString) {
+	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(nonTerminalString));
+	auto got = mNonTerminalSymbols.find(nonTerminal);
+	if (got == mNonTerminalSymbols.end()) {
+		// not found
+		return false;
+	} else {
+		return true;
+	}	
+}
+
+Symbol Grammar::stringToSymbol(const std::string& symbolString) {
+	// Check if this is a non terminal symbol
+	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(symbolString));
+	auto got = mNonTerminalSymbols.find(nonTerminal);
+	if (got == mNonTerminalSymbols.end()) {
+		// This is not a non terminal symbol and is a terminal symbol
+		std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(symbolString));
+		auto got = mTerminalSymbols.find(terminal);
+		if (got == mTerminalSymbols.end()) {
+		
+		} else {
+			return *got->get();
+		}
+		
+	} else {
+		return *got->get();
+	}
 }

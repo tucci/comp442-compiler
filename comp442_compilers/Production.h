@@ -3,7 +3,6 @@
 
 class Production {
 public:
-	Production();
 	Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production);
 	~Production();
 	NonTerminal getNonTerminal();
