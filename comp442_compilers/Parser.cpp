@@ -4,7 +4,7 @@ Parser::Parser(const Lexer& lexer, const Grammar& grammar) {
 	this->lexer = lexer;
 	this->grammar = grammar;
 	firstSet = GrammarFirstFollowSetGenerator::buildFirstSet(grammar);
-	followSet = GrammarFirstFollowSetGenerator::buildFollowSet(grammar);
+	followSet = GrammarFirstFollowSetGenerator::buildFollowSet(grammar, firstSet);
 	buildParseTable();
 }
 

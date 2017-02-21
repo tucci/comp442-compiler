@@ -105,7 +105,7 @@ const Production& Grammar::addProduction(const NonTerminal& symbol, std::vector<
 	return *productionRule;	
 }
 
-const NonTerminal& Grammar::getStartSymbol() {
+const NonTerminal& Grammar::getStartSymbol() const {
 	return *mStartSymbol;
 }
 
@@ -187,18 +187,57 @@ NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFirstSet(const 
 				// If there were changes while merging, then we need to continue adding until there were no more changes
 				continueProcessing = true;
 			}
-			
 		}
-		
 	}
-
-
 	return firstSet;
 }
 
 
-NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFollowSet(const Grammar& grammar) {
+NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFollowSet(const Grammar& grammar, const NonTerminalMapToTerminalSet& firstSet) {
 	NonTerminalMapToTerminalSet followSet = initMap(grammar);
+	// the end of file is in the follow set for the start symbol
+	followSet.at(grammar.getStartSymbol()).emplace(SpecialTerminal::END_OF_FILE);
+	bool continueProcessing = true;
+	std::vector<std::shared_ptr<Production>> productions = grammar.getProductions();
+	while (continueProcessing) {
+		// Assume we dont need to contine proccessing
+		// Further down, some caller may change this value
+		continueProcessing = false;
+
+		for (auto p = productions.begin(); p != productions.end(); ++p) {
+			std::vector<Symbol> rhs = (*p)->getProduction();
+
+			for (int i = 0; i < rhs.size(); i++) {
+				Symbol currentSymbol = rhs.at(i);
+				// Skip if this is a terminal symbol
+				if (currentSymbol.isTerminal()) {
+					continue;
+				}
+				// It is a nonterminal at this point
+				// This is a nonTerminal
+				const NonTerminal nt = static_cast<const NonTerminal&>(currentSymbol);
+				TerminalSet offsetSet = computeFirst(sublist(rhs, i + 1, rhs.size()), firstSet);
+				for (Terminal t : offsetSet) {
+					if (SpecialTerminal::isEpsilon(t.getName())) {
+						continue;
+					}
+
+					std::pair<TerminalSet::iterator, bool> emplaceResult = followSet.at(nt).emplace(t);
+					if (emplaceResult.second) {
+						continueProcessing = true;
+					}
+				}
+
+				if (offsetSet.find(SpecialTerminal::EPSILON) != offsetSet.end()) {
+					std::pair<TerminalSet, bool> merge = left_merge(followSet.at(nt), followSet.at((*p)->getNonTerminal()));
+					followSet.at(nt) = merge.first;
+					if (merge.second) {
+						continueProcessing = true;
+					}
+				}
+			}
+		}
+	}
 	return followSet;
 }
 
@@ -240,9 +279,7 @@ NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::initMap(const Gramma
 		TerminalSet emptySet;
 		map.emplace(*itr->get(), emptySet);
 	}
-
 	return map;
-
 }
 
 
@@ -257,6 +294,5 @@ std::pair<TerminalSet, bool> GrammarFirstFollowSetGenerator::left_merge(const Te
 			unionedSet.emplace(*t);
 		}
 	}
-
 	return std::pair<TerminalSet, bool>(unionedSet, hasChanges);
 }

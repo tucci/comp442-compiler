@@ -15,7 +15,7 @@ public:
 	// Creates a producution and it to the list of productions for this grammar
 	const Production& addProduction(const NonTerminal& symbol, std::vector<Symbol> production);
 	// Get the starting symbol for this grammar
-	const NonTerminal& Grammar::getStartSymbol();
+	const NonTerminal& Grammar::getStartSymbol() const;
 	// Get a list of productions for the grammar
 	const std::vector<std::shared_ptr<Production>>& getProductions() const;
 	// Gets the set of terminals/non terminals
@@ -48,7 +48,7 @@ class GrammarFirstFollowSetGenerator {
 public:
 	// NonTerminalMapToTerminalSet is typedefed in stdafx.h
 	static NonTerminalMapToTerminalSet buildFirstSet(const Grammar&);
-	static NonTerminalMapToTerminalSet buildFollowSet(const Grammar&);
+	static NonTerminalMapToTerminalSet buildFollowSet(const Grammar&, const NonTerminalMapToTerminalSet& firstSet);
 	// TerminalSet is typedef in stdafx.h
 	static TerminalSet computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first);
 
