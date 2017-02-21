@@ -26,11 +26,11 @@ private:
 	std::unordered_map <NonTerminal, std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual>, SymbolHasher, SymbolEqual> parseTable;
 	// Data structure to hold our parse stack
 	std::stack<Symbol> parseStack;
-
-	void buildFirstSet();
-	void buildFollowSet();
+	// Builds the parse table from the grammar
 	void buildParseTable();
+	// Handles the errors
 	void skipErrors();
+	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& rhs);
 	bool inSet(const Terminal& symbol, const std::unordered_set<Terminal, SymbolHasher, SymbolEqual>& symbolSet);
 

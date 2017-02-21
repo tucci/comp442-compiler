@@ -43,7 +43,7 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 			// loop over rhs split
 			for (std::vector<std::string>::iterator st = split.begin(); st != split.end(); ++st) {
 				// Make sure we dont add non terminals and epislon to the terminal string
-				if (!isNonTerminal(*st) && !isEpsilon(*st)) {
+				if (!isNonTerminal(*st) && !SpecialTerminal::isEpsilon(*st)) {
 					addTerminal(*st);
 				}
 			}
@@ -109,9 +109,17 @@ const NonTerminal& Grammar::getStartSymbol() {
 	return *mStartSymbol;
 }
 
- const std::vector<std::shared_ptr<Production>>& Grammar::getProductions() {
+ const std::vector<std::shared_ptr<Production>>& Grammar::getProductions() const{
 	return mProductions;
 }
+
+ const std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual>& Grammar::getTerminals() const {
+	 return mTerminalSymbols;
+ }
+
+ const std::unordered_set<std::shared_ptr<NonTerminal>, SymbolHasher, SymbolEqual>& Grammar::getNonTerminals() const {
+	 return mNonTerminalSymbols;
+ }
 
 std::ostream& operator <<(std::ostream& os, Grammar& g) {
 	// Outputs all productions for this grammar
@@ -133,13 +141,9 @@ bool Grammar::isNonTerminal(const std::string& nonTerminalString) {
 	}	
 }
 
-bool Grammar::isEpsilon(const std::string& symbolString) {
-	return symbolString == Symbol::EPSILON.getName();
-}
-
 Symbol Grammar::stringToSymbol(const std::string& symbolString) {
-	if (isEpsilon(symbolString)) {
-		return Symbol::EPSILON;
+	if (SpecialTerminal::isEpsilon(symbolString)) {
+		return SpecialTerminal::EPSILON;
 	}
 	// Check if this is a non terminal symbol
 	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(symbolString));
@@ -159,3 +163,100 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 	}
 }
 
+
+
+NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFirstSet(const Grammar& grammar) {
+	NonTerminalMapToTerminalSet firstSet = initMap(grammar);
+	std::vector<std::shared_ptr<Production>> productions = grammar.getProductions();
+
+	// Whether we should continue proccessing this grammar in order to add all the neccessary terminals
+	bool continueProcessing = true;
+	while (continueProcessing) {
+
+		// Assume we shouldnt continue
+		continueProcessing = false;
+		for (auto p = productions.begin(); p != productions.end(); ++p) {
+			NonTerminal pNonTerminal = p->get()->getNonTerminal();
+			TerminalSet first = computeFirst(p->get()->getProduction(), firstSet);
+			// Merge the current set for the non terminal with the computed first set
+			std::pair<TerminalSet, bool> merge = left_merge(firstSet.at(pNonTerminal), first);
+			// Check if there were changes
+			if (merge.second) {
+				// Set the merged set to the set for that non terminal
+				firstSet.at(pNonTerminal) = merge.first;
+				// If there were changes while merging, then we need to continue adding until there were no more changes
+				continueProcessing = true;
+			}
+			
+		}
+		
+	}
+
+
+	return firstSet;
+}
+
+
+NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFollowSet(const Grammar& grammar) {
+	NonTerminalMapToTerminalSet followSet = initMap(grammar);
+	return followSet;
+}
+
+
+TerminalSet GrammarFirstFollowSetGenerator::computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first) {
+	TerminalSet computedSet;
+	for (auto s = symbols.begin(); s!= symbols.end(); ++s) {
+		if (s->isTerminal()) {
+			const Terminal t = static_cast<const Terminal&>(*s);
+			computedSet.emplace(t);
+			return computedSet;
+		}
+		// This is a nonTerminal
+		const NonTerminal nt = static_cast<const NonTerminal&>(*s);
+
+		TerminalSet ntSet = first.at(nt);
+
+		// Check if this set has epislion
+		TerminalSet::iterator got = ntSet.find(SpecialTerminal::EPSILON);
+		if (got == ntSet.end()) {
+			// epsilon not found
+			std::pair<TerminalSet, bool> merge = left_merge(computedSet, first.at(nt));
+			computedSet = merge.first;
+			return computedSet;
+		}
+		std::pair<TerminalSet, bool> merge = left_merge(computedSet, first.at(nt));
+		computedSet = merge.first;
+		computedSet.erase(SpecialTerminal::EPSILON);
+	}
+	computedSet.emplace(SpecialTerminal::EPSILON);
+	return computedSet;
+}
+
+NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::initMap(const Grammar& grammar) {
+	NonTerminalMapToTerminalSet map;
+	const std::unordered_set<std::shared_ptr<NonTerminal>, SymbolHasher, SymbolEqual> nonTerminals = grammar.getNonTerminals();
+
+	for (auto itr = nonTerminals.begin(); itr != nonTerminals.end(); ++itr) {
+		TerminalSet emptySet;
+		map.emplace(*itr->get(), emptySet);
+	}
+
+	return map;
+
+}
+
+
+std::pair<TerminalSet, bool> GrammarFirstFollowSetGenerator::left_merge(const TerminalSet& set1, const TerminalSet& set2) {
+	TerminalSet unionedSet(set1);
+	bool hasChanges = false;
+	for (TerminalSet::const_iterator t = set2.begin(); t != set2.end(); ++t) {
+		TerminalSet::const_iterator got = unionedSet.find(*t);
+		if (got == unionedSet.end()) {
+			// no duplicate found, so there were changes to the set
+			hasChanges = true;
+			unionedSet.emplace(*t);
+		}
+	}
+
+	return std::pair<TerminalSet, bool>(unionedSet, hasChanges);
+}

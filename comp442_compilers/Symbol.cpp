@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
-const Symbol Symbol::EPSILON("EPSILON", false);
-const Symbol Symbol::END_OF_FILE("$", false);
+
 
 
 Symbol::Symbol(std::string name, bool isTerminal) {
@@ -16,7 +15,7 @@ const std::string& Symbol::getName() const {
 	return mName;
 }
 
-bool Symbol::isTerminal() {
+bool Symbol::isTerminal() const {
 	return mIsTerminalSymbol;
 }
 
@@ -25,3 +24,4 @@ std::ostream& operator <<(std::ostream& os, const Symbol& s) {
 	os << "<" << s.mName << ">";
 	return os;
 }
+

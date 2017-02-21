@@ -8,6 +8,19 @@ public:
 	~Terminal();
 };
 
+class SpecialTerminal : public Terminal {
+public:
+	// Special symbols to hold epsilon/end of file symbols
+	static const SpecialTerminal EPSILON;
+	static const SpecialTerminal END_OF_FILE;
+	SpecialTerminal(std::string name);
+	~SpecialTerminal();
+
+	// Whether the given string is an epsilon symbol
+	static bool isEpsilon(const std::string& symbolString);
+
+};
+
 
 
 #endif

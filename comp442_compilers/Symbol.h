@@ -6,19 +6,14 @@
 class Symbol {
 
 public:
-	// Special symbols to hold epsilon/end of file symbols
-	static const Symbol EPSILON;
-	static const Symbol END_OF_FILE;
-	
 
 	~Symbol();
 	// Get the name of this symbol
 	const std::string& getName() const;
 	// Get if this symbol is a terminal symbol
-	bool isTerminal();
+	bool isTerminal() const;
 	// Overide << for easier print outs
 	friend std::ostream& operator<<(std::ostream& os, const Symbol& s);
-
 
 protected:
 	// Constructor as protected to allow subclasses to override this
