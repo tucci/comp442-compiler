@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
+// Special production to be used in our parsing table to indicate that this is an error
+const NonTerminal Production::ERROR_PRODUCTION_NON_TERMINAL("ERROR_PRODUCTION");
+const Production Production::ERROR_PRODUCTION(ERROR_PRODUCTION_NON_TERMINAL, std::vector<Symbol>{});
 
 Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production) :mNonTerminal(nonTerminal), mProduction(production) {
 	// If you want an epsilon production, you must explicity add Symbol::EPSILON to the production vector
-	if (production.empty()) {
-		throw std::exception("Production list cannot be empty. EPSILON must be explictly added.");
-	}
 }
 
 Production::~Production() {

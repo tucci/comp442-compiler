@@ -3,6 +3,8 @@
 
 class Production {
 public:
+	static const NonTerminal ERROR_PRODUCTION_NON_TERMINAL;
+	static const Production ERROR_PRODUCTION;
 	// Creates a production from a given non terminal symbol, and list of symbols for a production
 	Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production);
 	~Production();

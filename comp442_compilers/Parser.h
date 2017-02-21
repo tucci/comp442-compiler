@@ -9,8 +9,7 @@ public:
 	~Parser();
 	// Parse method
 	bool parse();
-	std::unordered_set<Terminal, SymbolHasher, SymbolEqual> first(const NonTerminal& symbol);
-	std::unordered_set<Terminal, SymbolHasher, SymbolEqual> follow(const NonTerminal& symbol);
+	
 private:
 	// Our lexer
 	Lexer lexer;
@@ -19,9 +18,9 @@ private:
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
 	// Data structure to hold first set
-	std::unordered_map<NonTerminal, std::unordered_set<Terminal, SymbolHasher, SymbolEqual>, SymbolHasher, SymbolEqual> firstSet;
+	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
-	std::unordered_map<NonTerminal, std::unordered_set<Terminal, SymbolHasher, SymbolEqual>, SymbolHasher, SymbolEqual> followSet;
+	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> followSet;
 	// Data structe to hold the parse table
 	std::unordered_map <NonTerminal, std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual>, SymbolHasher, SymbolEqual> parseTable;
 	// Data structure to hold our parse stack
@@ -32,7 +31,11 @@ private:
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& rhs);
-	bool inSet(const Terminal& symbol, const std::unordered_set<Terminal, SymbolHasher, SymbolEqual>& symbolSet);
+
+	bool inFirst(const Terminal& terminal, const NonTerminal& nonTerminal);
+	bool inFollow(const Terminal& terminal, const NonTerminal& nonTerminal);
+	bool inSet(const Terminal& symbol, const TerminalSet& symbolSet);
+
 
 };
 

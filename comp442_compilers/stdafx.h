@@ -24,8 +24,9 @@
 #include "dfa.h"
 #include "specification.h"
 #include "lexer.h"
-// Helper classes
-#include "StringUtils.h"
+// Util code
+#include "Utils.h"
+
 
 
 // Grammar
@@ -33,8 +34,12 @@
 #include "Terminal.h"
 #include "NonTerminal.h"
 #include "Production.h"
+// Typedef this huge monster when building the first/follow sets
+typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;
+typedef std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> NonTerminalMapToTerminalSet;
 #include "Grammar.h"
 #include "Parser.h"
 #include "Compiler.h"
+
 
 #endif // !STDAFX_H

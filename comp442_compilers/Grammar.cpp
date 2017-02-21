@@ -1,6 +1,11 @@
 #include "stdafx.h"
 
 Grammar::Grammar() {
+
+	// Add end of file to the list of terminals 
+	// We are gonna need this when creating the parse table
+	mTerminalSymbols.emplace(std::shared_ptr<Terminal>(new Terminal(SpecialTerminal::END_OF_FILE.getName())));
+
 }
 
 Grammar::Grammar(std::string filename, std::string startSymbol) {
@@ -48,6 +53,10 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 				}
 			}
 		}
+
+		// Add end of file to the list of terminals 
+		// We are gonna need this when creating the parse table
+		mTerminalSymbols.emplace(std::shared_ptr<Terminal>(new Terminal(SpecialTerminal::END_OF_FILE.getName())));
 
 		// Final pass to create all the productions
 		while (std::getline(finalPassInputStream, line, '\n')) {
