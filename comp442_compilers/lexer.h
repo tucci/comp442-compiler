@@ -32,7 +32,7 @@ private:
 	std::vector<Token> outputTokens;
 	// the size of the source file in bytes
 	// use streamoff to avoid data loss
-	std::streamoff sourceSize;
+	std::streamoff sourceSizeInBytes;
 	// the current index of the source buffer we are indexing into
 	int sourceIndex;
 

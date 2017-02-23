@@ -28,9 +28,17 @@ void Compiler::setSourceFile(std::string sourceFile) {
 
 // Analyses the syntax of the source code
 bool Compiler::analyzeSyntax() {
-	bool parsed = parser->parse();
+	std::cout << "Analyzing Syntax..." << std::endl;
+	bool parsedSuccessfully = parser->parse();
 	parser->outputAnalysis();
-	return parsed;
+	if (parsedSuccessfully) {
+		std::cout << "Parsed Successfully" << std::endl;
+		std::cout << "See derivation.html for derivation" << std::endl;
+	} else {
+		std::cout << "There was an error during parsing" << std::endl;
+		std::cout << "See parserErrors.html for errors" << std::endl;
+	}
+	return parsedSuccessfully;
 }
 
 

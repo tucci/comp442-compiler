@@ -102,14 +102,12 @@ aParamsTailList		-> aParamsTail aParamsTailList
 aParamsTailList		-> EPSILON 
 
 assignOp          	-> = 
-relOp             	-> < relOpLessThanRest
-relOpLessThanRest 	-> =
-relOpLessThanRest	-> >
-relOpLessThanRest	-> EPSILON 
-relOp           	-> = = 
-relOp           	-> > relOpGreaterThanRest
-relOpGreaterThanRest	-> =
-relOpGreaterThanRest	-> EPSILON
+relOp           	-> == 
+relOp             	-> <>
+relOp             	-> <
+relOp           	-> >
+relOp           	-> <=
+relOp           	-> >=
 addOp			-> + 
 addOp			-> - 
 addOp			-> or 

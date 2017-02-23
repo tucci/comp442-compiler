@@ -6,9 +6,8 @@ first(termRest) : { EPSILON, /, *, and }
 first(classDecl) : { class }
 first(factorRestRest) : { EPSILON, [, . }
 first(classDeclList) : { class, EPSILON }
-first(relOpLessThanRest) : { =, >, EPSILON }
-first(variable) : { id }
 first(funcDef) : { float, int, id }
+first(variable) : { id }
 first(typeNoId) : { float, int }
 first(elseBlock) : { else, EPSILON }
 first(funcDefRest) : { ( }
@@ -30,7 +29,6 @@ first(statement) : { =, ., [, for, if, get, id, put, return }
 first(noIdStartStatement) : { for, if, get, put, return }
 first(arraySizeList) : { [, EPSILON }
 first(assignStat) : { id, [, ., = }
-first(relOpGreaterThanRest) : { =, EPSILON }
 first(assignStatRest) : { [, ., = }
 first(assignStatRestRest) : { ., = }
 first(addOp) : { +, -, or }
@@ -38,11 +36,11 @@ first(statBlock) : { {, EPSILON, get, if, [, ., =, for, put, id, return }
 first(sign) : { +, - }
 first(expr) : { -, (, id, +, num, not }
 first(dotidnest) : { . }
-first(exprRest) : { EPSILON, >, <, = }
+first(exprRest) : { EPSILON, <>, >, ==, <, <=, >= }
 first(aParamsTail) : { , }
 first(fParamsTail) : { , }
 first(arithExprRest) : { EPSILON, +, -, or }
-first(relOp) : { <, =, > }
+first(relOp) : { ==, <>, >, <, <=, >= }
 first(term) : { -, (, id, +, num, not }
 first(multOp) : { /, *, and }
 first(indiceList) : { [, EPSILON }
@@ -60,13 +58,12 @@ Follow Set
 follow(prog) : { $ }
 follow(type) : { id }
 follow(progBody) : { $ }
-follow(termRest) : { +, ], -, <, or, ), =, >, ,, ; }
+follow(termRest) : { ], ==, +, <, -, <=, ), or, >, <>, >=, ,, ; }
 follow(classDecl) : { class, program }
-follow(factorRestRest) : { >, *, /, -, <, and, ], +, or, ), =, ,, ; }
+follow(factorRestRest) : { <>, >, *, /, <, -, and, ], ==, +, or, <=, ), >=, ,, ; }
 follow(classDeclList) : { program }
-follow(relOpLessThanRest) : { id, (, -, not, num, + }
-follow(variable) : { ), = }
 follow(funcDef) : { float, int, $, id }
+follow(variable) : { ), = }
 follow(typeNoId) : { id }
 follow(elseBlock) : { ; }
 follow(funcDefRest) : { float, $, int, }, id }
@@ -75,7 +72,7 @@ follow(funcDefList) : { $ }
 follow(varDecl) : {  }
 follow(varDeclNoId) : { }, id, put, if, float, get, int, for, return }
 follow(assignOp) : { -, (, id, +, num, not }
-follow(arithExpr) : { >, <, =, ), ,, ;, ] }
+follow(arithExpr) : { <>, >, ], ==, <, ), <=, >=, ,, ; }
 follow(statementList) : { } }
 follow(varDeclRest) : { get, float, if, for, int, put, }, id, return }
 follow(varFuncDefList) : { } }
@@ -88,28 +85,27 @@ follow(statement) : { get, if, ., [, =, for, put, }, id, return, ;, else }
 follow(noIdStartStatement) : { id, }, put, if, get, float, int, =, [, ., for, return, ;, else }
 follow(arraySizeList) : { ;, ,, ) }
 follow(assignStat) : { ;, ) }
-follow(relOpGreaterThanRest) : { id, (, -, not, num, + }
 follow(assignStatRest) : { ;, ) }
 follow(assignStatRestRest) : { ;, ) }
 follow(addOp) : { -, (, id, +, num, not }
 follow(statBlock) : { ;, else }
 follow(sign) : { -, (, id, +, num, not }
 follow(expr) : { ;, ,, ) }
-follow(dotidnest) : { -, <, (, and, ., [, or, =, ), >, *, /, ], +, ,, ; }
+follow(dotidnest) : { -, (, <, and, =, ., [, or, <=, ), <>, >, *, /, ], +, ==, >=, ,, ; }
 follow(exprRest) : { ,, ;, ) }
 follow(aParamsTail) : { ,, ) }
 follow(fParamsTail) : { ,, ) }
-follow(arithExprRest) : { >, <, =, ), ,, ;, ] }
+follow(arithExprRest) : { <>, >, ==, ], <, ), <=, >=, ,, ; }
 follow(relOp) : { -, (, id, +, num, not }
-follow(term) : { ], +, -, <, or, ), =, >, ;, , }
+follow(term) : { ], +, ==, -, <, or, ), <=, <>, >, >=, ,, ; }
 follow(multOp) : { -, (, id, +, num, not }
 follow(indiceList) : { =, . }
-follow(factor) : { >, *, /, -, <, and, ], +, or, ), =, ,, ; }
+follow(factor) : { <>, >, *, /, <, -, and, ], ==, +, or, <=, ), >=, ,, ; }
 follow(arraySize) : { ), [, ,, ; }
-follow(factorRest) : { >, *, /, and, -, <, ], +, ), =, or, ,, ; }
+follow(factorRest) : { <>, >, *, /, and, <, -, ], ==, +, ), <=, or, >=, ,, ; }
 follow(aParams) : { ) }
 follow(fParams) : { ) }
 follow(dotidIndice) : { [, ., ), = }
-follow(indice) : { or, =, ), ., [, >, *, /, -, <, and, ], +, ,, ; }
+follow(indice) : { or, <=, ), ., [, =, <>, >, *, /, <, -, and, ], +, ==, >=, ,, ; }
 follow(aParamsTailList) : { ) }
 follow(fParamsTailList) : { ) }

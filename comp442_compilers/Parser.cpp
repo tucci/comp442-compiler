@@ -13,7 +13,6 @@ Parser::~Parser() {
 }
 
 bool Parser::parse() {
-	
 	bool error = false;
 	parseStack.push_back(SpecialTerminal::END_OF_FILE);
 	parseStack.push_back(grammar->getStartSymbol());
@@ -47,8 +46,6 @@ bool Parser::parse() {
 				skipErrors();
 				error = true;
 			}
-			
-			
 		}
 	}
 	
@@ -148,7 +145,11 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
+	// TODO: fix grammar. we have problem with float in indice. i.e n[2.1]
 	// TODO: factor in num type
+	if (terminalTokenType == TokenType::int_value && token.type == TokenType::num) {
+		return true;
+	}
 	return terminalTokenType == token.type;
 }
 
@@ -271,6 +272,7 @@ void Parser::outputAnalysis() {
 	// TODO: output errors as well
 	std::ofstream parserErrors;
 
+
 	parserDerivation.open("derivation.html");
 	parserDerivation << "<html><head><style>table, th, td{border: 1px solid black;}ul{list-style-type: none;}</style></head><body>";
 	parserDerivation << "<h1>Derivation</h1>";
@@ -287,7 +289,6 @@ void Parser::outputAnalysis() {
 	int derivationCount = 1;
 	for (auto d : derivation) {
 		parserDerivation << "<tr>";
-		std::cout << d.toString();
 		parserDerivation << "<td>" << derivationCount << "</td>";
 		parserDerivation << "<td>" << d.stackContent << "</td>";
 		parserDerivation << "<td>" << d.production << "</td>";

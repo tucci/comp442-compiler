@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	Compiler cp;
-	cp.setSourceFile("testgrammarSource.txt");
+	cp.setSourceFile("testsource_1.txt");
 	cp.analyzeSyntax();
 
 

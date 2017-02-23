@@ -36,7 +36,7 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "*", TokenType::multop },
 	{ "/", TokenType::divop },
 	{ "and", TokenType::and },
-	{ "$", TokenType::end_of_file_token }, // TODO: when calling next token, output a end of file token when done
+	{ "$", TokenType::end_of_file_token },
 	{ "<=", TokenType::lesseq },
 	{ "<>", TokenType::noteq },
 	{ ">=", TokenType::greateq },
@@ -304,16 +304,16 @@ void Specification::updateTokenType(Token* token) {
 			token->type = inTokenMap->second;
 		}
 	}
-	// Convert num types to their respective int/float tokens
-	if (token->type == TokenType::num) {
-		// if it is a float we will change it
-		if (token->lexeme.find('.') != std::string::npos) {
-			token->type = TokenType::float_value;
-		} else {
-			// if it is an integer we will change it to that
-			token->type = TokenType::int_value;
-		}
-	}
+	//// Convert num types to their respective int/float tokens
+	//if (token->type == TokenType::num) {
+	//	// if it is a float we will change it
+	//	if (token->lexeme.find('.') != std::string::npos) {
+	//		token->type = TokenType::float_value;
+	//	} else {
+	//		// if it is an integer we will change it to that
+	//		token->type = TokenType::int_value;
+	//	}
+	//}
 }
 
 
