@@ -304,6 +304,7 @@ void Lexer::writeTokensToFile() {
 	output.open("lexerOutput.txt");
 	error.open("lexerErrors.txt");
 
+	// TODO: also lexerOutput needs to be fixed. uses first follow set text
 	// TODO: this is broken for some reason
 	/*for (std::vector<Token>::iterator it = outputTokens.begin(); it != outputTokens.end(); ++it) {
 		if (it->type == TokenType::error_token) {

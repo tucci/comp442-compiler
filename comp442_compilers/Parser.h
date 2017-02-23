@@ -5,16 +5,17 @@
 class Parser {
 public:
 	// Create a parser from a given lexer and grammar
-	Parser(const Lexer& lexer, const Grammar& grammar);
+	Parser(Lexer* lexer, Grammar* grammar);
 	~Parser();
 	// Parse method
 	bool parse();
-	
+	// Outputs the data about the fisrt/follow sets and parsing table
+	void outputParserDataToFile();
 private:
 	// Our lexer
-	Lexer lexer;
+	Lexer* lexer;
 	// The grammar our parser is trying to validate
-	Grammar grammar;
+	Grammar* grammar;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
 	// Data structure to hold first set
@@ -30,12 +31,17 @@ private:
 	// Handles the errors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
-	void inverseRHSMultiplePush(const Production& rhs);
+	void inverseRHSMultiplePush(const Production& production);
 
+	// Returns true if the terminal is in the first set for the given non terminal production
 	bool inFirst(const Terminal& terminal, const NonTerminal& nonTerminal);
+	// Returns true if the terminal is in the follow set for the given non terminal production
 	bool inFollow(const Terminal& terminal, const NonTerminal& nonTerminal);
+	// Returns true if the terminal is in the given terminal set
 	bool inSet(const Terminal& symbol, const TerminalSet& symbolSet);
-
+	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
+	// Creates the tokens complementary terminal
+	Terminal tokenToTerminal(const Token& token);
 
 };
 

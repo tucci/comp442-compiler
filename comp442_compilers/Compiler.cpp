@@ -3,15 +3,15 @@
 
 Compiler::Compiler() {
 	// Create the spec for the tokens
-	spec = std::unique_ptr<Specification>(new Specification());
+	spec = std::shared_ptr<Specification>(new Specification());
 	// Read the grammar from the file that our parser will use
-	grammar = std::unique_ptr<Grammar>(new Grammar("grammar.txt", "prog"));
+	grammar = std::shared_ptr<Grammar>(new Grammar("grammar.txt", "prog"));
 	// Create the lexer with the given specification
-	lexer = std::unique_ptr<Lexer>(new Lexer(spec.get()));
+	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar
-	parser = std::unique_ptr<Parser>(new Parser(*lexer.get(), *grammar.get()));
+	parser = std::shared_ptr<Parser>(new Parser(lexer.get(), grammar.get()));
+	parser->outputParserDataToFile();
 }
-
 
 Compiler::~Compiler() {
 }

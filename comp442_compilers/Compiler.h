@@ -17,13 +17,13 @@ public:
 	// TODO add method to output analysis and errors
 private:
 	// The specfication for the token
-	std::unique_ptr<Specification> spec;
+	std::shared_ptr<Specification> spec;
 	// The grammar that holds the data structure for our LL(1) grammar
-	std::unique_ptr<Grammar> grammar;
+	std::shared_ptr<Grammar> grammar;
 	// The lexer that will tokenize our source
-	std::unique_ptr<Lexer> lexer;
+	std::shared_ptr<Lexer> lexer;
 	//  The parser that does the syntax checking
-	std::unique_ptr<Parser> parser;
+	std::shared_ptr<Parser> parser;
 };
 
 #endif // ! COMPILER_H

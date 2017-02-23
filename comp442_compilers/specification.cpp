@@ -2,50 +2,68 @@
 
 // A set of all the operartors for the language
 const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
-	{ "and", TokenType::and },
-	{ "or", TokenType::or },
-	{ "not", TokenType::not },
-	{ ".", TokenType::dot },
-	{ ",", TokenType::comma },
-	{ "<", TokenType::lt },
-	{ "<=", TokenType::lesseq },
-	{ "<>", TokenType::noteq },
-	{ ">", TokenType::gt },
-	{ ">=", TokenType::greateq },
-	{ "=", TokenType::assgn },
-	{ "==", TokenType::comparison},
-	{ "+", TokenType::addop },
-	{ "-", TokenType::subtractop },
-	{ "*", TokenType::multop },
-	{ "/", TokenType::divop },
-	{ "(", TokenType::openpar },
-	{ ")", TokenType::closepar },
+	// Listed in the order from kfg edit
+	{ "class", TokenType::class_token },
+	{ "id", TokenType::id },
 	{ "{", TokenType::openbrace },
 	{ "}", TokenType::closebrace },
-	{ "[", TokenType::opensquare },
-	{ "]", TokenType::closesquare },
 	{ ";", TokenType::semicolon },
+	{ "program", TokenType::program_token },
+	{ "(", TokenType::openpar },
+	{ ")", TokenType::closepar },
+	{ "for", TokenType::for_token },
 	{ "if", TokenType::if_token },
 	{ "then", TokenType::then_token },
-	{ "else", TokenType::else_token },
-	{ "for", TokenType::for_token },
-	{ "class", TokenType::class_token },
-	{ "int", TokenType::int_token },
-	{ "float", TokenType::float_token },
 	{ "get", TokenType::get_token },
 	{ "put", TokenType::put_token },
 	{ "return", TokenType::return_token },
-	{ "program", TokenType::program_token }
+	{ "else", TokenType::else_token },
+	{ ".", TokenType::dot },
+	{ "+", TokenType::addop },
+	{ "-", TokenType::subtractop },
+	{ "num", TokenType::num },
+	{ "not", TokenType::not },
+	{ "[", TokenType::opensquare },
+	{ "]", TokenType::closesquare },
+	{ "integer", TokenType::int_value },
+	{ "float", TokenType::float_token },
+	{ "int", TokenType::int_token },
+	{ ",", TokenType::comma },
+	{ "=", TokenType::assgn },
+	{ "<", TokenType::lt },
+	{ ">", TokenType::gt },
+	{ "or", TokenType:: or },
+	{ "*", TokenType::multop },
+	{ "/", TokenType::divop },
+	{ "and", TokenType::and },
+	{ "$", TokenType::end_of_file_token },
+
+	{ "<=", TokenType::lesseq },
+	{ "<>", TokenType::noteq },
+	{ ">=", TokenType::greateq },
+	{ "==", TokenType::comparison},
+	
+};
+
+const std::unordered_map<TokenType, std::string> Specification::REVERSE_TOKEN_MAP = constructReverseMap();
+
+std::unordered_map<TokenType, std::string> Specification::constructReverseMap() {
+	std::unordered_map<TokenType, std::string> reverseMap;
+	for (const auto& it : TOKEN_MAP) {
+		reverseMap.emplace(it.second, it.first);
+	}
+	return reverseMap;
 };
 
 const std::unordered_map<TokenType, std::string> Specification::TOKEN_PRINT_MAP = {
 	{ TokenType::non_token, "non_token" },
 	{ TokenType::error_token, "error_token" },
 	{ TokenType::id, "id" },
+	{ TokenType::num, "num_value" },
 	{ TokenType::int_value, "int_value" },
 	{ TokenType::float_value, "float_value" },
 	{ TokenType::and, "and"},
-	{ TokenType:: or, "or" },
+	{ TokenType::or, "or" },
 	{ TokenType::not, "not" },
 	{ TokenType::dot, "dot" },
 	{ TokenType::comma, "comma" },

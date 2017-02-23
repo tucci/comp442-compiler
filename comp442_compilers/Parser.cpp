@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-Parser::Parser(const Lexer& lexer, const Grammar& grammar) {
+Parser::Parser(Lexer* lexer, Grammar* grammar) {
 	this->lexer = lexer;
 	this->grammar = grammar;
-	firstSet = GrammarFirstFollowSetGenerator::buildFirstSet(grammar);
-	followSet = GrammarFirstFollowSetGenerator::buildFollowSet(grammar, firstSet);
+	firstSet = GrammarFirstFollowSetGenerator::buildFirstSet(*grammar);
+	followSet = GrammarFirstFollowSetGenerator::buildFollowSet(*grammar, firstSet);
 	buildParseTable();
 }
 
@@ -13,39 +13,45 @@ Parser::~Parser() {
 }
 
 bool Parser::parse() {
-	//bool error;
-	//parseStack.push(Symbol::END_OF_FILE);
-	//parseStack.push(grammar->getStartSymbol());
-	//lookAheadToken = lexer->nextToken();
-	//while (true) {
-	//	Symbol x = parseStack.top();
-	//	if (x.isTerminal) {
-	//		if (x == lookAheadToken) {
-	//			parseStack.pop();
-	//			lookAheadToken = lexer->nextToken();
-	//		} else {
-	//			skipErrors();
-	//			error = true;
-	//		}
-	//	} else {
-	//		// TODO
-	//		if (parseTable.at(x).at(a) != "error") {
-	//			parseStack.pop();
-	//			inverseRHSMultiplePush();
-	//		} else {
-	//			skipErrors();
-	//			error = true;
-	//		}
-	//	}
-	//}
-	//// TODO
-	//if (lookAheadToken != EOF || error == true) {
-	//	return false;
-	//} else {
-	//	return true;
-	//}
-	//
-	//
+	bool error;
+	parseStack.push(SpecialTerminal::END_OF_FILE);
+	parseStack.push(grammar->getStartSymbol());
+	lookAheadToken = lexer->nextToken();
+	while (parseStack.top().getName() != SpecialTerminal::END_OF_FILE.getName()) {
+		Symbol x = parseStack.top();
+		if (x.isTerminal()) {
+			// TODO: figure out how to handle epsilon
+			Terminal tx = static_cast<Terminal&>(x);
+			if (matchTerminalToTokenType(tx, lookAheadToken)) {
+				parseStack.pop();
+				lookAheadToken = lexer->nextToken();
+			} else {
+				skipErrors();
+				error = true;
+			}
+		} else {
+			// x is not a terminal cast to non terminal
+			NonTerminal nx = static_cast<NonTerminal&>(x);
+			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken);
+			const Production p = parseTable.at(nx).at(lookaheadTerminal);
+			if (p != Production::ERROR_PRODUCTION) {
+				parseStack.pop();
+				inverseRHSMultiplePush(p);
+			} else {
+				skipErrors();
+				error = true;
+			}
+		}
+	}
+	
+	if (matchTerminalToTokenType(SpecialTerminal::END_OF_FILE, lookAheadToken) || error == true) {
+		return false;
+	} else {
+		return true;
+	}
+
+	
+	
 	return false;
 }
 
@@ -53,10 +59,10 @@ bool Parser::parse() {
 
 
 void Parser::buildParseTable() {
-	
-	const std::vector<std::shared_ptr<Production>> productions = grammar.getProductions();
+	// Taken from power point
+	const std::vector<std::shared_ptr<Production>> productions = grammar->getProductions();
 	typedef std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual> TerminalSetPtr;
-	const TerminalSetPtr terminalSet = grammar.getTerminals();
+	const TerminalSetPtr terminalSet = grammar->getTerminals();
 	std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> emptyRow;
 	for (std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual>::const_iterator t = terminalSet.begin(); t != terminalSet.end(); ++t) {
 		// Add this terminal to the row
@@ -93,17 +99,18 @@ void Parser::buildParseTable() {
 				}	
 			}
 		}
-
 	}
-
 }
 
 void Parser::skipErrors() {
 }
 
-void Parser::inverseRHSMultiplePush(const Production& rhs) {
-	// TODO inverser
+void Parser::inverseRHSMultiplePush(const Production& production) {
+	std::vector<Symbol> rhs = production.getProduction();
 	// This pushes the production in reverse order
+	for (std::vector<Symbol>::reverse_iterator it = rhs.rbegin(); it != rhs.rend(); ++it) {
+		parseStack.push(*it);
+	}	
 }
 
 bool Parser::inFirst(const Terminal& terminal, const NonTerminal& nonTerminal)  {
@@ -120,4 +127,123 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 		return false;
 	}
 	return true;
+}
+
+bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
+	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
+	// TODO: factor in num type
+	return terminalTokenType == token.type;
+}
+
+Terminal Parser::tokenToTerminal(const Token& token) {
+	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));
+	return t;
+}
+
+void Parser::outputParserDataToFile() {
+	std::ofstream firstfollowOutput;
+	std::ofstream parsingTableOutput;
+
+	firstfollowOutput.open("first_and_follow_sets.txt");
+
+	firstfollowOutput << "First Set\n";
+	for (auto nt_iterator : firstSet) {
+		firstfollowOutput << "first(" << nt_iterator.first.getName() << ") : { ";
+		int size = nt_iterator.second.size();
+		int i = 0;
+		for (auto t_iterator : nt_iterator.second) {
+			firstfollowOutput << t_iterator.getName();
+			// Prevent comma at end of set output
+			if (i < size - 1) {
+				firstfollowOutput << ", ";
+			}
+			i++;
+		}
+		firstfollowOutput << " }\n";
+	}
+
+	firstfollowOutput << "\nFollow Set\n";
+
+	for (auto nt_iterator : followSet) {
+		firstfollowOutput << "follow(" << nt_iterator.first.getName() << ") : { ";
+		int size = nt_iterator.second.size();
+		int i = 0;
+		for (auto t_iterator : nt_iterator.second) {
+			firstfollowOutput << t_iterator.getName();
+			// Prevent comma at end of set output
+			if (i < size - 1) {
+				firstfollowOutput << ", ";
+			}
+			i++;
+		}
+		firstfollowOutput << " }\n";
+	}
+	firstfollowOutput.close();
+
+
+	// Since printing a table would be a disaster in a text file
+	// lets output to a html file
+	parsingTableOutput.open("parsingtable.html");
+	parsingTableOutput << "<html><head><style>table, th, td{border: 1px solid black;}ul{list-style-type: none;}</style></head><body>";
+	parsingTableOutput << "<h1>Production list</h1>";
+	// Print out rules
+	std::vector<std::shared_ptr<Production>> productions = grammar->getProductions();
+	// Get a map of production to indexes
+	std::unordered_map<Production, int, ProductionHasher> productionToRuleIndexMap;
+
+	int productionNumber = 1;
+	parsingTableOutput << "<ul>";
+	for (auto p : productions) {
+		productionToRuleIndexMap.emplace(*p, productionNumber);
+		parsingTableOutput << "<li>";
+		parsingTableOutput << "r" << productionNumber << " : " << *p;
+		parsingTableOutput << "</li>";
+		productionNumber++;
+	}
+	parsingTableOutput << "</ul>";
+
+	parsingTableOutput << "<h1>Parsing table</h1>";
+	parsingTableOutput << "<table>";
+	parsingTableOutput << "<tr>";
+	parsingTableOutput << "<th>Non Terminal</th>";
+
+
+	std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual> terminals = grammar->getTerminals();
+
+	// Get an indexable copy
+	std::vector<std::shared_ptr<Terminal>> terminalVector(terminals.begin(), terminals.end());
+
+	// Output header of table
+	for (int sCol = 0; sCol < terminalVector.size(); sCol++) {
+		parsingTableOutput << "<th>" << terminalVector.at(sCol)->getName() << "</th>";
+	}
+	parsingTableOutput << "</tr>"; // close the header row
+
+
+	// Loop over every non terminal/row
+	for (auto nt_iterator : parseTable) {
+		parsingTableOutput << "<tr>";
+		// Get the terminal map for this row
+
+		// output the non terminal symbol for this row
+		parsingTableOutput <<  "<td>" << nt_iterator.first.getName() << "</td>";
+		// Loop over the terminals in the same order as our header
+		for (int i = 0; i < terminalVector.size(); i++) {
+			// Get the production for this terminal column
+			Production columnProduction = nt_iterator.second.at(*terminalVector.at(i).get());
+			if (columnProduction != Production::ERROR_PRODUCTION) {
+				//parsingTableOutput << "<td>" <<  columnProduction  <<  " </td>";
+				// Get the mapped rule index for this production
+				parsingTableOutput << "<td>" <<  "r" <<  productionToRuleIndexMap.at(columnProduction) << " </td>";
+			} else {
+				parsingTableOutput << "<td></td>";
+				// dont print anything for error productions
+			}
+		}
+		// Close the row for this non terminal
+		parsingTableOutput << "</tr>";
+	}
+	parsingTableOutput << "</table>"; // close table
+	parsingTableOutput << "</body></html>"; // close html
+	parsingTableOutput.close(); // close file
 }

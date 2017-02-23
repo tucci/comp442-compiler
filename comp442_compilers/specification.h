@@ -8,6 +8,10 @@ class Specification {
 public:
 	// Holds all the mappings from lexemes to token types for our language. Does not include ids or number tokens
 	const static std::unordered_map<std::string, TokenType> TOKEN_MAP;
+
+	// It is the revese lookup for the token map
+	const static std::unordered_map<TokenType, std::string> REVERSE_TOKEN_MAP;
+	static std::unordered_map<TokenType, std::string> constructReverseMap();
 	// A map just to hold the strings of the tokens used when printing/outputing to file.
 	// So that when reading the token types, u dont have to look up the int value
 	// Besides pretty printing, this is not used anywhere else

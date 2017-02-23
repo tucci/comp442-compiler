@@ -6,6 +6,7 @@ enum TokenType {
 	non_token,		// this means this state is an intermediate state
 					// special token to tell the lexer that this is not a token and should carry on
 	error_token,	// error token, specifiying that there was no token found
+	end_of_file_token, // token to denote end of file
 	// Tokens part of our language
 	id,				// identifier token
 	num,			// Number token
