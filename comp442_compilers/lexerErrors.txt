@@ -1,5 +1,0 @@
-error: $		message: Unknown symbol		line number: 1
-error: $		message: Unknown symbol		line number: 1
-error: 1.00		message: Invalid float		line number: 1
-error: 2.00		message: Invalid float		line number: 3
-error: 		message: Mulit-line comment not closed		line number: 5

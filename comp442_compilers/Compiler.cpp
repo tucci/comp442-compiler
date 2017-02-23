@@ -31,6 +31,7 @@ bool Compiler::analyzeSyntax() {
 	std::cout << "Analyzing Syntax..." << std::endl;
 	bool parsedSuccessfully = parser->parse();
 	parser->outputAnalysis();
+	lexer->writeTokensToFile();
 	if (parsedSuccessfully) {
 		std::cout << "Parsed Successfully" << std::endl;
 		std::cout << "See derivation.html for derivation" << std::endl;

@@ -144,7 +144,7 @@ bool Lexer::setSource(std::string pathToFile) {
 
 bool Lexer::hasMoreTokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return lookaheadToken.type != TokenType::non_token;
+	return lookaheadToken.type != TokenType::end_of_file_token;
 }
 
 Token Lexer::createToken(std::string lexeme, State state) {
@@ -309,18 +309,16 @@ void Lexer::writeTokensToFile() {
 	std::ofstream error;
 	output.open("lexerOutput.txt");
 	error.open("lexerErrors.txt");
-
-	// TODO: also lexerOutput needs to be fixed. uses first follow set text
-	// TODO: this is broken for some reason
-	/*for (std::vector<Token>::iterator it = outputTokens.begin(); it != outputTokens.end(); ++it) {
-		if (it->type == TokenType::error_token) {
-			error << *it;
-		} else {
-			output << *it;
+	for (auto t : outputTokens) {
+		if (t.type != TokenType::end_of_file_token) {
+			if (t.type == TokenType::error_token) {
+				error << t;
+			} else {
+				output << t;
+			}
 		}
-	}*/
-
+	}
 	output.close();
 	error.close();
-	std::cout << "Successfully Wrote to output.txt and errors.txt" << std::endl;
+	std::cout << "Successfully wrote tokens to lexerOutput.txt and lexerErrors.txt" << std::endl;
 }

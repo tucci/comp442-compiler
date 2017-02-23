@@ -8,8 +8,6 @@ int main() {
 	cp.setSourceFile("testsource_1.txt");
 	cp.analyzeSyntax();
 
-
-
 	return 0;
 }
 

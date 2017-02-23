@@ -54,48 +54,6 @@ std::unordered_map<TokenType, std::string> Specification::constructReverseMap() 
 	return reverseMap;
 };
 
-const std::unordered_map<TokenType, std::string> Specification::TOKEN_PRINT_MAP = {
-	{ TokenType::non_token, "non_token" },
-	{ TokenType::error_token, "error_token" },
-	{ TokenType::id, "id" },
-	{ TokenType::num, "num_value" },
-	{ TokenType::int_value, "int_value" },
-	{ TokenType::float_value, "float_value" },
-	{ TokenType::and, "and"},
-	{ TokenType::or, "or" },
-	{ TokenType::not, "not" },
-	{ TokenType::dot, "dot" },
-	{ TokenType::comma, "comma" },
-	{ TokenType::lt, "lt" },
-	{ TokenType::lesseq, "lesseq" },
-	{ TokenType::noteq, "noteq" },
-	{ TokenType::gt, "gt" },
-	{ TokenType::greateq, "greateq" },
-	{ TokenType::assgn, "assgn" },
-	{ TokenType::comparison, "comparison" },
-	{ TokenType::addop, "addop" },
-	{ TokenType::subtractop, "subtractop" },
-	{ TokenType::multop, "multop"},
-	{ TokenType::divop, "divop" },
-	{ TokenType::openpar, "openpar" },
-	{ TokenType::closepar, "closepar"},
-	{ TokenType::openbrace, "openbrace" },
-	{ TokenType::closebrace, "closebrace" },
-	{ TokenType::opensquare, "opensquare" },
-	{ TokenType::closesquare, "closesquare" },
-	{ TokenType::semicolon, "semicolon" },
-	{ TokenType::if_token, "if_token" },
-	{ TokenType::then_token, "then_token" },
-	{ TokenType::else_token, "else_token" },
-	{ TokenType::for_token, "for_token"  },
-	{ TokenType::class_token, "class_token" },
-	{ TokenType::int_token, "int_token" },
-	{ TokenType::float_token, "float_token" },
-	{ TokenType::get_token, "get_token" },
-	{ TokenType::put_token, "put_token" },
-	{ TokenType::return_token, "return_token" },
-	{ TokenType::program_token, "program_token" }
-};
 
 Specification::Specification(bool useDefault) {
 	// Here we create the lanugage elements and specs into the dfa
