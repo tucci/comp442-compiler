@@ -7,7 +7,7 @@ public:
 	// Create a parser from a given lexer and grammar
 	Parser(Lexer* lexer, Grammar* grammar);
 	~Parser();
-	// Parse method
+	// Parse method 
 	bool parse();
 	// Outputs the data about the fisrt/follow sets and parsing table
 	void outputParserDataToFile();
@@ -25,13 +25,14 @@ private:
 	// Data structe to hold the parse table
 	std::unordered_map <NonTerminal, std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual>, SymbolHasher, SymbolEqual> parseTable;
 	// Data structure to hold our parse stack
-	std::stack<Symbol> parseStack;
+	// Could use a std::stack, but they dont implement iterating, so we cant output stack contents
+	std::vector<Symbol> parseStack;
 	// Builds the parse table from the grammar
 	void buildParseTable();
 	// Handles the errors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
-	void inverseRHSMultiplePush(const Production& production);
+	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
 
 	// Returns true if the terminal is in the first set for the given non terminal production
 	bool inFirst(const Terminal& terminal, const NonTerminal& nonTerminal);
@@ -42,6 +43,7 @@ private:
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
 	// Creates the tokens complementary terminal
 	Terminal tokenToTerminal(const Token& token);
+	std::string getStackContents();
 
 };
 

@@ -294,6 +294,9 @@ public:
 		// Test all token types
 		std::unordered_map<std::string, TokenType>::const_iterator it = Specification::TOKEN_MAP.begin();
 		while (it != Specification::TOKEN_MAP.end()) {
+			if (it->first == Specification::REVERSE_TOKEN_MAP.at(TokenType::num)) {
+				continue; // skip num during tests
+			}
 			TokenType type = spec.getTokenTypeForInput(it->first);
 			Assert::IsTrue(it->second == type);
 			it++;

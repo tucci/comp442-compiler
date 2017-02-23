@@ -5,7 +5,7 @@ Compiler::Compiler() {
 	// Create the spec for the tokens
 	spec = std::shared_ptr<Specification>(new Specification());
 	// Read the grammar from the file that our parser will use
-	grammar = std::shared_ptr<Grammar>(new Grammar("grammar.txt", "prog"));
+	grammar = std::shared_ptr<Grammar>(new Grammar("testgrammar.txt", "E"));
 	// Create the lexer with the given specification
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar

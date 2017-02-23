@@ -13,17 +13,21 @@ Parser::~Parser() {
 }
 
 bool Parser::parse() {
-	bool error;
-	parseStack.push(SpecialTerminal::END_OF_FILE);
-	parseStack.push(grammar->getStartSymbol());
+	
+	bool error = false;
+	parseStack.push_back(SpecialTerminal::END_OF_FILE);
+	parseStack.push_back(grammar->getStartSymbol());
+	std::string derivation = parseStack.at(parseStack.size() - 1).getName();
 	lookAheadToken = lexer->nextToken();
-	while (parseStack.top().getName() != SpecialTerminal::END_OF_FILE.getName()) {
-		Symbol x = parseStack.top();
+	std::cout << getStackContents() << "\t" << derivation << std::endl;
+	while (parseStack.at(parseStack.size() - 1).getName() != SpecialTerminal::END_OF_FILE.getName()) {
+		Symbol x = parseStack.at(parseStack.size() - 1);
+		std::string stackContent = getStackContents();
 		if (x.isTerminal()) {
-			// TODO: figure out how to handle epsilon
 			Terminal tx = static_cast<Terminal&>(x);
+			std::cout << stackContent << "\t\t" << std::endl;
 			if (matchTerminalToTokenType(tx, lookAheadToken)) {
-				parseStack.pop();
+				parseStack.pop_back();
 				lookAheadToken = lexer->nextToken();
 			} else {
 				skipErrors();
@@ -35,18 +39,21 @@ bool Parser::parse() {
 			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken);
 			const Production p = parseTable.at(nx).at(lookaheadTerminal);
 			if (p != Production::ERROR_PRODUCTION) {
-				parseStack.pop();
-				inverseRHSMultiplePush(p);
+				parseStack.pop_back();
+				inverseRHSMultiplePush(p, derivation);
 			} else {
 				skipErrors();
 				error = true;
 			}
+			std::cout << stackContent << "\t\t" << p << "\t\t\t\t" << derivation << std::endl;
 		}
 	}
 	
-	if (matchTerminalToTokenType(SpecialTerminal::END_OF_FILE, lookAheadToken) || error == true) {
+	if (!matchTerminalToTokenType(SpecialTerminal::END_OF_FILE, lookAheadToken) || error == true) {
 		return false;
 	} else {
+		derivation = "success";
+		std::cout << getStackContents() << "\t" << derivation << std::endl;
 		return true;
 	}
 
@@ -54,8 +61,6 @@ bool Parser::parse() {
 	
 	return false;
 }
-
-
 
 
 void Parser::buildParseTable() {
@@ -105,12 +110,24 @@ void Parser::buildParseTable() {
 void Parser::skipErrors() {
 }
 
-void Parser::inverseRHSMultiplePush(const Production& production) {
+void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
 	std::vector<Symbol> rhs = production.getProduction();
+	std::string replaceWith;
+	std::string nonTerminalString = production.getNonTerminal().getName();
+	int replaceIndex = derivation.find_first_of(nonTerminalString);
+	int replaceLength = nonTerminalString.length();
 	// This pushes the production in reverse order
 	for (std::vector<Symbol>::reverse_iterator it = rhs.rbegin(); it != rhs.rend(); ++it) {
-		parseStack.push(*it);
-	}	
+		// If this is epsilon, dont push it onto the stack. just continue on
+		if (it->getName() == SpecialTerminal::EPSILON.getName()) {
+			derivation.replace(replaceIndex, replaceLength, "");
+			return;
+		}
+		parseStack.push_back(*it);
+		replaceWith = it->getName() + replaceWith;
+	}
+	
+	derivation.replace(replaceIndex, replaceLength, replaceWith);
 }
 
 bool Parser::inFirst(const Terminal& terminal, const NonTerminal& nonTerminal)  {
@@ -130,12 +147,22 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 }
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
+	// TODO: remove when done testing
+	if (terminal.getName() == token.lexeme) {
+		return true;
+	}
+	//
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
 	// TODO: factor in num type
 	return terminalTokenType == token.type;
 }
 
 Terminal Parser::tokenToTerminal(const Token& token) {
+	// TODO: remove this when done testing
+	if (token.type == TokenType::int_value) {
+		return Terminal(token.lexeme);
+	}
+
 	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));
 	return t;
 }
@@ -246,4 +273,12 @@ void Parser::outputParserDataToFile() {
 	parsingTableOutput << "</table>"; // close table
 	parsingTableOutput << "</body></html>"; // close html
 	parsingTableOutput.close(); // close file
+}
+
+std::string Parser::getStackContents() {
+	std::string contents;
+	for (auto s : parseStack) {
+		contents.append(s.getName() + " ");
+	}
+	return contents;
 }

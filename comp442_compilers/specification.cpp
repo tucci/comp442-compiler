@@ -36,8 +36,7 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "*", TokenType::multop },
 	{ "/", TokenType::divop },
 	{ "and", TokenType::and },
-	{ "$", TokenType::end_of_file_token },
-
+	{ "$", TokenType::end_of_file_token }, // TODO: when calling next token, output a end of file token when done
 	{ "<=", TokenType::lesseq },
 	{ "<>", TokenType::noteq },
 	{ ">=", TokenType::greateq },
