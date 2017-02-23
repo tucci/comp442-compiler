@@ -147,22 +147,12 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 }
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
-	// TODO: remove when done testing
-	if (terminal.getName() == token.lexeme) {
-		return true;
-	}
-	//
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
 	// TODO: factor in num type
 	return terminalTokenType == token.type;
 }
 
 Terminal Parser::tokenToTerminal(const Token& token) {
-	// TODO: remove this when done testing
-	if (token.type == TokenType::int_value) {
-		return Terminal(token.lexeme);
-	}
-
 	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));
 	return t;
 }
