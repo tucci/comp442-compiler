@@ -1,6 +1,15 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+// A simple stucture to hold data about a single derivaton
+struct DerivationData {
+	std::string stackContent;
+	std::string production;
+	std::string derivation;
+	std::string toString() {
+		return stackContent + "\t\t" + production + "\t\t" + derivation + "\n";
+	};
+};
 
 class Parser {
 public:
@@ -11,6 +20,8 @@ public:
 	bool parse();
 	// Outputs the data about the fisrt/follow sets and parsing table
 	void outputParserDataToFile();
+	// Outputs the derivation and any errors
+	void outputAnalysis();
 private:
 	// Our lexer
 	Lexer* lexer;
@@ -27,13 +38,14 @@ private:
 	// Data structure to hold our parse stack
 	// Could use a std::stack, but they dont implement iterating, so we cant output stack contents
 	std::vector<Symbol> parseStack;
+	// The list of derivations while parsing
+	std::vector<DerivationData> derivation;
 	// Builds the parse table from the grammar
 	void buildParseTable();
 	// Handles the errors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
-
 	// Returns true if the terminal is in the first set for the given non terminal production
 	bool inFirst(const Terminal& terminal, const NonTerminal& nonTerminal);
 	// Returns true if the terminal is in the follow set for the given non terminal production
@@ -43,7 +55,9 @@ private:
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
 	// Creates the tokens complementary terminal
 	Terminal tokenToTerminal(const Token& token);
+	// Gets the contents of the stack when called
 	std::string getStackContents();
+	void addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString);
 
 };
 

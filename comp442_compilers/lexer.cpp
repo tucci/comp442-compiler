@@ -60,6 +60,12 @@ Token Lexer::getLookaheadToken() {
 				if (currentState.tokenType == TokenType::error_token && c == EOF) {
 					Token token;
 					token.type = TokenType::non_token;
+					
+					if (sourceIndex == sourceSize) {
+						// If we are the end of the file, we'll change this to end of file token
+						token.lexeme = SpecialTerminal::END_OF_FILE.getName();
+						token.type = TokenType::end_of_file_token;
+					}
 					return token;
 				}
 				if (currentState.tokenType == TokenType::error_token) {				

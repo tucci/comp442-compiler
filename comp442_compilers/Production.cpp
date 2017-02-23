@@ -18,15 +18,18 @@ NonTerminal Production::getNonTerminal() const {
 std::vector<Symbol> Production::getProduction() const {
 	return mProduction;
 }
-
-std::ostream& operator <<(std::ostream& os, const Production& p) {	
+std::string Production::toString() const {
 	std::string productionStr;
-	for (std::vector<Symbol>::const_iterator it = p.mProduction.begin(); it != p.mProduction.end(); ++it) {
-		productionStr.append(" " + it->getName());
+	for (std::vector<Symbol>::const_iterator it = mProduction.begin(); it != mProduction.end(); ++it) {
+		productionStr.append(it->getName() + " ");
 	}
 
-	// i.e S->tABC
-	os << p.mNonTerminal.getName() << " -> " << productionStr;
+	// i.e S -> t A B C
+	return mNonTerminal.getName() + " -> " + productionStr + "\n";
+}
+
+std::ostream& operator <<(std::ostream& os, const Production& p) {	
+	os << p.toString();
 	return os;
 }
 

@@ -17,15 +17,15 @@ bool Parser::parse() {
 	bool error = false;
 	parseStack.push_back(SpecialTerminal::END_OF_FILE);
 	parseStack.push_back(grammar->getStartSymbol());
-	std::string derivation = parseStack.at(parseStack.size() - 1).getName();
+	std::string derivationString = parseStack.at(parseStack.size() - 1).getName();
 	lookAheadToken = lexer->nextToken();
-	std::cout << getStackContents() << "\t" << derivation << std::endl;
+	addToDerivationList(getStackContents(), "", derivationString);
 	while (parseStack.at(parseStack.size() - 1).getName() != SpecialTerminal::END_OF_FILE.getName()) {
 		Symbol x = parseStack.at(parseStack.size() - 1);
 		std::string stackContent = getStackContents();
 		if (x.isTerminal()) {
 			Terminal tx = static_cast<Terminal&>(x);
-			std::cout << stackContent << "\t\t" << std::endl;
+			addToDerivationList(getStackContents(), "", "");
 			if (matchTerminalToTokenType(tx, lookAheadToken)) {
 				parseStack.pop_back();
 				lookAheadToken = lexer->nextToken();
@@ -34,31 +34,31 @@ bool Parser::parse() {
 				error = true;
 			}
 		} else {
-			// x is not a terminal cast to non terminal
+			// x is not a terminal so cast to non terminal
 			NonTerminal nx = static_cast<NonTerminal&>(x);
 			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken);
 			const Production p = parseTable.at(nx).at(lookaheadTerminal);
 			if (p != Production::ERROR_PRODUCTION) {
+				std::string preStackContents = getStackContents();
 				parseStack.pop_back();
-				inverseRHSMultiplePush(p, derivation);
+				inverseRHSMultiplePush(p, derivationString);
+				addToDerivationList(preStackContents, p.toString(), derivationString);
 			} else {
 				skipErrors();
 				error = true;
 			}
-			std::cout << stackContent << "\t\t" << p << "\t\t\t\t" << derivation << std::endl;
+			
+			
 		}
 	}
 	
 	if (!matchTerminalToTokenType(SpecialTerminal::END_OF_FILE, lookAheadToken) || error == true) {
 		return false;
 	} else {
-		derivation = "success";
-		std::cout << getStackContents() << "\t" << derivation << std::endl;
+		derivationString = "success";
+		addToDerivationList(getStackContents(), "", derivationString);
 		return true;
 	}
-
-	
-	
 	return false;
 }
 
@@ -275,10 +275,49 @@ void Parser::outputParserDataToFile() {
 	parsingTableOutput.close(); // close file
 }
 
+void Parser::outputAnalysis() {
+	
+	std::ofstream parserDerivation;
+	// TODO: output errors as well
+	std::ofstream parserErrors;
+
+	parserDerivation.open("derivation.html");
+	parserDerivation << "<html><head><style>table, th, td{border: 1px solid black;}ul{list-style-type: none;}</style></head><body>";
+	parserDerivation << "<h1>Derivation</h1>";
+	parserDerivation << "<table>";
+	parserDerivation << "<tr>";
+
+	parserDerivation << "<th></th>";
+	parserDerivation << "<th>Stack</th>";
+	parserDerivation << "<th>Production</th>";
+	parserDerivation << "<th>Derivation</th>";
+
+	parserDerivation << "</tr>";
+
+	int derivationCount = 1;
+	for (auto d : derivation) {
+		parserDerivation << "<tr>";
+		std::cout << d.toString();
+		parserDerivation << "<td>" << derivationCount << "</td>";
+		parserDerivation << "<td>" << d.stackContent << "</td>";
+		parserDerivation << "<td>" << d.production << "</td>";
+		parserDerivation << "<td>" << d.derivation << "</td>";
+		parserDerivation << "</tr>";
+		derivationCount++;
+	}
+	parserDerivation << "</table>"; // close table
+	parserDerivation << "</body></html>"; // close html
+	parserDerivation.close();
+}
+
 std::string Parser::getStackContents() {
 	std::string contents;
 	for (auto s : parseStack) {
 		contents.append(s.getName() + " ");
 	}
 	return contents;
+}
+
+void Parser::addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString) {
+	derivation.push_back({ stackContents, production, derivationString });
 }

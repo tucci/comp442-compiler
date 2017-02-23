@@ -28,7 +28,9 @@ void Compiler::setSourceFile(std::string sourceFile) {
 
 // Analyses the syntax of the source code
 bool Compiler::analyzeSyntax() {
-	return parser->parse();
+	bool parsed = parser->parse();
+	parser->outputAnalysis();
+	return parsed;
 }
 
 

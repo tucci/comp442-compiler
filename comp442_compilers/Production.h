@@ -12,6 +12,7 @@ public:
 	NonTerminal getNonTerminal() const;
 	// Gets the rhs for this production
 	std::vector<Symbol> getProduction() const;
+	std::string toString() const;
 	// Overide << for easier print outs
 	friend std::ostream& operator<<(std::ostream& os, const Production& p);
 	friend bool operator==(const Production& p1, const Production& p2);

@@ -14,7 +14,6 @@ public:
 	void setSourceFile(std::string sourceFile);
 	// Checks the syntax of the source fie
 	bool analyzeSyntax();
-	// TODO add method to output analysis and errors
 private:
 	// The specfication for the token
 	std::shared_ptr<Specification> spec;
