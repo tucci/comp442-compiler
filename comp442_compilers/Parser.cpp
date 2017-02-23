@@ -114,7 +114,7 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 	std::vector<Symbol> rhs = production.getProduction();
 	std::string replaceWith;
 	std::string nonTerminalString = production.getNonTerminal().getName();
-	int replaceIndex = derivation.find_first_of(nonTerminalString);
+	int replaceIndex = derivation.find(nonTerminalString);
 	int replaceLength = nonTerminalString.length();
 	// This pushes the production in reverse order
 	for (std::vector<Symbol>::reverse_iterator it = rhs.rbegin(); it != rhs.rend(); ++it) {
@@ -124,7 +124,7 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 			return;
 		}
 		parseStack.push_back(*it);
-		replaceWith = it->getName() + replaceWith;
+		replaceWith = it->getName() + " " + replaceWith;
 	}
 	
 	derivation.replace(replaceIndex, replaceLength, replaceWith);

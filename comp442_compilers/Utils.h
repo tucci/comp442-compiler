@@ -46,4 +46,12 @@ template <class T> static inline std::vector<T> sublist(const std::vector<T>& ve
 	return std::vector<T> (first, last);
 }
 
+static inline std::string vectorToString(const std::vector <std::string>& vec) {
+	std::string str;
+	for (auto s : vec) {
+		str += (s + " ");
+	}
+	return str;
+}
+
 #endif // !UTILS_H
