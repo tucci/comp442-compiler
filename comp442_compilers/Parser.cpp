@@ -115,22 +115,28 @@ void Parser::skipErrors() {
 	NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
 	Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
 	SyntaxError error = {tokenIndex , consumedToken};
-	bool hasErrors = errors.size() != 0;
 
-	if (hasErrors) {
-		SyntaxError topError = errors.at(errors.size() - 1);
-		// Check the last error and the current error. Avoid outputing the same error multiple times
-		if (!(error.tokenPosition == topError.tokenPosition
-			&& error.token.tokenLine == topError.token.tokenLine
-			&& error.token.lexeme == topError.token.lexeme)) {
-			outputError();
-		}	
+	bool isDuplicate;
+
+	// Check if the current error is a duplicate of the last one
+	if (errors.size() == 0) {
+		isDuplicate = false;
 	} else {
-		// This is the first error
-		outputError();
+		// Compare the top error with the current error
+		SyntaxError topError = errors.at(errors.size() - 1);
+		isDuplicate = error.tokenPosition	== topError.tokenPosition
+				   && error.token.tokenLine == topError.token.tokenLine
+				   && error.token.lexeme	== topError.token.lexeme;
+	}
+
+	// Add the error to the error list
+	errors.push_back(error);
+
+	// If this is not a duplicate error, output it
+	if (!isDuplicate) {
+		std::cout << "Syntax error on line " << consumedToken.tokenLine << ". Unexpected identifer \"" << lookAheadToken.lexeme << "\" after \"" << consumedToken.lexeme << "\"" << std::endl;
 	}
 	
-	errors.push_back(error);
 
 	if (consumedToken.type != TokenType::end_of_file_token || inFollow(consumedTerminal, top)) {
 		parseStack.pop_back();
@@ -140,12 +146,7 @@ void Parser::skipErrors() {
 			nextToken();
 			consumedTerminal = tokenToTerminal(consumedToken, top);
 		}
-			
 	}
-}
-
-void Parser::outputError() {
-	std::cout << "Syntax error on line " << consumedToken.tokenLine << ". Unexpected identifer \"" << lookAheadToken.lexeme   << "\" after \"" << consumedToken.lexeme << "\"" << std::endl;
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {

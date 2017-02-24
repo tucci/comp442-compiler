@@ -58,7 +58,6 @@ private:
 	void buildParseTable();
 	// Handles the errors
 	void skipErrors();
-	void outputError();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
 	// Returns true if the terminal is in the first set for the given non terminal production
