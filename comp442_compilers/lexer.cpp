@@ -179,14 +179,11 @@ void Lexer::backupChar() {
 	if (sourceIndex != 0) {
 		 sourceIndex--;
 	}
-
 }
 
 bool Lexer::isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }
-
-
 
 void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 
@@ -270,15 +267,12 @@ void Lexer::handleComment(Token* token, State* currentState) {
 					if (source.at(sourceIndex - 1) == '*' && source.at(sourceIndex) == '/') {
 						cmtStack.pop();
 					}
-					
 				}
 				else if (top == '/') {cmtStack.push('*');}
-			}
-			
+			}	
 		} else {
 			inMulitCmt = false;
 		}
-
 
 		state = tokenizer->table(currentState->stateIdentifier, lookup);
 		if (state == NULL) {
@@ -297,11 +291,6 @@ void Lexer::handleComment(Token* token, State* currentState) {
 			}
 		}
 	}
-	
-
-
-		
-		
 }
 
 void Lexer::writeTokensToFile() {

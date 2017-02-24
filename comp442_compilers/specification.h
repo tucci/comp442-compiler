@@ -53,6 +53,10 @@ public:
 	void alphanumTransitions(State* start, State* end);
 	//Create id transitions regex="letter alphanum*" from the start state to the end state
 	void idTransitions(State* start, State* end);
+
+	static bool isInteger(const Token& t);
+	static bool isFloat(const Token& t);
+
 private:
 	// The dfa/state transition table for this spec
 	std::shared_ptr<Dfa> spec;

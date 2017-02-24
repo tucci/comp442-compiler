@@ -6,19 +6,22 @@ first(termRest) : { EPSILON, /, *, and }
 first(classDecl) : { class }
 first(factorRestRest) : { EPSILON, [, . }
 first(classDeclList) : { class, EPSILON }
-first(funcDef) : { float, int, id }
+first(termAEIntRest) : { EPSILON, /, *, and }
 first(variable) : { id }
+first(funcDef) : { float, int, id }
 first(typeNoId) : { float, int }
 first(elseBlock) : { else, EPSILON }
 first(funcDefRest) : { ( }
 first(funcBody) : { { }
 first(funcDefList) : { EPSILON, float, int, id }
 first(varDecl) : { float, int, id }
+first(termAEInt) : { -, (, id, integer, +, not }
 first(varDeclNoId) : { float, int }
 first(assignOp) : { = }
 first(arithExpr) : { -, (, id, +, num, not }
 first(statementList) : { EPSILON, get, if, ., [, =, for, put, id, return }
 first(varDeclRest) : { [, ; }
+first(factorAEInt) : { -, (, id, integer, +, not }
 first(varFuncDefList) : { EPSILON, float, int, id }
 first(dotidIndiceList) : { ., [, EPSILON }
 first(varFuncDefListRest) : { (, [, ; }
@@ -26,6 +29,7 @@ first(varStatementList) : { put, id, get, float, if, EPSILON, for, int, return }
 first(varStatementListRest) : { id, [, ., = }
 first(relExpr) : { -, (, id, +, num, not }
 first(statement) : { =, ., [, for, if, get, id, put, return }
+first(arithExprAEInt) : { -, (, id, integer, +, not }
 first(noIdStartStatement) : { for, if, get, put, return }
 first(arraySizeList) : { [, EPSILON }
 first(assignStat) : { id, [, ., = }
@@ -47,6 +51,7 @@ first(indiceList) : { [, EPSILON }
 first(factor) : { -, (, id, +, num, not }
 first(arraySize) : { [ }
 first(factorRest) : { (, EPSILON, ., [ }
+first(arithExprAEIntRest) : { EPSILON, +, -, or }
 first(aParams) : { EPSILON, -, (, id, +, num, not }
 first(fParams) : { float, EPSILON, int, id }
 first(dotidIndice) : { ., [ }
@@ -58,54 +63,59 @@ Follow Set
 follow(prog) : { $ }
 follow(type) : { id }
 follow(progBody) : { $ }
-follow(termRest) : { ], ==, +, <, -, <=, ), or, >, <>, >=, ,, ; }
+follow(termRest) : { ==, +, <, -, <=, ), or, >, <>, >=, ,, ; }
 follow(classDecl) : { class, program }
 follow(factorRestRest) : { <>, >, *, /, <, -, and, ], ==, +, or, <=, ), >=, ,, ; }
 follow(classDeclList) : { program }
-follow(funcDef) : { float, int, $, id }
+follow(termAEIntRest) : { ], +, -, ), or }
 follow(variable) : { ), = }
+follow(funcDef) : { float, $, int, id }
 follow(typeNoId) : { id }
 follow(elseBlock) : { ; }
 follow(funcDefRest) : { float, $, int, }, id }
 follow(funcBody) : { ; }
 follow(funcDefList) : { $ }
 follow(varDecl) : {  }
-follow(varDeclNoId) : { }, id, put, if, float, get, int, for, return }
+follow(termAEInt) : { ], +, -, ), or }
+follow(varDeclNoId) : { id, }, put, if, get, float, int, for, return }
 follow(assignOp) : { -, (, id, +, num, not }
-follow(arithExpr) : { <>, >, ], ==, <, ), <=, >=, ,, ; }
+follow(arithExpr) : { >, <>, ==, <, <=, ), >=, ,, ; }
 follow(statementList) : { } }
 follow(varDeclRest) : { get, float, if, for, int, put, }, id, return }
+follow(factorAEInt) : { /, *, -, and, ], +, ), or }
 follow(varFuncDefList) : { } }
 follow(dotidIndiceList) : { ), = }
-follow(varFuncDefListRest) : { float, int, id, } }
+follow(varFuncDefListRest) : { float, int, }, id }
 follow(varStatementList) : { } }
-follow(varStatementListRest) : { }, id, put, if, float, get, int, for, return }
+follow(varStatementListRest) : { id, }, put, if, get, float, int, for, return }
 follow(relExpr) : { ; }
 follow(statement) : { get, if, ., [, =, for, put, }, id, return, ;, else }
+follow(arithExprAEInt) : { ), ] }
 follow(noIdStartStatement) : { id, }, put, if, get, float, int, =, [, ., for, return, ;, else }
-follow(arraySizeList) : { ;, ,, ) }
+follow(arraySizeList) : { ,, ;, ) }
 follow(assignStat) : { ;, ) }
 follow(assignStatRest) : { ;, ) }
 follow(assignStatRestRest) : { ;, ) }
-follow(addOp) : { -, (, id, +, num, not }
+follow(addOp) : { -, (, id, +, num, not, integer }
 follow(statBlock) : { ;, else }
-follow(sign) : { -, (, id, +, num, not }
+follow(sign) : { -, (, id, +, num, not, integer }
 follow(expr) : { ;, ,, ) }
-follow(dotidnest) : { -, (, <, and, =, ., [, or, <=, ), <>, >, *, /, ], +, ==, >=, ,, ; }
-follow(exprRest) : { ,, ;, ) }
+follow(dotidnest) : { <, (, -, and, ), <=, or, [, ., =, /, *, >, <>, ], ==, +, >=, ;, , }
+follow(exprRest) : { ;, ,, ) }
 follow(aParamsTail) : { ,, ) }
 follow(fParamsTail) : { ,, ) }
-follow(arithExprRest) : { <>, >, ==, ], <, ), <=, >=, ,, ; }
+follow(arithExprRest) : { <>, >, ==, <, ), <=, >=, ;, , }
 follow(relOp) : { -, (, id, +, num, not }
-follow(term) : { ], +, ==, -, <, or, ), <=, <>, >, >=, ,, ; }
-follow(multOp) : { -, (, id, +, num, not }
-follow(indiceList) : { =, . }
-follow(factor) : { <>, >, *, /, <, -, and, ], ==, +, or, <=, ), >=, ,, ; }
-follow(arraySize) : { ), [, ,, ; }
-follow(factorRest) : { <>, >, *, /, and, <, -, ], ==, +, ), <=, or, >=, ,, ; }
+follow(term) : { +, ==, -, <, or, ), <=, <>, >, >=, ,, ; }
+follow(multOp) : { -, (, id, +, num, not, integer }
+follow(indiceList) : { ., = }
+follow(factor) : { <>, >, *, /, <, -, and, ==, +, or, <=, ), >=, ,, ; }
+follow(arraySize) : { [, ), ;, , }
+follow(factorRest) : { /, *, >, <>, and, -, <, +, ==, ], or, <=, ), >=, ,, ; }
+follow(arithExprAEIntRest) : { ), ] }
 follow(aParams) : { ) }
 follow(fParams) : { ) }
-follow(dotidIndice) : { [, ., ), = }
+follow(dotidIndice) : { =, ), ., [ }
 follow(indice) : { or, <=, ), ., [, =, <>, >, *, /, <, -, and, ], +, ==, >=, ,, ; }
 follow(aParamsTailList) : { ) }
 follow(fParamsTailList) : { ) }

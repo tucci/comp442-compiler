@@ -41,7 +41,6 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "<>", TokenType::noteq },
 	{ ">=", TokenType::greateq },
 	{ "==", TokenType::comparison},
-	
 };
 
 const std::unordered_map<TokenType, std::string> Specification::REVERSE_TOKEN_MAP = constructReverseMap();
@@ -53,7 +52,6 @@ std::unordered_map<TokenType, std::string> Specification::constructReverseMap() 
 	}
 	return reverseMap;
 };
-
 
 Specification::Specification(bool useDefault) {
 	// Here we create the lanugage elements and specs into the dfa
@@ -362,4 +360,23 @@ void Specification::alphanumTransitions(State* start, State* end) {
 void Specification::idTransitions(State* start, State* end) {
 	letterTransitions(start, end);
 	alphanumTransitions(end, end);
+}
+
+bool Specification::isInteger(const Token& t) {
+	if (t.type == TokenType::num) {
+		return !isFloat(t);
+	}
+	return false;
+}
+
+bool Specification::isFloat(const Token& t) {
+	if (t.type == TokenType::num) {
+		
+		if (t.lexeme.find('.') != std::string::npos) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
 }

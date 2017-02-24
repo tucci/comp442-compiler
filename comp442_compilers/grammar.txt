@@ -50,11 +50,14 @@ expr			-> arithExpr exprRest
 exprRest 		-> relOp arithExpr 
 exprRest 		-> EPSILON
 relExpr			-> arithExpr relOp arithExpr
+
+
+sign			-> + 
+sign			-> - 
+
 arithExpr		-> term arithExprRest
 arithExprRest 		-> addOp term arithExprRest
 arithExprRest 		-> EPSILON
-sign			-> + 
-sign			-> - 
 term			-> factor termRest
 termRest 		-> multOp factor termRest
 termRest		-> EPSILON
@@ -71,13 +74,25 @@ factorRestRest		-> indice factorRestRest
 factorRestRest		-> dotidnest factorRest
 factorRestRest		-> EPSILON
 
+arithExprAEInt	-> termAEInt arithExprAEIntRest
+arithExprAEIntRest	-> addOp termAEInt arithExprAEIntRest
+arithExprAEIntRest	-> EPSILON
+termAEInt			-> factorAEInt termAEIntRest
+termAEIntRest		-> multOp factorAEInt termAEIntRest
+termAEIntRest		-> EPSILON
+factorAEInt	-> ( arithExprAEInt )
+factorAEInt -> integer
+factorAEInt -> not factorAEInt
+factorAEInt	-> sign factorAEInt
+factorAEInt	-> id factorRest
+
 variable		-> id dotidIndiceList
 dotidnest		-> . id
 dotidIndice		-> dotidnest
 dotidIndice		-> indice
 dotidIndiceList		-> dotidIndice dotidIndiceList
 dotidIndiceList		-> EPSILON 
-indice			-> [ arithExpr ] 
+indice			-> [ arithExprAEInt ] 
 indiceList		-> indice indiceList 
 indiceList		-> EPSILON 
 arraySize		-> [ integer ] 

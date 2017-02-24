@@ -53,10 +53,11 @@ private:
 	// Returns true if the terminal is in the given terminal set
 	bool inSet(const Terminal& symbol, const TerminalSet& symbolSet);
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
-	// Creates the tokens complementary terminal
-	Terminal tokenToTerminal(const Token& token);
+	// Creates the tokens complementary terminal depending on the non terminal. Used to convert num to integer sometimes
+	Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);
 	// Gets the contents of the stack when called
 	std::string getStackContents();
+	// Adds a derivation to the current derivation list
 	void addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString);
 
 };

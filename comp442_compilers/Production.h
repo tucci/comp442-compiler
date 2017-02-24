@@ -33,7 +33,6 @@ public:
 		for (auto s : p->getProduction()) {
 			stringKey.append(s.getName()  + " ");
 		}
-
 		return hashFunc(stringKey);
 	}
 	// Used when we have sets/maps with non pointer data

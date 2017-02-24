@@ -35,7 +35,7 @@ bool Parser::parse() {
 		} else {
 			// x is not a terminal so cast to non terminal
 			NonTerminal nx = static_cast<NonTerminal&>(x);
-			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken);
+			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
 			const Production p = parseTable.at(nx).at(lookaheadTerminal);
 			if (p != Production::ERROR_PRODUCTION) {
 				std::string preStackContents = getStackContents();
@@ -153,8 +153,17 @@ bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& tok
 	return terminalTokenType == token.type;
 }
 
-Terminal Parser::tokenToTerminal(const Token& token) {
-	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));
+Terminal Parser::tokenToTerminal(const Token& token, const NonTerminal& nt) {
+	
+	if (Specification::isInteger(token)) {
+		// Custom logic to update num to integer when we have an arithexprAEInt and sub productions
+		// Really ugly and temp solution to this problem
+		if (nt.getName().find("AEInt") != std::string::npos) {
+			Terminal t(Specification::REVERSE_TOKEN_MAP.at(TokenType::int_value));
+			return t;
+		}
+	}
+	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));	
 	return t;
 }
 
