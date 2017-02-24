@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+
 Parser::Parser(Lexer* lexer, Grammar* grammar) {
 	this->lexer = lexer;
 	this->grammar = grammar;
@@ -17,7 +18,7 @@ bool Parser::parse() {
 	parseStack.push_back(SpecialTerminal::END_OF_FILE);
 	parseStack.push_back(grammar->getStartSymbol());
 	std::string derivationString = parseStack.at(parseStack.size() - 1).getName();
-	lookAheadToken = lexer->nextToken();
+	nextToken();
 	addToDerivationList(getStackContents(), "", derivationString);
 	while (parseStack.at(parseStack.size() - 1).getName() != SpecialTerminal::END_OF_FILE.getName()) {
 		Symbol x = parseStack.at(parseStack.size() - 1);
@@ -27,7 +28,7 @@ bool Parser::parse() {
 			addToDerivationList(getStackContents(), "", "");
 			if (matchTerminalToTokenType(tx, lookAheadToken)) {
 				parseStack.pop_back();
-				lookAheadToken = lexer->nextToken();
+				nextToken();
 			} else {
 				skipErrors();
 				error = true;
@@ -104,7 +105,47 @@ void Parser::buildParseTable() {
 	}
 }
 
+void Parser::nextToken() {
+	tokenIndex++;
+	consumedToken = lookAheadToken;
+	lookAheadToken = lexer->nextToken();
+}
+
 void Parser::skipErrors() {
+	NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
+	Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
+	SyntaxError error = {tokenIndex , consumedToken};
+	bool hasErrors = errors.size() != 0;
+
+	if (hasErrors) {
+		SyntaxError topError = errors.at(errors.size() - 1);
+		// Check the last error and the current error. Avoid outputing the same error multiple times
+		if (!(error.tokenPosition == topError.tokenPosition
+			&& error.token.tokenLine == topError.token.tokenLine
+			&& error.token.lexeme == topError.token.lexeme)) {
+			outputError();
+		}	
+	} else {
+		// This is the first error
+		outputError();
+	}
+	
+	errors.push_back(error);
+
+	if (consumedToken.type != TokenType::end_of_file_token || inFollow(consumedTerminal, top)) {
+		parseStack.pop_back();
+	} else {
+		while (!inFirst(consumedTerminal, top)
+			|| inFirst(SpecialTerminal::EPSILON, top) && !inFollow(consumedTerminal, top)) {
+			nextToken();
+			consumedTerminal = tokenToTerminal(consumedToken, top);
+		}
+			
+	}
+}
+
+void Parser::outputError() {
+	std::cout << "Syntax error on line " << consumedToken.tokenLine << ". Unexpected identifer \"" << lookAheadToken.lexeme   << "\" after \"" << consumedToken.lexeme << "\"" << std::endl;
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
@@ -145,8 +186,6 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
-	// TODO: fix grammar. we have problem with float in indice. i.e n[2.1]
-	// TODO: factor in num type
 	if (terminalTokenType == TokenType::int_value && token.type == TokenType::num) {
 		return true;
 	}

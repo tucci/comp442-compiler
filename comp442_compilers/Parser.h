@@ -11,6 +11,11 @@ struct DerivationData {
 	};
 };
 
+struct SyntaxError {
+	int tokenPosition;
+	Token token;
+};
+
 class Parser {
 public:
 	// Create a parser from a given lexer and grammar
@@ -27,6 +32,9 @@ private:
 	Lexer* lexer;
 	// The grammar our parser is trying to validate
 	Grammar* grammar;
+	// The token before the lookahead token. This is used during error recovery
+	// Since we only find out the error after we consumed the token, we need to keep track of the token we just consumed
+	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
 	// Data structure to hold first set
@@ -40,10 +48,17 @@ private:
 	std::vector<Symbol> parseStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
+	// The index of the current token
+	int tokenIndex;
+	// The list of syntax errors during parsing
+	std::vector<SyntaxError> errors;
+	// Internally calls the lexer
+	void nextToken();
 	// Builds the parse table from the grammar
 	void buildParseTable();
 	// Handles the errors
 	void skipErrors();
+	void outputError();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
 	// Returns true if the terminal is in the first set for the given non terminal production
