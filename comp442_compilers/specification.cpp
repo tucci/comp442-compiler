@@ -41,6 +41,7 @@ const std::unordered_map<std::string, TokenType> Specification::TOKEN_MAP = {
 	{ "<>", TokenType::noteq },
 	{ ">=", TokenType::greateq },
 	{ "==", TokenType::comparison},
+	{ "non_token", TokenType::non_token }, // special token
 };
 
 const std::unordered_map<TokenType, std::string> Specification::REVERSE_TOKEN_MAP = constructReverseMap();

@@ -184,7 +184,7 @@ bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
-	if (terminalTokenType == TokenType::int_value && token.type == TokenType::num) {
+	if (Specification::isInteger(token) &&  token.type == TokenType::num) {
 		return true;
 	}
 	return terminalTokenType == token.type;
@@ -342,15 +342,17 @@ void Parser::outputAnalysis() {
 	parserDerivation << "</body></html>"; // close html
 	parserDerivation.close();
 
-
-	// TODO: output errors as well
 	std::ofstream parserErrors;
 	parserErrors.open("parserErrors.txt");
 
 	bool isDuplicate;
 
 	for (SyntaxError error : errors) {
-		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\" after \"" << error.token.lexeme << "\"" << std::endl;
+		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";
+		if (error.token.type != TokenType::non_token) {
+			parserErrors << " after \"" << error.token.lexeme << "\"";
+		}
+		parserErrors << std::endl;
 	}
 
 	parserErrors.close();
