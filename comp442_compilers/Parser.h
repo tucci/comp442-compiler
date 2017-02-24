@@ -14,6 +14,7 @@ struct DerivationData {
 struct SyntaxError {
 	int tokenPosition;
 	Token token;
+	Token lookaheadToken;
 };
 
 class Parser {

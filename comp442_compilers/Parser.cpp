@@ -114,29 +114,26 @@ void Parser::nextToken() {
 void Parser::skipErrors() {
 	NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
 	Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
-	SyntaxError error = {tokenIndex , consumedToken};
+	SyntaxError error = {tokenIndex , consumedToken, lookAheadToken};
 
 	bool isDuplicate;
 
-	// Check if the current error is a duplicate of the last one
+	// Logic to avoid outputing duplcate errors
 	if (errors.size() == 0) {
 		isDuplicate = false;
 	} else {
 		// Compare the top error with the current error
 		SyntaxError topError = errors.at(errors.size() - 1);
-		isDuplicate = error.tokenPosition	== topError.tokenPosition
-				   && error.token.tokenLine == topError.token.tokenLine
-				   && error.token.lexeme	== topError.token.lexeme;
+		isDuplicate = error.tokenPosition == topError.tokenPosition
+			&& error.token.tokenLine == topError.token.tokenLine
+			&& error.token.lexeme == topError.token.lexeme;
 	}
 
-	// Add the error to the error list
-	errors.push_back(error);
-
-	// If this is not a duplicate error, output it
+	// If this is not a duplicate error, add it to the error list
 	if (!isDuplicate) {
-		std::cout << "Syntax error on line " << consumedToken.tokenLine << ". Unexpected identifer \"" << lookAheadToken.lexeme << "\" after \"" << consumedToken.lexeme << "\"" << std::endl;
+		// Add the error to the error list
+		errors.push_back(error);
 	}
-	
 
 	if (consumedToken.type != TokenType::end_of_file_token || inFollow(consumedTerminal, top)) {
 		parseStack.pop_back();
@@ -316,12 +313,8 @@ void Parser::outputParserDataToFile() {
 }
 
 void Parser::outputAnalysis() {
-	
+
 	std::ofstream parserDerivation;
-	// TODO: output errors as well
-	std::ofstream parserErrors;
-
-
 	parserDerivation.open("derivation.html");
 	parserDerivation << "<html><head><style>table, th, td{border: 1px solid black;}ul{list-style-type: none;}</style></head><body>";
 	parserDerivation << "<h1>Derivation</h1>";
@@ -348,6 +341,19 @@ void Parser::outputAnalysis() {
 	parserDerivation << "</table>"; // close table
 	parserDerivation << "</body></html>"; // close html
 	parserDerivation.close();
+
+
+	// TODO: output errors as well
+	std::ofstream parserErrors;
+	parserErrors.open("parserErrors.txt");
+
+	bool isDuplicate;
+
+	for (SyntaxError error : errors) {
+		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\" after \"" << error.token.lexeme << "\"" << std::endl;
+	}
+
+	parserErrors.close();
 }
 
 std::string Parser::getStackContents() {
