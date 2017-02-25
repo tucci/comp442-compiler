@@ -9,19 +9,19 @@ namespace Tests
 	{
 	public:
 
-		TEST_METHOD(dfa_getStartingStateTest) {
+		TEST_METHOD(Dfa_getStartingStateTest) {
 			Dfa dfa;
 			State* test = dfa.createStartState();
 			Assert::IsTrue(test == dfa.getStartingState());
 		};
 
-		TEST_METHOD(dfa_createStartState1) {
+		TEST_METHOD(Dfa_createStartState1) {
 			Dfa dfa;
 			State* test = dfa.createStartState();
 			Assert::IsTrue(test->isStartState);
 		};
 
-		TEST_METHOD(dfa_createStartState2) {
+		TEST_METHOD(Dfa_createStartState2) {
 			Dfa dfa;
 			State* start1 = dfa.createStartState();
 			State* test3 = dfa.createState();
@@ -30,7 +30,7 @@ namespace Tests
 			Assert::IsTrue(start2->isStartState);
 		};
 
-		TEST_METHOD(dfa_createStateDefault) {
+		TEST_METHOD(Dfa_createStateDefault) {
 			Dfa dfa;
 			State* test = dfa.createState();
 			Assert::IsFalse(test->isStartState);
@@ -38,25 +38,25 @@ namespace Tests
 			Assert::AreEqual(static_cast<int>(TokenType::non_token), static_cast<int>(test->tokenType));
 		}
 
-		TEST_METHOD(dfa_createStateFinal) {
+		TEST_METHOD(Dfa_createStateFinal) {
 			Dfa dfa;
 			State* test = dfa.createState(true);
 			Assert::IsTrue(test->isFinalState);
 		}
 
-		TEST_METHOD(dfa_createStateBacktrack) {
+		TEST_METHOD(Dfa_createStateBacktrack) {
 			Dfa dfa;
 			State* test = dfa.createState(false, true);
 			Assert::IsTrue(test->needsToBacktrack);
 		}
 
-		TEST_METHOD(dfa_createStateWithTokenType) {
+		TEST_METHOD(Dfa_createStateWithTokenType) {
 			Dfa dfa;
 			State* test = dfa.createState(false, false, TokenType::id);
 			Assert::AreEqual(static_cast<int>(TokenType::id), static_cast<int>(test->tokenType));
 		}
 
-		TEST_METHOD(dfa_addTransitionSuccessTrue) {
+		TEST_METHOD(Dfa_addTransitionSuccessTrue) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = dfa.createStartState();
@@ -66,7 +66,7 @@ namespace Tests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(dfa_addTransitionSuccessFalse) {
+		TEST_METHOD(Dfa_addTransitionSuccessFalse) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = dfa.createStartState();
@@ -77,7 +77,7 @@ namespace Tests
 			delete end;
 		}
 
-		TEST_METHOD(dfa_addTransitionSuccessFalse2) {
+		TEST_METHOD(Dfa_addTransitionSuccessFalse2) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = new State();
@@ -89,7 +89,7 @@ namespace Tests
 			delete end;
 		}
 
-		TEST_METHOD(dfa_addElseTransition) {
+		TEST_METHOD(Dfa_addElseTransition) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -98,7 +98,7 @@ namespace Tests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(dfa_hasStateTrue) {
+		TEST_METHOD(Dfa_hasStateTrue) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			// Testing to see if the state we just added is in the dfa
@@ -106,7 +106,7 @@ namespace Tests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(dfa_hasStateTrue2) {
+		TEST_METHOD(Dfa_hasStateTrue2) {
 			Dfa dfa;
 			State* state = dfa.createState();
 			// Testing to see if the state we just added is in the dfa
@@ -114,7 +114,7 @@ namespace Tests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(dfa_hasStateFalse) {
+		TEST_METHOD(Dfa_hasStateFalse) {
 			Dfa dfa;
 			State state;
 			state.stateIdentifier = 2;
@@ -123,7 +123,7 @@ namespace Tests
 			Assert::IsFalse(actual);
 		}
 
-		TEST_METHOD(dfa_tableSuccess) {
+		TEST_METHOD(Dfa_tableSuccess) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -135,7 +135,7 @@ namespace Tests
 		}
 
 
-		TEST_METHOD(dfa_tableSuccessElseTransiton) {
+		TEST_METHOD(Dfa_tableSuccessElseTransiton) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -145,7 +145,7 @@ namespace Tests
 			Assert::AreEqual(end->stateIdentifier, actual->stateIdentifier);
 		}
 
-		TEST_METHOD(dfa_tableNULLTest) {
+		TEST_METHOD(Dfa_tableNULLTest) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* actual = dfa.table(start->stateIdentifier, "a");
@@ -153,7 +153,7 @@ namespace Tests
 			Assert::IsNull(actual);
 		}
 
-		TEST_METHOD(dfa_tableNULLTest2) {
+		TEST_METHOD(Dfa_tableNULLTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -163,7 +163,7 @@ namespace Tests
 			Assert::IsNull(actual);
 		}
 
-		TEST_METHOD(dfa_acceptsInputTest1) {
+		TEST_METHOD(Dfa_acceptsInputTest1) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* i1 = dfa.createState();
@@ -182,7 +182,7 @@ namespace Tests
 			Assert::IsFalse(dfa.acceptsInput("bac"));
 		}
 		
-		TEST_METHOD(dfa_acceptsInputTest2) {
+		TEST_METHOD(Dfa_acceptsInputTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);
@@ -199,7 +199,7 @@ namespace Tests
 			Assert::IsFalse(dfa.acceptsInput("abbb"));
 		}
 
-		TEST_METHOD(dfa_acceptsInputTest3) {
+		TEST_METHOD(Dfa_acceptsInputTest3) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);
@@ -219,7 +219,7 @@ namespace Tests
 			Assert::IsFalse(dfa.acceptsInput("aaa"));	
 		}
 
-		TEST_METHOD(dfa_stateFromInputTest1) {
+		TEST_METHOD(Dfa_stateFromInputTest1) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* i1 = dfa.createState();
@@ -233,7 +233,7 @@ namespace Tests
 			
 		}
 
-		TEST_METHOD(dfa_stateFromInputTest2) {
+		TEST_METHOD(Dfa_stateFromInputTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);

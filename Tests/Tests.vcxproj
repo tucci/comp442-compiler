@@ -160,6 +160,7 @@
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
+    <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="FirstFollowSetGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />
+    <ClCompile Include="Parser_tests.cpp" />
     <ClCompile Include="Production_tests.cpp" />
     <ClCompile Include="specification_tests.cpp" />
     <ClCompile Include="stdafx.cpp">

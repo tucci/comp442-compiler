@@ -7,7 +7,7 @@ namespace Tests {
 	TEST_CLASS(SpecificationTest) {
 public:
 
-	TEST_METHOD(specifcation_whitespaceTest) {
+	TEST_METHOD(Specifcation_whitespaceTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -22,7 +22,7 @@ public:
 		Assert::IsTrue(expected == tokenizer->table(start->stateIdentifier, "\r\n"));
 	};
 
-	TEST_METHOD(specifcation_nonZeroTest) {
+	TEST_METHOD(Specifcation_nonZeroTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -41,7 +41,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(specifcation_digitTest) {
+	TEST_METHOD(Specifcation_digitTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -57,7 +57,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(specifcation_letterTest) {
+	TEST_METHOD(Specifcation_letterTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -73,7 +73,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(specifcation_floatTest) {
+	TEST_METHOD(Specifcation_floatTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -113,7 +113,7 @@ public:
 	};
 
 
-	TEST_METHOD(specifcation_fractionTest) {
+	TEST_METHOD(Specifcation_fractionTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -139,7 +139,7 @@ public:
 	};
 
 
-	TEST_METHOD(specifcation_integerTest) {
+	TEST_METHOD(Specifcation_integerTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -173,7 +173,7 @@ public:
 	};
 
 
-	TEST_METHOD(specifcation_numTest) {
+	TEST_METHOD(Specifcation_numTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -242,7 +242,7 @@ public:
 
 
 
-	TEST_METHOD(specifcation_alphaNumTest) {
+	TEST_METHOD(Specifcation_alphaNumTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -258,7 +258,7 @@ public:
 	};
 
 
-	TEST_METHOD(specifcation_idTokenTest) {
+	TEST_METHOD(Specifcation_idTokenTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -287,7 +287,7 @@ public:
 	};
 
 
-	TEST_METHOD(specifcation_TokenTest) {
+	TEST_METHOD(Specifcation_TokenTest) {
 		Specification spec(true);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 
