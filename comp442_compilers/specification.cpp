@@ -261,6 +261,10 @@ void Specification::updateTokenType(Token* token) {
 			token->type = inTokenMap->second;
 		}
 	}
+
+	if (token->lexeme == SpecialTerminal::END_OF_FILE.getName()) {
+		token->type = end_of_file_token;
+	}
 	//// Convert num types to their respective int/float tokens
 	//if (token->type == TokenType::num) {
 	//	// if it is a float we will change it

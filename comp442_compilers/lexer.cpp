@@ -298,13 +298,16 @@ void Lexer::writeTokensToFile() {
 	std::ofstream error;
 	output.open("lexerOutput.txt");
 	error.open("lexerErrors.txt");
-	for (auto t : outputTokens) {
+
+	for (int i = 0; i < outputTokens.size(); i++) {
+		const Token t = outputTokens.at(i);
 		if (t.type != TokenType::end_of_file_token) {
-			if (t.type == TokenType::error_token) {
+			// TODO: this deoesnt work anymore
+			/*if (t.type == TokenType::error_token) {
 				error << t;
 			} else {
 				output << t;
-			}
+			}*/
 		}
 	}
 	output.close();

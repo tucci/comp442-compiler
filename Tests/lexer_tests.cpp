@@ -78,17 +78,17 @@ public:
 		Assert::IsTrue(tokens.at(15).type == error_token && tokens.at(15).lexeme == "1.00" && tokens.at(15).tokenLine == 6);
 		Assert::IsTrue(tokens.at(15).error.type == invalid_float);
 
-		Assert::IsTrue(tokens.at(16).type == float_value && tokens.at(16).lexeme == "2.0" && tokens.at(16).tokenLine == 7);
+		Assert::IsTrue(tokens.at(16).type == num && tokens.at(16).lexeme == "2.0" && tokens.at(16).tokenLine == 7);
 		Assert::IsTrue(tokens.at(17).type == int_token && tokens.at(17).lexeme == "3" && tokens.at(17).tokenLine == 8);
 		Assert::IsTrue(tokens.at(18).type == dot && tokens.at(18).lexeme == "." && tokens.at(18).tokenLine == 8);
 		Assert::IsTrue(tokens.at(19).type == id && tokens.at(19).lexeme == "a" && tokens.at(19).tokenLine == 8);
-		Assert::IsTrue(tokens.at(20).type == float_value && tokens.at(20).lexeme == "4.2" && tokens.at(20).tokenLine == 9);
+		Assert::IsTrue(tokens.at(20).type == num && tokens.at(20).lexeme == "4.2" && tokens.at(20).tokenLine == 9);
 		Assert::IsTrue(tokens.at(21).type == id && tokens.at(21).lexeme == "a" && tokens.at(21).tokenLine == 9);
-		Assert::IsTrue(tokens.at(22).type == float_value && tokens.at(22).lexeme == "5.0" && tokens.at(22).tokenLine == 10);
+		Assert::IsTrue(tokens.at(22).type == num && tokens.at(22).lexeme == "5.0" && tokens.at(22).tokenLine == 10);
 		Assert::IsTrue(tokens.at(23).type == id && tokens.at(23).lexeme == "a" && tokens.at(23).tokenLine == 10);
-		Assert::IsTrue(tokens.at(24).type == float_value && tokens.at(24).lexeme == "6.03" && tokens.at(24).tokenLine == 11);
+		Assert::IsTrue(tokens.at(24).type == num && tokens.at(24).lexeme == "6.03" && tokens.at(24).tokenLine == 11);
 		Assert::IsTrue(tokens.at(25).type == id && tokens.at(25).lexeme == "a" && tokens.at(25).tokenLine == 11);
-		Assert::IsTrue(tokens.at(26).type == float_value && tokens.at(26).lexeme == "7.00000000003" && tokens.at(26).tokenLine == 12);
+		Assert::IsTrue(tokens.at(26).type == num && tokens.at(26).lexeme == "7.00000000003" && tokens.at(26).tokenLine == 12);
 		Assert::IsTrue(tokens.at(27).type == id && tokens.at(27).lexeme == "a" && tokens.at(27).tokenLine == 12);
 
 		// invalid_float error
@@ -98,7 +98,7 @@ public:
 		Assert::IsTrue(tokens.at(29).type == int_token && tokens.at(29).lexeme == "0" && tokens.at(29).tokenLine == 14);
 		Assert::IsTrue(tokens.at(30).type == dot && tokens.at(30).lexeme == "." && tokens.at(30).tokenLine == 14);
 		Assert::IsTrue(tokens.at(31).type == id && tokens.at(31).lexeme == "a1" && tokens.at(31).tokenLine == 14);
-		Assert::IsTrue(tokens.at(32).type == float_value && tokens.at(32).lexeme == "0.1" && tokens.at(32).tokenLine == 15);
+		Assert::IsTrue(tokens.at(32).type == num && tokens.at(32).lexeme == "0.1" && tokens.at(32).tokenLine == 15);
 		Assert::IsTrue(tokens.at(33).type == id && tokens.at(33).lexeme == "a" && tokens.at(33).tokenLine == 15);
 
 		// invalid_float error
@@ -106,9 +106,9 @@ public:
 		Assert::IsTrue(tokens.at(34).error.type == invalid_float);
 
 		Assert::IsTrue(tokens.at(35).type == id && tokens.at(35).lexeme == "a" && tokens.at(35).tokenLine == 16);
-		Assert::IsTrue(tokens.at(36).type == float_value && tokens.at(36).lexeme == "2.0" && tokens.at(36).tokenLine == 17);
+		Assert::IsTrue(tokens.at(36).type == num && tokens.at(36).lexeme == "2.0" && tokens.at(36).tokenLine == 17);
 		Assert::IsTrue(tokens.at(37).type == id && tokens.at(37).lexeme == "a" && tokens.at(37).tokenLine == 17);
-		Assert::IsTrue(tokens.at(38).type == float_value && tokens.at(38).lexeme == "3.003" && tokens.at(38).tokenLine == 18);
+		Assert::IsTrue(tokens.at(38).type == num && tokens.at(38).lexeme == "3.003" && tokens.at(38).tokenLine == 18);
 		Assert::IsTrue(tokens.at(39).type == id && tokens.at(39).lexeme == "a" && tokens.at(39).tokenLine == 18);
 
 		// invalid_float error

@@ -68,6 +68,12 @@
     <ClCompile Include="Grammar_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstFollowSetGenerator_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestLexerSourceFile.txt">
@@ -75,6 +81,9 @@
     </Text>
     <Text Include="..\comp442_compilers\ReadMe.txt">
       <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="TestGrammarFile.txt">
+      <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
 </Project>

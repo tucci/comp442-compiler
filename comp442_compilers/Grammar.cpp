@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 Grammar::Grammar() {
-
+	mStartSymbol = std::shared_ptr<NonTerminal>(new NonTerminal("S"));
 	// Add end of file to the list of terminals 
 	// We are gonna need this when creating the parse table
 	mTerminalSymbols.emplace(std::shared_ptr<Terminal>(new Terminal(SpecialTerminal::END_OF_FILE.getName())));
@@ -174,7 +174,7 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 
 
 
-NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFirstSet(const Grammar& grammar) {
+NonTerminalMapToTerminalSet FirstFollowSetGenerator::buildFirstSet(const Grammar& grammar) {
 	NonTerminalMapToTerminalSet firstSet = initMap(grammar);
 	std::vector<std::shared_ptr<Production>> productions = grammar.getProductions();
 
@@ -202,7 +202,7 @@ NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFirstSet(const 
 }
 
 
-NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFollowSet(const Grammar& grammar, const NonTerminalMapToTerminalSet& firstSet) {
+NonTerminalMapToTerminalSet FirstFollowSetGenerator::buildFollowSet(const Grammar& grammar, const NonTerminalMapToTerminalSet& firstSet) {
 	NonTerminalMapToTerminalSet followSet = initMap(grammar);
 	// the end of file is in the follow set for the start symbol
 	followSet.at(grammar.getStartSymbol()).emplace(SpecialTerminal::END_OF_FILE);
@@ -251,7 +251,7 @@ NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::buildFollowSet(const
 }
 
 
-TerminalSet GrammarFirstFollowSetGenerator::computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first) {
+TerminalSet FirstFollowSetGenerator::computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first) {
 	TerminalSet computedSet;
 	for (auto s = symbols.begin(); s!= symbols.end(); ++s) {
 		if (s->isTerminal()) {
@@ -280,7 +280,7 @@ TerminalSet GrammarFirstFollowSetGenerator::computeFirst(const std::vector<Symbo
 	return computedSet;
 }
 
-NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::initMap(const Grammar& grammar) {
+NonTerminalMapToTerminalSet FirstFollowSetGenerator::initMap(const Grammar& grammar) {
 	NonTerminalMapToTerminalSet map;
 	const std::unordered_set<std::shared_ptr<NonTerminal>, SymbolHasher, SymbolEqual> nonTerminals = grammar.getNonTerminals();
 
@@ -292,7 +292,7 @@ NonTerminalMapToTerminalSet GrammarFirstFollowSetGenerator::initMap(const Gramma
 }
 
 
-std::pair<TerminalSet, bool> GrammarFirstFollowSetGenerator::left_merge(const TerminalSet& set1, const TerminalSet& set2) {
+std::pair<TerminalSet, bool> FirstFollowSetGenerator::left_merge(const TerminalSet& set1, const TerminalSet& set2) {
 	TerminalSet unionedSet(set1);
 	bool hasChanges = false;
 	for (TerminalSet::const_iterator t = set2.begin(); t != set2.end(); ++t) {

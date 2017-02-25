@@ -4,8 +4,8 @@
 Parser::Parser(Lexer* lexer, Grammar* grammar) {
 	this->lexer = lexer;
 	this->grammar = grammar;
-	firstSet = GrammarFirstFollowSetGenerator::buildFirstSet(*grammar);
-	followSet = GrammarFirstFollowSetGenerator::buildFollowSet(*grammar, firstSet);
+	firstSet = FirstFollowSetGenerator::buildFirstSet(*grammar);
+	followSet = FirstFollowSetGenerator::buildFollowSet(*grammar, firstSet);
 	buildParseTable();
 }
 
@@ -75,7 +75,7 @@ void Parser::buildParseTable() {
 		NonTerminal lhs = (*p)->getNonTerminal();
 		std::vector<Symbol> rhs = (*p)->getProduction();
 		parseTable.emplace(lhs, emptyRow);
-		TerminalSet firstRhs = GrammarFirstFollowSetGenerator::computeFirst(rhs, firstSet);
+		TerminalSet firstRhs = FirstFollowSetGenerator::computeFirst(rhs, firstSet);
 		for (TerminalSetPtr::iterator t_ptr = terminalSet.begin(); t_ptr != terminalSet.end(); ++t_ptr) {
 			Terminal t = *t_ptr->get();
 			if (t.isTerminal() && !SpecialTerminal::isEpsilon(t.getName())) {
@@ -150,8 +150,8 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 	std::vector<Symbol> rhs = production.getProduction();
 	std::string replaceWith;
 	std::string nonTerminalString = production.getNonTerminal().getName();
-	int replaceIndex = derivation.find(nonTerminalString);
-	int replaceLength = nonTerminalString.length();
+	size_t replaceIndex = derivation.find(nonTerminalString);
+	size_t replaceLength = nonTerminalString.length();
 	// This pushes the production in reverse order
 	for (std::vector<Symbol>::reverse_iterator it = rhs.rbegin(); it != rhs.rend(); ++it) {
 		// If this is epsilon, dont push it onto the stack. just continue on
@@ -213,7 +213,7 @@ void Parser::outputParserDataToFile() {
 	firstfollowOutput << "First Set\n";
 	for (auto nt_iterator : firstSet) {
 		firstfollowOutput << "first(" << nt_iterator.first.getName() << ") : { ";
-		int size = nt_iterator.second.size();
+		size_t size = nt_iterator.second.size();
 		int i = 0;
 		for (auto t_iterator : nt_iterator.second) {
 			firstfollowOutput << t_iterator.getName();
@@ -230,7 +230,7 @@ void Parser::outputParserDataToFile() {
 
 	for (auto nt_iterator : followSet) {
 		firstfollowOutput << "follow(" << nt_iterator.first.getName() << ") : { ";
-		int size = nt_iterator.second.size();
+		size_t size = nt_iterator.second.size();
 		int i = 0;
 		for (auto t_iterator : nt_iterator.second) {
 			firstfollowOutput << t_iterator.getName();
@@ -344,8 +344,6 @@ void Parser::outputAnalysis() {
 
 	std::ofstream parserErrors;
 	parserErrors.open("parserErrors.txt");
-
-	bool isDuplicate;
 
 	for (SyntaxError error : errors) {
 		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";

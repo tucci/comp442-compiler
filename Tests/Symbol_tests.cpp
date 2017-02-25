@@ -13,14 +13,29 @@ public:
 		Assert::IsFalse(nt.isTerminal());
 	};
 
-	TEST_METHOD(Symbol_NonTerminalSepcialSymbolTest) {
-	};
-
 	TEST_METHOD(Symbol_TerminalTest) {
 		Terminal t("<test>");
 		Assert::IsTrue(t.getName() == "<test>");
 		Assert::IsTrue(t.isTerminal());
 	};
+
+	TEST_METHOD(Symbol_NonTerminalSepcialSymbolTest) {
+		// Here we are just testing to see if the same are the same
+		Assert::IsTrue("EPSILON" == SpecialTerminal::EPSILON.getName());
+		Assert::IsTrue("$" == SpecialTerminal::END_OF_FILE.getName());
+
+		Assert::IsTrue(SpecialTerminal::isEpsilon(SpecialTerminal::EPSILON.getName()));
+		Assert::IsFalse(SpecialTerminal::isEpsilon(SpecialTerminal::END_OF_FILE.getName()));
+
+		Terminal t("notEpsilon");
+		NonTerminal nt("notEpsilon2");
+
+		Assert::IsFalse(SpecialTerminal::isEpsilon(t.getName()));
+		Assert::IsFalse(SpecialTerminal::isEpsilon(nt.getName()));
+
+	};
+
+	
 
 	};
 }

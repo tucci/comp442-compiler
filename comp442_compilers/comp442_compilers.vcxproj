@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="parserErrors.txt" />
     <Text Include="testsource_1.txt" />
     <Text Include="first_and_follow_sets.txt" />
     <Text Include="lexerErrors.txt" />

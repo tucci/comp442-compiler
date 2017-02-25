@@ -6,6 +6,9 @@ const Production Production::ERROR_PRODUCTION(ERROR_PRODUCTION_NON_TERMINAL, std
 
 Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production) :mNonTerminal(nonTerminal), mProduction(production) {
 	// If you want an epsilon production, you must explicity add Symbol::EPSILON to the production vector
+	if (nonTerminal.getName().empty()) {
+		throw std::exception("Can't have empty non terminal");
+	}
 }
 
 Production::~Production() {

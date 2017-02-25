@@ -78,7 +78,7 @@ struct Token {
 	// The error data structure in case this token is an error token
 	TokenError error;
 	// Override output for a token
-	friend std::ostream& operator << (std::ostream& o, Token& token);
+	friend std::ostream& operator << (std::ostream& o, const Token& token);
 };
 
 #endif // !TOKEN_H

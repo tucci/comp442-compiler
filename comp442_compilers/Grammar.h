@@ -41,7 +41,7 @@ private:
 
 };
 
-class GrammarFirstFollowSetGenerator {
+class FirstFollowSetGenerator {
 	// TODO: move this back to the parser to avoid copying
 	// For now this is here for testing
 	// algorithm to build first and follow sets for the given grammar
