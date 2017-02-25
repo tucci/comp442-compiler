@@ -46,14 +46,6 @@ template <class T> static inline std::vector<T> sublist(const std::vector<T>& ve
 	return std::vector<T> (first, last);
 }
 
-static inline std::string vectorToString(const std::vector <std::string>& vec) {
-	std::string str;
-	for (auto s : vec) {
-		str += (s + " ");
-	}
-	return str;
-}
-
 // Returns true if the terminal is in the given terminal set
 static inline bool inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 	TerminalSet::const_iterator got = symbolSet.find(symbol);
@@ -79,6 +71,21 @@ template <class K, class V, class H, class E> static inline bool inMap(const K& 
 		return false;
 	}
 	return true;
+}
+
+// second value, returns true if there were items in set2 that were not int set1. Adds items in set2 to set1
+static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const TerminalSet& set2) {
+	TerminalSet unionedSet(set1);
+	bool hasChanges = false;
+	for (TerminalSet::const_iterator t = set2.begin(); t != set2.end(); ++t) {
+		TerminalSet::const_iterator got = unionedSet.find(*t);
+		if (got == unionedSet.end()) {
+			// no duplicate found, so there were changes to the set
+			hasChanges = true;
+			unionedSet.emplace(*t);
+		}
+	}
+	return std::pair<TerminalSet, bool>(unionedSet, hasChanges);
 }
 
 #endif // !UTILS_H

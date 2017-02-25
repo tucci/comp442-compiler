@@ -24,6 +24,9 @@
     <ClInclude Include="..\comp442_compilers\token.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\comp442_compilers\Utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -71,13 +74,19 @@
     <ClCompile Include="..\comp442_compilers\Grammar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FirstFollowSetGenerator_tests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Parser_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\comp442_compilers\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParserGenerator_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils_testcpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

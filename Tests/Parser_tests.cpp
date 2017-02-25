@@ -18,6 +18,11 @@ public:
 		return "";
 	}
 
+
+	TEST_CLASS_INITIALIZE(INIT_TEST_PARSER_FROM_FILE) {
+		
+	}
+
 	TEST_METHOD(Parser_parserFromFileTest) {
 
 

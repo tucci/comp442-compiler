@@ -119,6 +119,9 @@
     <ClInclude Include="token.h">
       <Filter>Header Files\lexer</Filter>
     </ClInclude>
+    <ClInclude Include="ParserGenerator.h">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -159,6 +162,9 @@
     </ClCompile>
     <ClCompile Include="token.cpp">
       <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="ParserGenerator.cpp">
+      <Filter>Source Files\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

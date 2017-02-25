@@ -9,11 +9,12 @@ Compiler::Compiler() {
 	// Create the lexer with the given specification
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar
-	parser = std::shared_ptr<Parser>(new Parser(lexer.get(), grammar.get()));
+	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
 	parser->outputParserDataToFile();
 }
 
 Compiler::~Compiler() {
+	std::cout << "cleaning";
 }
 
 // Compiles our source code the to the target code

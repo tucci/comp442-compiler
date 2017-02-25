@@ -162,6 +162,7 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="NonTerminal.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="ParserGenerator.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="specification.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NonTerminal.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="ParserGenerator.cpp" />
     <ClCompile Include="Production.cpp" />
     <ClCompile Include="specification.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -1,12 +1,7 @@
 #include "stdafx.h"
 
 
-Parser::Parser(Lexer* lexer, Grammar* grammar) {
-	this->lexer = lexer;
-	this->grammar = grammar;
-	firstSet = FirstFollowSetGenerator::buildFirstSet(*grammar);
-	followSet = FirstFollowSetGenerator::buildFollowSet(*grammar, firstSet);
-	buildParseTable();
+Parser::Parser() {
 }
 
 
@@ -61,49 +56,6 @@ bool Parser::parse() {
 }
 
 
-void Parser::buildParseTable() {
-	// Taken from power point
-	const std::vector<std::shared_ptr<Production>> productions = grammar->getProductions();
-	typedef std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual> TerminalSetPtr;
-	const TerminalSetPtr terminalSet = grammar->getTerminals();
-	std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> emptyRow;
-	for (std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual>::const_iterator t = terminalSet.begin(); t != terminalSet.end(); ++t) {
-		// Add this terminal to the row
-		emptyRow.emplace(*(t->get()), Production::ERROR_PRODUCTION);
-	}
-	for (std::vector<std::shared_ptr<Production>>::const_iterator p = productions.begin(); p != productions.end(); ++p) {
-		NonTerminal lhs = (*p)->getNonTerminal();
-		std::vector<Symbol> rhs = (*p)->getProduction();
-		parseTable.emplace(lhs, emptyRow);
-		TerminalSet firstRhs = FirstFollowSetGenerator::computeFirst(rhs, firstSet);
-		for (TerminalSetPtr::iterator t_ptr = terminalSet.begin(); t_ptr != terminalSet.end(); ++t_ptr) {
-			Terminal t = *t_ptr->get();
-			if (t.isTerminal() && !SpecialTerminal::isEpsilon(t.getName())) {
-				Terminal terminalCast = static_cast<Terminal&>(t);
-				if (inSet(terminalCast, firstRhs)) {
-					// Revove the error production there
-					parseTable.at(lhs).erase(terminalCast);
-					// Add the updated production
-					parseTable.at(lhs).emplace( terminalCast, *p->get());
-				}
-			}
-		}
-		if (inSet(SpecialTerminal::EPSILON, firstRhs)) {
-			for (TerminalSetPtr::iterator t_ptr = terminalSet.begin(); t_ptr != terminalSet.end(); ++t_ptr) {
-				Terminal t = *t_ptr->get();
-				if (t.isTerminal()) {
-					Terminal terminalCast = static_cast<Terminal&>(t);
-					if (inFollow(terminalCast, lhs)) {
-						// Revove the error production there
-						parseTable.at(lhs).erase(terminalCast);
-						// Add the updated production
-						parseTable.at(lhs).emplace(terminalCast, *p->get());
-					}
-				}	
-			}
-		}
-	}
-}
 
 void Parser::nextToken() {
 	tokenIndex++;
@@ -135,11 +87,11 @@ void Parser::skipErrors() {
 		errors.push_back(error);
 	}
 
-	if (consumedToken.type != TokenType::end_of_file_token || inFollow(consumedTerminal, top)) {
+	if (consumedToken.type != TokenType::end_of_file_token || ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
 		parseStack.pop_back();
 	} else {
-		while (!inFirst(consumedTerminal, top)
-			|| inFirst(SpecialTerminal::EPSILON, top) && !inFollow(consumedTerminal, top)) {
+		while (!ParserGenerator::inFirst(consumedTerminal, top, firstSet)
+			|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet) && !ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
 			nextToken();
 			consumedTerminal = tokenToTerminal(consumedToken, top);
 		}
@@ -164,14 +116,6 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 	}
 	
 	derivation.replace(replaceIndex, replaceLength, replaceWith);
-}
-
-bool Parser::inFirst(const Terminal& terminal, const NonTerminal& nonTerminal)  {
-	return inSet(terminal, firstSet.at(nonTerminal));
-}
-
-bool Parser::inFollow(const Terminal& terminal, const NonTerminal& nonTerminal) {
-	return inSet(terminal, followSet.at(nonTerminal));
 }
 
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {

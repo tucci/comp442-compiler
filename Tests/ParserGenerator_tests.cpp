@@ -4,7 +4,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests {
-	TEST_CLASS(FirstFollowSetGeneratorTest) {
+	TEST_CLASS(ParserGeneratorTest) {
 public:
 	// Taken from http://stackoverflow.com/questions/15874723/how-to-open-a-file-from-the-project-in-a-native-c-unit-test-visual-studio
 	// Needed in order to read test file in current directory
@@ -18,9 +18,9 @@ public:
 		return "";
 	}
 
-	TEST_METHOD(FirstFollowSetGenerator_initMapFileTest) {
+	TEST_METHOD(ParserGeneratorTest_initMapFileTest) {
 		Grammar g(GetDirectoryName(TEST_CASE_DIRECTORY) + "TestGrammarFile.txt", "E");
-		NonTerminalMapToTerminalSet emptyMap = FirstFollowSetGenerator::initMap(g);
+		std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> emptyMap = ParserGenerator::initMap(g);
 
 		NonTerminal E("E");
 		NonTerminal Ep("E'");
@@ -42,7 +42,7 @@ public:
 
 	};
 
-	TEST_METHOD(FirstFollowSetGenerator_firstfollowFileTest) {
+	TEST_METHOD(ParserGeneratorTest_firstfollowFileTest) {
 		Grammar g(GetDirectoryName(TEST_CASE_DIRECTORY) + "TestGrammarFile.txt", "E");
 		Assert::IsTrue(g.getNonTerminals().size() == 5);
 		Assert::IsTrue(g.getTerminals().size() == 6 + 1); // 1 for $. symbol added on creation
@@ -77,8 +77,8 @@ public:
 		FLW(F) 	: { *,+,$,) }
 		*/
 
-		NonTerminalMapToTerminalSet firstSet = FirstFollowSetGenerator::buildFirstSet(g);
-		NonTerminalMapToTerminalSet followSet = FirstFollowSetGenerator::buildFollowSet(g, firstSet);
+		std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet = ParserGenerator::buildFirstSet(g);
+		std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> followSet = ParserGenerator::buildFollowSet(g, firstSet);
 
 		// FST(E)	: { 0,1,( }
 		TerminalSet firstE = firstSet.at(E);
@@ -139,40 +139,6 @@ public:
 
 	};
 
-	TEST_METHOD(FirstFollowSetGenerator_leftMergeTest) {
-		Terminal a("a");
-		Terminal b("b");
-		Terminal c("c");
-
-		Terminal d("d");
-		Terminal e("e");
-		Terminal f("f");
-
-		TerminalSet set1 = { a, b, c };
-		TerminalSet set2 = { d, e, f };
-		std::pair<TerminalSet, bool> actualSet = FirstFollowSetGenerator::leftMerge(set1, set2);
-		Assert::IsTrue(actualSet.second);
-		Assert::IsTrue(inSet(a, actualSet.first));
-		Assert::IsTrue(inSet(b, actualSet.first));
-		Assert::IsTrue(inSet(c, actualSet.first));
-		Assert::IsTrue(inSet(d, actualSet.first));
-		Assert::IsTrue(inSet(e, actualSet.first));
-		Assert::IsTrue(inSet(f, actualSet.first));
-
-		TerminalSet set3 = { a };
-		std::pair<TerminalSet, bool> actualSet2 = FirstFollowSetGenerator::leftMerge(set1, set3);
-		// Bool should be false because it shouldnt have changed anything when adding
-		Assert::IsFalse(actualSet2.second);
-		// The count of a should be 1
-		Assert::IsTrue(actualSet2.first.count(a) == 1);
-		Assert::IsTrue(inSet(a, actualSet2.first));
-		Assert::IsTrue(inSet(b, actualSet2.first));
-		Assert::IsTrue(inSet(c, actualSet2.first));
-		Assert::IsFalse(inSet(d, actualSet2.first));
-		Assert::IsFalse(inSet(e, actualSet2.first));
-		Assert::IsFalse(inSet(f, actualSet2.first));
-		
-	};
 
 
 };

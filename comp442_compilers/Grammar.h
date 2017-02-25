@@ -40,20 +40,4 @@ private:
 
 };
 
-class FirstFollowSetGenerator {
-public:
-	// NonTerminalMapToTerminalSet is typedefed in stdafx.h
-	// TerminalSet is typedefed in stdafx.h
-
-	// Creates an empty map that holds all the non terminals to empty sets
-	static NonTerminalMapToTerminalSet initMap(const Grammar& g);
-	static TerminalSet computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first);
-	// Builds the first follow set for the grammar
-	static NonTerminalMapToTerminalSet buildFirstSet(const Grammar&);
-	static NonTerminalMapToTerminalSet buildFollowSet(const Grammar&, const NonTerminalMapToTerminalSet& firstSet);
-	// Returns a pair, where the first value is the union of the two sets
-	// second value, returns true if there were items in set2 that were not int set1. Adds items in set2 to set1
-	static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const TerminalSet& set2);
-};
-
 #endif // !GRAMMAR_H

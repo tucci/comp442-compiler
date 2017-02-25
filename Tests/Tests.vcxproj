@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\comp442_compilers\token.h" />
+    <ClInclude Include="..\comp442_compilers\Utils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -161,11 +162,12 @@
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
+    <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
     <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
-    <ClCompile Include="FirstFollowSetGenerator_tests.cpp" />
+    <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />
     <ClCompile Include="Parser_tests.cpp" />
@@ -179,6 +181,7 @@
     </ClCompile>
     <ClCompile Include="dfa_tests.cpp" />
     <ClCompile Include="Symbol_tests.cpp" />
+    <ClCompile Include="Utils_testcpp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\comp442_compilers\ReadMe.txt" />
