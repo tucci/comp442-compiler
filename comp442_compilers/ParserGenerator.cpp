@@ -42,7 +42,8 @@ std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGe
 }
 
 
-std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGenerator::buildFollowSet(const Grammar& grammar, const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet) {
+std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGenerator::buildFollowSet(const Grammar& grammar,
+	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet) {
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> followSet = initMap(grammar);
 	// the end of file is in the follow set for the start symbol
 	followSet.at(grammar.getStartSymbol()).emplace(SpecialTerminal::END_OF_FILE);
@@ -91,7 +92,8 @@ std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGe
 }
 
 
-TerminalSet ParserGenerator::computeFirst(const std::vector<Symbol>& symbols, const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& first) {
+TerminalSet ParserGenerator::computeFirst(const std::vector<Symbol>& symbols,
+	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& first) {
 	TerminalSet computedSet;
 	for (auto s = symbols.begin(); s != symbols.end(); ++s) {
 		if (s->isTerminal()) {
@@ -138,7 +140,6 @@ std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEq
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> followSet = ParserGenerator::buildFollowSet(g, firstSet);
 	return buildParseTable(g, firstSet, followSet);
 }
-
 
 std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEqual> ParserGenerator::buildParseTable(const Grammar& g,
 	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet,
@@ -190,11 +191,15 @@ std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEq
 	return parseTable;
 }
 
-bool ParserGenerator::inFirst(const Terminal& terminal, const NonTerminal& nonTerminal, const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet) {
+bool ParserGenerator::inFirst(const Terminal& terminal,
+	const NonTerminal& nonTerminal,
+	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet) {
 	return inSet(terminal, firstSet.at(nonTerminal));
 }
 
-bool ParserGenerator::inFollow(const Terminal& terminal, const NonTerminal& nonTerminal, const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& followSet) {
+bool ParserGenerator::inFollow(const Terminal& terminal,
+	const NonTerminal& nonTerminal,
+	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& followSet) {
 	return inSet(terminal, followSet.at(nonTerminal));
 }
 
