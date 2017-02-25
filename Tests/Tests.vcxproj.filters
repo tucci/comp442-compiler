@@ -86,7 +86,7 @@
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils_testcpp.cpp">
+    <ClCompile Include="Utils_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

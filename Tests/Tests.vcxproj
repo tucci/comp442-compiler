@@ -181,7 +181,7 @@
     </ClCompile>
     <ClCompile Include="dfa_tests.cpp" />
     <ClCompile Include="Symbol_tests.cpp" />
-    <ClCompile Include="Utils_testcpp.cpp" />
+    <ClCompile Include="Utils_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\comp442_compilers\ReadMe.txt" />

@@ -40,6 +40,7 @@ static inline std::vector<std::string> simpleSplit(const std::string& splitStrin
 }
 
 // Taken from http://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
+// Gets from start to end, but not including end
 template <class T> static inline std::vector<T> sublist(const std::vector<T>& vec, int start, int end) {
 	std::vector<T>::const_iterator first = vec.begin() + start;
 	std::vector<T>::const_iterator last = vec.begin() + end;
@@ -55,15 +56,13 @@ static inline bool inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
 	return true;
 }
 
-
 template <class T, class H, class E> static inline bool inSet(const T& toFind, const std::unordered_set<T, H, E>& set) {
-	unordered_set<T, H, E>::const_iterator got = set.find(toFind);
+	std::unordered_set<T, H, E>::const_iterator got = set.find(toFind);
 	if (got == set.end()) {
 		return false;
 	}
 	return true;
 }
-
 
 template <class K, class V, class H, class E> static inline bool inMap(const K& toFind, const std::unordered_map<K, V, H, E>& map) {
 	std::unordered_map<K, V, H, E>::const_iterator got = map.find(toFind);

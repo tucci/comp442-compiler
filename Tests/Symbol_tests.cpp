@@ -19,7 +19,7 @@ public:
 		Assert::IsTrue(t.isTerminal());
 	};
 
-	TEST_METHOD(Symbol_NonTerminalSepcialSymbolTest) {
+	TEST_METHOD(Symbol_SepcialSymbolTest) {
 		// Here we are just testing to see if the same are the same
 		Assert::IsTrue("EPSILON" == SpecialTerminal::EPSILON.getName());
 		Assert::IsTrue("$" == SpecialTerminal::END_OF_FILE.getName());

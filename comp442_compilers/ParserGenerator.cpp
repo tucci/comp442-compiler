@@ -41,7 +41,6 @@ std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGe
 	return firstSet;
 }
 
-
 std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGenerator::buildFollowSet(const Grammar& grammar,
 	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& firstSet) {
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> followSet = initMap(grammar);
@@ -91,7 +90,6 @@ std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGe
 	return followSet;
 }
 
-
 TerminalSet ParserGenerator::computeFirst(const std::vector<Symbol>& symbols,
 	const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& first) {
 	TerminalSet computedSet;
@@ -132,7 +130,6 @@ std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> ParserGe
 	}
 	return map;
 }
-
 
 std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEqual> ParserGenerator::buildParseTable(const Grammar& g) {
 	std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEqual> parseTable;
