@@ -65,8 +65,6 @@ private:
 	bool inFirst(const Terminal& terminal, const NonTerminal& nonTerminal);
 	// Returns true if the terminal is in the follow set for the given non terminal production
 	bool inFollow(const Terminal& terminal, const NonTerminal& nonTerminal);
-	// Returns true if the terminal is in the given terminal set
-	bool inSet(const Terminal& symbol, const TerminalSet& symbolSet);
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
 	// Creates the tokens complementary terminal depending on the non terminal. Used to convert num to integer sometimes
 	Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);

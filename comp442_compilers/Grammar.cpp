@@ -188,7 +188,7 @@ NonTerminalMapToTerminalSet FirstFollowSetGenerator::buildFirstSet(const Grammar
 			NonTerminal pNonTerminal = p->get()->getNonTerminal();
 			TerminalSet first = computeFirst(p->get()->getProduction(), firstSet);
 			// Merge the current set for the non terminal with the computed first set
-			std::pair<TerminalSet, bool> merge = left_merge(firstSet.at(pNonTerminal), first);
+			std::pair<TerminalSet, bool> merge = leftMerge(firstSet.at(pNonTerminal), first);
 			// Check if there were changes
 			if (merge.second) {
 				// Set the merged set to the set for that non terminal
@@ -238,7 +238,7 @@ NonTerminalMapToTerminalSet FirstFollowSetGenerator::buildFollowSet(const Gramma
 				}
 
 				if (offsetSet.find(SpecialTerminal::EPSILON) != offsetSet.end()) {
-					std::pair<TerminalSet, bool> merge = left_merge(followSet.at(nt), followSet.at((*p)->getNonTerminal()));
+					std::pair<TerminalSet, bool> merge = leftMerge(followSet.at(nt), followSet.at((*p)->getNonTerminal()));
 					followSet.at(nt) = merge.first;
 					if (merge.second) {
 						continueProcessing = true;
@@ -268,11 +268,11 @@ TerminalSet FirstFollowSetGenerator::computeFirst(const std::vector<Symbol>& sym
 		TerminalSet::iterator got = ntSet.find(SpecialTerminal::EPSILON);
 		if (got == ntSet.end()) {
 			// epsilon not found
-			std::pair<TerminalSet, bool> merge = left_merge(computedSet, first.at(nt));
+			std::pair<TerminalSet, bool> merge = leftMerge(computedSet, first.at(nt));
 			computedSet = merge.first;
 			return computedSet;
 		}
-		std::pair<TerminalSet, bool> merge = left_merge(computedSet, first.at(nt));
+		std::pair<TerminalSet, bool> merge = leftMerge(computedSet, first.at(nt));
 		computedSet = merge.first;
 		computedSet.erase(SpecialTerminal::EPSILON);
 	}
@@ -292,7 +292,7 @@ NonTerminalMapToTerminalSet FirstFollowSetGenerator::initMap(const Grammar& gram
 }
 
 
-std::pair<TerminalSet, bool> FirstFollowSetGenerator::left_merge(const TerminalSet& set1, const TerminalSet& set2) {
+std::pair<TerminalSet, bool> FirstFollowSetGenerator::leftMerge(const TerminalSet& set1, const TerminalSet& set2) {
 	TerminalSet unionedSet(set1);
 	bool hasChanges = false;
 	for (TerminalSet::const_iterator t = set2.begin(); t != set2.end(); ++t) {

@@ -54,4 +54,31 @@ static inline std::string vectorToString(const std::vector <std::string>& vec) {
 	return str;
 }
 
+// Returns true if the terminal is in the given terminal set
+static inline bool inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
+	TerminalSet::const_iterator got = symbolSet.find(symbol);
+	if (got == symbolSet.end()) {
+		return false;
+	}
+	return true;
+}
+
+
+template <class T, class H, class E> static inline bool inSet(const T& toFind, const std::unordered_set<T, H, E>& set) {
+	unordered_set<T, H, E>::const_iterator got = set.find(toFind);
+	if (got == set.end()) {
+		return false;
+	}
+	return true;
+}
+
+
+template <class K, class V, class H, class E> static inline bool inMap(const K& toFind, const std::unordered_map<K, V, H, E>& map) {
+	std::unordered_map<K, V, H, E>::const_iterator got = map.find(toFind);
+	if (got == map.end()) {
+		return false;
+	}
+	return true;
+}
+
 #endif // !UTILS_H

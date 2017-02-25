@@ -174,14 +174,6 @@ bool Parser::inFollow(const Terminal& terminal, const NonTerminal& nonTerminal) 
 	return inSet(terminal, followSet.at(nonTerminal));
 }
 
-bool Parser::inSet(const Terminal& symbol, const TerminalSet& symbolSet) {
-	TerminalSet::const_iterator got = symbolSet.find(symbol);
-	if (got == symbolSet.end()) {
-		return false;
-	}
-	return true;
-}
-
 bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& token) {
 	TokenType terminalTokenType = Specification::TOKEN_MAP.at(terminal.getName());
 	if (Specification::isInteger(token) &&  token.type == TokenType::num) {

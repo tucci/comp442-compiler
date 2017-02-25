@@ -24,10 +24,6 @@
 #include "dfa.h"
 #include "specification.h"
 #include "lexer.h"
-// Util code
-#include "Utils.h"
-
-
 
 // Grammar
 #include "Symbol.h"
@@ -40,6 +36,9 @@ typedef std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> 
 #include "Grammar.h"
 #include "Parser.h"
 #include "Compiler.h"
+// Util code
+#include "Utils.h"
+
 
 
 #endif // !STDAFX_H

@@ -33,7 +33,6 @@ private:
 	std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual> mTerminalSymbols;
 	// The set of nonterminals for this grammar
 	std::unordered_set<std::shared_ptr<NonTerminal>, SymbolHasher, SymbolEqual> mNonTerminalSymbols;
-	
 	// Whether the given string is a non terminal symbol
 	bool isNonTerminal(const std::string& nonTerminalString);
 	// Turns the string into either the terminal/nonterminal/epsilon symbol
@@ -42,21 +41,19 @@ private:
 };
 
 class FirstFollowSetGenerator {
-	// TODO: move this back to the parser to avoid copying
-	// For now this is here for testing
-	// algorithm to build first and follow sets for the given grammar
 public:
 	// NonTerminalMapToTerminalSet is typedefed in stdafx.h
-	static NonTerminalMapToTerminalSet buildFirstSet(const Grammar&);
-	static NonTerminalMapToTerminalSet buildFollowSet(const Grammar&, const NonTerminalMapToTerminalSet& firstSet);
-	// TerminalSet is typedef in stdafx.h
-	static TerminalSet computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first);
+	// TerminalSet is typedefed in stdafx.h
 
 	// Creates an empty map that holds all the non terminals to empty sets
 	static NonTerminalMapToTerminalSet initMap(const Grammar& g);
+	static TerminalSet computeFirst(const std::vector<Symbol>& symbols, const NonTerminalMapToTerminalSet& first);
+	// Builds the first follow set for the grammar
+	static NonTerminalMapToTerminalSet buildFirstSet(const Grammar&);
+	static NonTerminalMapToTerminalSet buildFollowSet(const Grammar&, const NonTerminalMapToTerminalSet& firstSet);
 	// Returns a pair, where the first value is the union of the two sets
 	// second value, returns true if there were items in set2 that were not int set1. Adds items in set2 to set1
-	static std::pair<TerminalSet, bool> left_merge(const TerminalSet& set1, const TerminalSet& set2);
+	static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const TerminalSet& set2);
 };
 
 #endif // !GRAMMAR_H
