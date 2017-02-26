@@ -4,7 +4,8 @@
 // A simple wrapper class that holds on the neccessary data and data structures to init our compiler
 class Compiler {
 public:
-	Compiler();
+	Compiler(std::string grammarFile="grammar.txt", std::string grammarStartSymbol="prog", bool outputToFile=true);
+	
 	~Compiler();
 	// Method used to turn the source code into the target code
 	// This will be implemented in further assignments
@@ -15,6 +16,7 @@ public:
 	// Checks the syntax of the source fie
 	bool analyzeSyntax();
 private:
+	bool writeOutputs;
 	// The specfication for the token
 	std::shared_ptr<Specification> spec;
 	// The grammar that holds the data structure for our LL(1) grammar

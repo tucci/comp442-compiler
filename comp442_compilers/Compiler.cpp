@@ -1,20 +1,22 @@
 #include "stdafx.h"
 
 
-Compiler::Compiler() {
+Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool outputTofile) {
+	writeOutputs = outputTofile;
 	// Create the spec for the tokens
 	spec = std::shared_ptr<Specification>(new Specification());
 	// Read the grammar from the file that our parser will use
-	grammar = std::shared_ptr<Grammar>(new Grammar("grammar.txt", "prog"));
+	grammar = std::shared_ptr<Grammar>(new Grammar(grammarFile, grammarStartSymbol));
 	// Create the lexer with the given specification
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar
 	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
-	parser->outputParserDataToFile();
+	if (writeOutputs) {
+		parser->outputParserDataToFile();
+	}
 }
 
 Compiler::~Compiler() {
-	std::cout << "cleaning";
 }
 
 // Compiles our source code the to the target code
@@ -31,14 +33,22 @@ void Compiler::setSourceFile(std::string sourceFile) {
 bool Compiler::analyzeSyntax() {
 	std::cout << "Analyzing Syntax..." << std::endl;
 	bool parsedSuccessfully = parser->parse();
-	parser->outputAnalysis();
-	lexer->writeTokensToFile();
+
+	if (writeOutputs) {
+		parser->outputAnalysis();
+		lexer->writeTokensToFile();
+	}
+
 	if (parsedSuccessfully) {
 		std::cout << "Parsed Successfully" << std::endl;
-		std::cout << "See derivation.html for derivation" << std::endl;
+		if (writeOutputs) {
+			std::cout << "See derivation.html for derivation" << std::endl;
+		}
 	} else {
 		std::cout << "There was an error during parsing" << std::endl;
-		std::cout << "See parserErrors.html for errors" << std::endl;
+		if (writeOutputs) {
+			std::cout << "See parserErrors.html for errors" << std::endl;
+		}
 	}
 	return parsedSuccessfully;
 }

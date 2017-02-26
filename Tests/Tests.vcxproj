@@ -157,6 +157,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
@@ -185,8 +186,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\comp442_compilers\ReadMe.txt" />
+    <Text Include="grammar.txt" />
     <Text Include="TestGrammarFile.txt" />
     <Text Include="TestLexerSourceFile.txt" />
+    <Text Include="TestSource1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

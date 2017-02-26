@@ -125,6 +125,8 @@ bool Lexer::setSource(std::string pathToFile) {
 		istream.seekg(0, istream.end);
 		// get the size of the source file
 		sourceSizeInBytes = istream.tellg();
+		// Set the index to the start
+		sourceIndex = 0;
 		// put position of stream to the start of source file
 		istream.seekg(0, istream.beg);
 		// create our source buffer array

@@ -89,6 +89,9 @@
     <ClCompile Include="Utils_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Compiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestLexerSourceFile.txt">
@@ -98,6 +101,12 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="TestGrammarFile.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="TestSource1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="grammar.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
