@@ -1,0 +1,61 @@
+class String {
+	// Store string as an array of ints
+	int chars[5];
+
+	int length() {
+		return (32);
+	};
+};
+
+class Student {
+	String mName;
+	int mAge;
+	float mHeight;
+	Student Student(String name, int age, float height) {
+		mName = name;
+		mAge = age;
+		mHeight = height;
+	};
+};
+
+program {
+	String name;
+	int age;
+	float height;
+
+	Student s;
+	// Here we are making some fake name with ints
+	name.chars[0] = 5;
+	name.chars[1] = 7;
+	name.chars[2] = 3;
+	name.chars[3] = 4;
+	name.chars[name.length()] = 8;
+	
+
+	age = 22;
+	height = 23.040444;
+
+	s = Student(name, age, height);
+	get(s);
+	get(s.name.chars);
+	get(s.age);
+	get(s.height);
+
+	return (s.name.chars[0] 
+		+ s.name.chars[1] 
+		+ s.name.chars[2]
+		+ s.name.chars[3]
+		+ s.name.chars[4]
+		+ s.name.chars[s.name.length() - 1 + 1 * 1]);
+};
+
+
+int sum(int array[10]) {
+	int s;
+
+	for (int i = 0; i < 10; i = i + 1) {
+		s = s + array[i];
+	};
+
+	return (s);
+};

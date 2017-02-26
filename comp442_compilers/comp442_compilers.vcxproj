@@ -146,14 +146,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="parserErrors.txt" />
-    <Text Include="testsource_1.txt" />
+    <Text Include="sourcefile.txt" />
     <Text Include="first_and_follow_sets.txt" />
     <Text Include="lexerErrors.txt" />
     <Text Include="grammar.txt" />
     <Text Include="lexerOutput.txt" />
-    <Text Include="testsource_2.txt" />
     <Text Include="testgrammar.txt" />
-    <Text Include="testgrammarSource.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compiler.h" />

@@ -190,6 +190,8 @@
     <Text Include="TestGrammarFile.txt" />
     <Text Include="TestLexerSourceFile.txt" />
     <Text Include="TestSource1.txt" />
+    <Text Include="TestSource2.txt" />
+    <Text Include="TestSource3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

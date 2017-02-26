@@ -54,23 +54,17 @@
     <Text Include="first_and_follow_sets.txt">
       <Filter>Resource Files\parserOutput</Filter>
     </Text>
-    <Text Include="testgrammarSource.txt">
-      <Filter>Resource Files\sourcecode</Filter>
-    </Text>
     <Text Include="grammar.txt">
       <Filter>Resource Files\grammar</Filter>
     </Text>
     <Text Include="testgrammar.txt">
       <Filter>Resource Files\grammar</Filter>
     </Text>
-    <Text Include="testsource_1.txt">
-      <Filter>Resource Files\sourcecode</Filter>
-    </Text>
-    <Text Include="testsource_2.txt">
-      <Filter>Resource Files\sourcecode</Filter>
-    </Text>
     <Text Include="parserErrors.txt">
       <Filter>Resource Files\parserOutput</Filter>
+    </Text>
+    <Text Include="sourcefile.txt">
+      <Filter>Resource Files\sourcecode</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

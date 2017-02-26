@@ -109,5 +109,11 @@
     <Text Include="grammar.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="TestSource2.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="TestSource3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

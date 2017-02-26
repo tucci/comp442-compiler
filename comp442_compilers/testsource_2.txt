@@ -1,9 +1,0 @@
-
-program {
-	for(int t = 0; t <> 100 ; t = t + 1) {
-	};
-	// TODO: fix this issue
-	//id = id[2.1];
-
-};
-
