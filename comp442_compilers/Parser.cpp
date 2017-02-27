@@ -77,7 +77,7 @@ void Parser::skipErrors() {
 					// Hack: Avoids infinite loops
 					// This "should" rarely happen 
 					if (loopCount == 1000) {
-						// Output which ever errors we alreay have	
+						// Output which ever errors we alreay have						
 						outputAnalysis();
 						// Throw expection so that main could catch and deallocate our memory
 						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;

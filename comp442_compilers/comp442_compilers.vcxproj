@@ -151,6 +151,7 @@
     <Text Include="lexerErrors.txt" />
     <Text Include="grammar.txt" />
     <Text Include="lexerOutput.txt" />
+    <Text Include="sourceWithErrors.txt" />
     <Text Include="testgrammar.txt" />
   </ItemGroup>
   <ItemGroup>

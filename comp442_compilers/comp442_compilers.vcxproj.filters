@@ -66,6 +66,9 @@
     <Text Include="sourcefile.txt">
       <Filter>Resource Files\sourcecode</Filter>
     </Text>
+    <Text Include="sourceWithErrors.txt">
+      <Filter>Resource Files\sourcecode</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

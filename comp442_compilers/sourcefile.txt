@@ -1,0 +1,223 @@
+// Test class Declrations
+
+// Test empty class
+class Test1 {};
+
+// Test class with var decls and func defs mixed
+class Test2 {
+	// Test vardecls
+	int x;
+	int y;
+	int z;
+	float byteSize;
+	Test2 object;
+
+	// Test funcdefs
+	Test2 getTest2(int x, int y, int z) {
+		Test2 t;
+		t.x = x;
+		t.y = y;
+		t.z = z;
+		return (t);
+	};
+
+	// Test a mix of vardecls and funcdefs
+	float r;
+	float g;
+	float b;
+	
+	float scale(float s) {
+		r = r * s;
+		g = g * s;
+		b = b * s;
+	};
+
+	// Test vardecls with arraysize
+	float buffer[256];
+	float array_3[512][512][512];
+
+	int getBuffer(int offset) {
+		return (addressOf(buffer[offset]));
+	};
+
+	float getArray_3(int x, int y, int z) {
+		return (array_3[x][y][z]);
+	};
+
+	float createArray_3(float a[512][512][512]) {
+		for (int i = 0; i < 512; i = i + 1) {
+			for (int j = 0; j < 512; j = j + 1) {
+				for (int k = 0; k < 512; k = k + 1) {
+					array_3[i][j][k] = a[i][j][k];
+				};
+			};
+		};
+	};
+
+
+};
+
+// Test only var decls
+class Test3 {
+	Test1 a;
+	Test2 b;
+	Test3 c;
+};
+
+// Test only func defs
+class Test4 {
+	Test1 a() {};
+	Test2 b() {};
+	Test3 c() {};
+};
+
+
+// Test program
+program {
+
+	// test funcBody and varStatementList
+
+	// Test variable declrations through varStatementList
+	// test types
+	int j;
+	float q;
+	Object o;
+	
+
+	// Test assignStat, variable arithExprAEint, indice, dotidnest
+	id.id[2 + 2 * 3][x.a[4]][4 / 2 + val][math.pow(2, 3)][x.a[x.b[x.c[2][(3)][-x.id + y + not z[2]]][x + y + z * sum(q)]]] = not not +(-value);
+
+	id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z = id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z();
+
+	// Test aParams no param
+	x = func();
+
+	// Test aParams single param
+	x = func(id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z);
+
+	// Test multi aParams
+	x = func(array[0], array[array.size() - 1], array.size(), array.tests);
+
+	// Test var decs again after statements
+	// Here this allows us to mix var declrations and statements in the func body
+	int j;
+	float q;
+	Object o;
+
+	// Test other statements (noIdStartStatement) such as for if
+
+	// Test for
+	for (int i = 0; i < j; i = i + 1) {
+	};
+
+	// Test if without else
+	if (j - q < x + q) then {
+	
+	};
+
+	// Test if else
+	if (j - q < x + q) then {
+	
+	} else {
+	
+	};
+
+	// Test if without else but no statBlock
+	if (j - q < x + q) then 
+		//f = q();
+	;
+
+	// Test if else with no statBlock
+	if (j - q < x + q) then
+		f = q();
+	 else 
+		f = a();
+	 ;
+	 
+	 // test gets
+	 get (x);
+	 get (id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z);
+	 
+
+	 // Test puts
+	 put (x);
+	 put (id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z);
+	 put (id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z());
+	 put (x + y);
+	 // Test also addop/multop with expr
+	 put (a + b - c * d / e or f and g);
+
+	 // Test relops
+	 put (a == b);
+	 put (a <> b);
+	 put (a < b);
+	 put (a > b);
+	 put (a <= b);
+	 put (a >= b);
+
+	 // Tests returns
+
+	 return (x);
+	 return (id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z);
+	 return (id.a.b.c.d.e.f.g[3].h[i.j[k].l[m][n][o[p[q].r[s.t.u] * v()].x[y]].z(z)].z[z].z());
+	 return (x + y);
+	 return (a + b - c * d / e or f and g);
+	 return (a == b);
+	 return (a <> b);
+	 return (a < b);
+	 return (a > b);
+	 return (a <= b);
+	 return (a >= b);
+
+
+	 // test ints
+	 i = 10;
+	 i = 0;
+	 i = 202020203300;
+	 // test signs
+	 i = +10;
+	 i = +0;
+	 i = +202020203300;
+	 i = -10;
+	 i = -0;
+	 i = -202020203300;
+
+	 // test floats
+	 i = 2.0;
+	 j = 222330.03232;
+	 // Test signs
+	 i = +2.0;
+	 j = +222330.03232;
+	 i = -2.0;
+	 j = -222330.03232;
+};
+
+// Test func defs
+
+int add5(int v) {
+	return (v + 5);
+};
+
+float toPercent(int value) {
+	return (value * 0.1);
+};
+
+Vertex toVertex(int x, int y, int z) {
+	Vertex v;
+	v.x = x;
+	v.y = y;
+	v.z = z;
+	return (v);
+};
+
+Vertex toVertex(int vx[3]) {
+	Vertex v;
+	v.x = vx[0];
+	v.y = vx[1];
+	v.z = vx[2];
+	return (v);
+};
+
+Mesh copyMesh(float m[1024][1024][1024]) {
+	// this is just to test the func def for array list
+};

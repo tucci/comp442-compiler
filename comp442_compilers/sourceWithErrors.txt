@@ -1,0 +1,38 @@
+class Test {
+	int d //  no closing ;
+};
+
+
+program {
+	// Error test file
+
+	int i = 0; // this shouldnt happen
+	i = x[3.2]; // we shouldnt have float indices
+	int g[44.2]; // shouldnt have float size
+
+	return (2 < 4 > 3); // This should give us an error
+	get(); // should return problem
+	return ();
+	program {get();
+	return ();
+	return (id.());
+	return (not id[2 < 2][id * id]);
+	get(id());
+	get(id.);
+	get(id.());
+	get(id[2].);
+	return(id.[2].[2]);
+	get(id.[2].[2]);
+	return(id.);
+	return (id.id id.);
+	get(id.id id.);
+	return (id.id.id.id.id[2]());
+	return ([2][2][2]);
+	get([2][2][2]);
+
+	get(5);
+
+
+};
+
+nofuncType(noParamtype, int p1 p2) {};
