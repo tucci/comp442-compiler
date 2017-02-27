@@ -74,6 +74,7 @@ class Test4 {
 
 // Test program
 program {
+
 	// test funcBody and varStatementList
 
 	// Test variable declrations through varStatementList

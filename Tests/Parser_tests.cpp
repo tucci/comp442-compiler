@@ -32,11 +32,25 @@ public:
 
 	TEST_METHOD(Parser_parserFromFileTest2) {
 		Compiler c(GetDirectoryName(TEST_CASE_DIRECTORY) + "grammar.txt", "prog", false);
+		c.setSourceFile(GetDirectoryName(TEST_CASE_DIRECTORY) + "TestSource2.txt");
+		bool success = c.analyzeSyntax();
+		Assert::IsTrue(success);
+	};
+
+	TEST_METHOD(Parser_parserFromFileTest3) {
+		Compiler c(GetDirectoryName(TEST_CASE_DIRECTORY) + "grammar.txt", "prog", false);
 		c.setSourceFile(GetDirectoryName(TEST_CASE_DIRECTORY) + "TestSource3.txt");
 		bool success = c.analyzeSyntax();
 		Assert::IsTrue(success);
 	};
 
+	TEST_METHOD(Parser_parserFromFileTest4) {
+		// This test tests bad code
+		Compiler c(GetDirectoryName(TEST_CASE_DIRECTORY) + "grammar.txt", "prog", false);
+		c.setSourceFile(GetDirectoryName(TEST_CASE_DIRECTORY) + "TestSource4.txt");
+		bool success = c.analyzeSyntax();
+		Assert::IsFalse(success);
+	};
 	
 	};
 

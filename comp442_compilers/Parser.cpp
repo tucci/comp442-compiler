@@ -64,9 +64,30 @@ void Parser::nextToken() {
 }
 
 void Parser::skipErrors() {
-	NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
-	Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
-	SyntaxError error = {tokenIndex , consumedToken, lookAheadToken};
+	Symbol top = parseStack.at(parseStack.size() - 1);
+
+	if (!top.isTerminal()) {
+		NonTerminal ntTop = static_cast<NonTerminal&>(top);
+		Terminal lookAheadTerminal = tokenToTerminal(lookAheadToken, ntTop);
+
+		if (ParserGenerator::inFollow(lookAheadTerminal, ntTop, followSet) && parseTable.at(ntTop).at(lookAheadTerminal) == Production::ERROR_PRODUCTION) {	
+				parseStack.pop_back();
+		} else {
+			while (!ParserGenerator::inFirst(lookAheadTerminal, ntTop, firstSet) || !SpecialTerminal::isEpsilon(lookAheadTerminal.getName())) {
+				if (parseTable.at(ntTop).at(lookAheadTerminal) == Production::ERROR_PRODUCTION) {
+					nextToken();
+					lookAheadTerminal = tokenToTerminal(lookAheadToken, ntTop);
+				} else {
+					break;
+				}
+			}
+		}
+	} else {
+		// This is a terminal, so lets pop it and continue
+		parseStack.pop_back();
+	}
+
+	SyntaxError error = { tokenIndex , consumedToken, lookAheadToken };
 
 	bool isDuplicate;
 
@@ -87,15 +108,25 @@ void Parser::skipErrors() {
 		errors.push_back(error);
 	}
 
-	if (consumedToken.type != TokenType::end_of_file_token || ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
+
+
+
+	
+	/*Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, top);
+
+	if (top.isTerminal() || lookAheadToken.type == TokenType::end_of_file_token || ParserGenerator::inFollow(lookaheadTerminal, top, followSet)) {
 		parseStack.pop_back();
 	} else {
-		while (!ParserGenerator::inFirst(consumedTerminal, top, firstSet)
-			|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet) && !ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
+		while (ParserGenerator::inFirst(lookaheadTerminal, top, firstSet)
+			|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet)
+			&& !ParserGenerator::inFollow(lookaheadTerminal, top, followSet)) {
 			nextToken();
 			consumedTerminal = tokenToTerminal(consumedToken, top);
+			lookaheadTerminal = tokenToTerminal(lookAheadToken, top);
 		}
-	}
+	}*/
+
+
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
@@ -127,7 +158,6 @@ bool Parser::matchTerminalToTokenType(const Terminal& terminal, const Token& tok
 }
 
 Terminal Parser::tokenToTerminal(const Token& token, const NonTerminal& nt) {
-	
 	if (Specification::isInteger(token)) {
 		// Custom logic to update num to integer when we have an arithexprAEInt and sub productions
 		// Really ugly and temp solution to this problem

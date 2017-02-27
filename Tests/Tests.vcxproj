@@ -192,6 +192,7 @@
     <Text Include="TestSource1.txt" />
     <Text Include="TestSource2.txt" />
     <Text Include="TestSource3.txt" />
+    <Text Include="TestSource4.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
