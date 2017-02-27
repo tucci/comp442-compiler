@@ -55,8 +55,6 @@ bool Parser::parse() {
 	return false;
 }
 
-
-
 void Parser::nextToken() {
 	tokenIndex++;
 	consumedToken = lookAheadToken;
@@ -65,16 +63,26 @@ void Parser::nextToken() {
 
 void Parser::skipErrors() {
 	Symbol top = parseStack.at(parseStack.size() - 1);
-
+	int loopCount = 0;
 	if (!top.isTerminal()) {
 		NonTerminal ntTop = static_cast<NonTerminal&>(top);
 		Terminal lookAheadTerminal = tokenToTerminal(lookAheadToken, ntTop);
 
-		if (ParserGenerator::inFollow(lookAheadTerminal, ntTop, followSet) && parseTable.at(ntTop).at(lookAheadTerminal) == Production::ERROR_PRODUCTION) {	
+		if (lookAheadToken.type == TokenType::end_of_file_token || ParserGenerator::inFollow(lookAheadTerminal, ntTop, followSet) && parseTable.at(ntTop).at(lookAheadTerminal) == Production::ERROR_PRODUCTION) {
 				parseStack.pop_back();
 		} else {
-			while (!ParserGenerator::inFirst(lookAheadTerminal, ntTop, firstSet) || !SpecialTerminal::isEpsilon(lookAheadTerminal.getName())) {
+			while (!ParserGenerator::inFirst(lookAheadTerminal, ntTop, firstSet) && !ParserGenerator::inFollow(lookAheadTerminal, ntTop, followSet)){
 				if (parseTable.at(ntTop).at(lookAheadTerminal) == Production::ERROR_PRODUCTION) {
+					loopCount++;
+					// Hack: Avoids infinite loops
+					// This "should" rarely happen 
+					if (loopCount == 1000) {
+						// Output which ever errors we alreay have	
+						outputAnalysis();
+						// Throw expection so that main could catch and deallocate our memory
+						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;
+						throw std::exception("There was an unrecoverable error during parsing the file.");
+					}
 					nextToken();
 					lookAheadTerminal = tokenToTerminal(lookAheadToken, ntTop);
 				} else {
@@ -86,45 +94,25 @@ void Parser::skipErrors() {
 		// This is a terminal, so lets pop it and continue
 		parseStack.pop_back();
 	}
-
-	SyntaxError error = { tokenIndex , consumedToken, lookAheadToken };
-
-	bool isDuplicate;
-
-	// Logic to avoid outputing duplcate errors
-	if (errors.size() == 0) {
-		isDuplicate = false;
-	} else {
-		// Compare the top error with the current error
-		SyntaxError topError = errors.at(errors.size() - 1);
-		isDuplicate = error.tokenPosition == topError.tokenPosition
-			&& error.token.tokenLine == topError.token.tokenLine
-			&& error.token.lexeme == topError.token.lexeme;
-	}
-
-	// If this is not a duplicate error, add it to the error list
-	if (!isDuplicate) {
-		// Add the error to the error list
-		errors.push_back(error);
-	}
+	// Add the error we just found to the list
+	addError();
 
 
 
 
-	
-	/*Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, top);
+	//NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
+	//Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
+	//addError();
 
-	if (top.isTerminal() || lookAheadToken.type == TokenType::end_of_file_token || ParserGenerator::inFollow(lookaheadTerminal, top, followSet)) {
-		parseStack.pop_back();
-	} else {
-		while (ParserGenerator::inFirst(lookaheadTerminal, top, firstSet)
-			|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet)
-			&& !ParserGenerator::inFollow(lookaheadTerminal, top, followSet)) {
-			nextToken();
-			consumedTerminal = tokenToTerminal(consumedToken, top);
-			lookaheadTerminal = tokenToTerminal(lookAheadToken, top);
-		}
-	}*/
+	//if (consumedToken.type != TokenType::end_of_file_token || ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
+	//	parseStack.pop_back();
+	//} else {
+	//	while (!ParserGenerator::inFirst(consumedTerminal, top, firstSet)
+	//		|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet) && !ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
+	//		nextToken();
+	//		consumedTerminal = tokenToTerminal(consumedToken, top);
+	//	}
+	//}
 
 
 }
@@ -311,7 +299,7 @@ void Parser::outputAnalysis() {
 	std::ofstream parserErrors;
 	parserErrors.open("parserErrors.txt");
 
-	for (SyntaxError error : errors) {
+	for (SyntaxError error : errors) {		
 		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";
 		if (error.token.type != TokenType::non_token) {
 			parserErrors << " after \"" << error.token.lexeme << "\"";
@@ -332,4 +320,27 @@ std::string Parser::getStackContents() {
 
 void Parser::addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString) {
 	derivation.push_back({ stackContents, production, derivationString });
+}
+
+void Parser::addError() {
+	SyntaxError error = { tokenIndex , consumedToken, lookAheadToken };
+
+	bool isDuplicate;
+
+	// Logic to avoid outputing duplcate errors
+	if (errors.size() == 0) {
+		isDuplicate = false;
+	} else {
+		// Compare the top error with the current error
+		SyntaxError topError = errors.at(errors.size() - 1);
+		isDuplicate = error.tokenPosition == topError.tokenPosition
+			&& error.token.tokenLine == topError.token.tokenLine
+			&& error.token.lexeme == topError.token.lexeme;
+	}
+
+	// If this is not a duplicate error, add it to the error list
+	if (!isDuplicate) {
+		// Add the error to the error list
+		errors.push_back(error);
+	}
 }

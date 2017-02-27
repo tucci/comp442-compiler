@@ -68,7 +68,8 @@ private:
 	std::string getStackContents();
 	// Adds a derivation to the current derivation list
 	void addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString);
-
+	// Helper method to add errors to our error list
+	void addError();
 };
 
 #endif // !PARSER_H

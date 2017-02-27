@@ -5,7 +5,12 @@ using namespace std;
 int main() {
 	Compiler cp;
 	cp.setSourceFile("sourcefile.txt");
-	cp.analyzeSyntax();
+	try {
+		cp.analyzeSyntax();
+	} catch (std::exception e) {
+	
+	}
+
 
 	return 0;
 }
