@@ -10,17 +10,39 @@
 
 // external libs
 #include <string>
-#include <unordered_map>
-#include <stack>
 #include <iostream>
-#include <memory>
 #include <fstream>
+#include <sstream>
 
-// Our files
+#include <unordered_map>
+#include <unordered_set>
+#include <stack>
+#include <memory>
+
+// Our classes
 #include "token.h"
 #include "dfa.h"
 #include "specification.h"
 #include "lexer.h"
+
+
+// Grammar
+#include "Symbol.h"
+#include "Terminal.h"
+#include "NonTerminal.h"
+#include "Production.h"
+// Typedef this huge monster when building the first/follow sets
+typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;
+typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> TerminalToProductionMap;
+// Util code
+#include "Utils.h"
+
+#include "Grammar.h"
+#include "Parser.h"
+#include "ParserGenerator.h"
+#include "Compiler.h"
+
+
 
 
 #endif // !STDAFX_H

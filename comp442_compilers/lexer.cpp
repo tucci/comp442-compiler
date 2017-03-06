@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+Lexer::Lexer() {
+}
+
 Lexer::Lexer(Specification* spec) {
 	tokenizer = spec->getSpec();
 }
@@ -10,6 +13,7 @@ Lexer::~Lexer() {
 Token Lexer::nextToken() {
 	Token token = lookaheadToken;
 	lookaheadToken = getLookaheadToken();
+	outputTokens.push_back(lookaheadToken);
 	return token;
 }
 
@@ -56,6 +60,12 @@ Token Lexer::getLookaheadToken() {
 				if (currentState.tokenType == TokenType::error_token && c == EOF) {
 					Token token;
 					token.type = TokenType::non_token;
+					
+					if (sourceIndex >= source.size()) {
+						// If we are the end of the file, we'll change this to end of file token
+						token.lexeme = SpecialTerminal::END_OF_FILE.getName();
+						token.type = TokenType::end_of_file_token;
+					}
 					return token;
 				}
 				if (currentState.tokenType == TokenType::error_token) {				
@@ -109,15 +119,18 @@ bool Lexer::setSource(std::string pathToFile) {
 	sourceFilePath = pathToFile;
 	std::ifstream istream(pathToFile);
 	bool readSuccess = false;
+	outputTokens.clear();
 	if (istream) {
 		// put position of stream to the end of source file
 		istream.seekg(0, istream.end);
 		// get the size of the source file
-		sourceSize = istream.tellg();
+		sourceSizeInBytes = istream.tellg();
+		// Set the index to the start
+		sourceIndex = 0;
 		// put position of stream to the start of source file
 		istream.seekg(0, istream.beg);
 		// create our source buffer array
-		source.reserve(sourceSize);
+		source.reserve(sourceSizeInBytes);
 		// copy the whole contents of file into the vector
 		source = std::vector<char>((std::istreambuf_iterator<char>(istream)),std::istreambuf_iterator<char>());
 		// Close the stream to the source file
@@ -133,7 +146,7 @@ bool Lexer::setSource(std::string pathToFile) {
 
 bool Lexer::hasMoreTokens() {
 	// If we have no more chars to read, then we are out of tokens to read
-	return lookaheadToken.type != TokenType::non_token;
+	return lookaheadToken.type != TokenType::end_of_file_token;
 }
 
 Token Lexer::createToken(std::string lexeme, State state) {
@@ -168,14 +181,11 @@ void Lexer::backupChar() {
 	if (sourceIndex != 0) {
 		 sourceIndex--;
 	}
-
 }
 
 bool Lexer::isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }
-
-
 
 void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 
@@ -259,15 +269,12 @@ void Lexer::handleComment(Token* token, State* currentState) {
 					if (source.at(sourceIndex - 1) == '*' && source.at(sourceIndex) == '/') {
 						cmtStack.pop();
 					}
-					
 				}
 				else if (top == '/') {cmtStack.push('*');}
-			}
-			
+			}	
 		} else {
 			inMulitCmt = false;
 		}
-
 
 		state = tokenizer->table(currentState->stateIdentifier, lookup);
 		if (state == NULL) {
@@ -286,9 +293,26 @@ void Lexer::handleComment(Token* token, State* currentState) {
 			}
 		}
 	}
-	
+}
 
+void Lexer::writeTokensToFile() {
+	std::ofstream output;
+	std::ofstream error;
+	output.open("lexerOutput.txt");
+	error.open("lexerErrors.txt");
 
-		
-		
+	for (int i = 0; i < outputTokens.size(); i++) {
+		const Token t = outputTokens.at(i);
+		if (t.type != TokenType::end_of_file_token) {
+			// TODO: this deoesnt work anymore
+			/*if (t.type == TokenType::error_token) {
+				error << t;
+			} else {
+				output << t;
+			}*/
+		}
+	}
+	output.close();
+	error.close();
+	std::cout << "Successfully wrote tokens to lexerOutput.txt and lexerErrors.txt" << std::endl;
 }

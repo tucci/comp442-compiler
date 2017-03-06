@@ -145,24 +145,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="errors.txt" />
-    <Text Include="output.txt" />
-    <Text Include="ReadMe.txt" />
-    <Text Include="SourceCode.txt" />
+    <Text Include="parserErrors.txt" />
+    <Text Include="sourcefile.txt" />
+    <Text Include="first_and_follow_sets.txt" />
+    <Text Include="lexerErrors.txt" />
+    <Text Include="grammar.txt" />
+    <Text Include="lexerOutput.txt" />
+    <Text Include="sourceWithErrors.txt" />
+    <Text Include="testgrammar.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compiler.h" />
     <ClInclude Include="dfa.h" />
+    <ClInclude Include="Grammar.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="NonTerminal.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="ParserGenerator.h" />
+    <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="specification.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Symbol.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Terminal.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="dfa.cpp" />
+    <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NonTerminal.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="ParserGenerator.cpp" />
+    <ClCompile Include="Production.cpp" />
     <ClCompile Include="specification.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -170,10 +189,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Symbol.cpp" />
+    <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="comp442_compilers.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="derivation.html" />
+    <None Include="parsingtable.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

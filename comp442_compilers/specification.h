@@ -8,13 +8,17 @@ class Specification {
 public:
 	// Holds all the mappings from lexemes to token types for our language. Does not include ids or number tokens
 	const static std::unordered_map<std::string, TokenType> TOKEN_MAP;
+
+	// It is the revese lookup for the token map
+	const static std::unordered_map<TokenType, std::string> REVERSE_TOKEN_MAP;
+	static std::unordered_map<TokenType, std::string> constructReverseMap();
 	// A map just to hold the strings of the tokens used when printing/outputing to file.
 	// So that when reading the token types, u dont have to look up the int value
 	// Besides pretty printing, this is not used anywhere else
 	const static std::unordered_map<TokenType, std::string> TOKEN_PRINT_MAP;
 
 	// If use default, it will use the spec provided. if false, the spec will be empty
-	Specification(bool useDefault);
+	Specification(bool useDefault = true);
 	~Specification();
 	// Returns the dfa for this specification
 	std::shared_ptr<Dfa> getSpec();
@@ -49,6 +53,10 @@ public:
 	void alphanumTransitions(State* start, State* end);
 	//Create id transitions regex="letter alphanum*" from the start state to the end state
 	void idTransitions(State* start, State* end);
+
+	static bool isInteger(const Token& t);
+	static bool isFloat(const Token& t);
+
 private:
 	// The dfa/state transition table for this spec
 	std::shared_ptr<Dfa> spec;

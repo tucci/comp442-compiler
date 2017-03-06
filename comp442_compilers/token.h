@@ -6,6 +6,7 @@ enum TokenType {
 	non_token,		// this means this state is an intermediate state
 					// special token to tell the lexer that this is not a token and should carry on
 	error_token,	// error token, specifiying that there was no token found
+	end_of_file_token, // token to denote end of file
 	// Tokens part of our language
 	id,				// identifier token
 	num,			// Number token
@@ -77,7 +78,7 @@ struct Token {
 	// The error data structure in case this token is an error token
 	TokenError error;
 	// Override output for a token
-	friend std::ostream& operator << (std::ostream& o, Token& token);
+	friend std::ostream& operator << (std::ostream& o, const Token& token);
 };
 
 #endif // !TOKEN_H

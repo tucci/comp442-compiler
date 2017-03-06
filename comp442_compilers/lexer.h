@@ -4,6 +4,7 @@
 
 class Lexer {
 public:
+	Lexer();
 	// Create the lexer with the language specification for this lexer to use
 	Lexer(Specification* spec);
 	~Lexer();
@@ -13,6 +14,8 @@ public:
 	bool setSource(std::string pathToFile);
 	// Whether the lexer has more tokens
 	bool hasMoreTokens();
+	// Writes the tokens and error tokens to the file
+	void writeTokensToFile();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<Dfa> tokenizer;
@@ -25,8 +28,11 @@ private:
 	std::string sourceFilePath;
 	// The buffer to hold the source file
 	std::vector<char> source;
+	// The list of tokens in ourfile to be used when outputing to file
+	std::vector<Token> outputTokens;
 	// the size of the source file in bytes
-	int sourceSize;
+	// use streamoff to avoid data loss
+	std::streamoff sourceSizeInBytes;
 	// the current index of the source buffer we are indexing into
 	int sourceIndex;
 
@@ -42,7 +48,7 @@ private:
 	bool isNewLine(char);
 	// Handle the error for this state
 	void handleError(Token* token, std::string lexeme, State* errorType, std::string lookup);
-
+	// Method to handle comments while tokenizing
 	void handleComment(Token* token, State* state);
 };
 

@@ -23,6 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LexerTests</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Tests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,11 +151,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\comp442_compilers\token.h" />
+    <ClInclude Include="..\comp442_compilers\Utils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
+    <ClCompile Include="..\comp442_compilers\dfa.cpp" />
+    <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
+    <ClCompile Include="..\comp442_compilers\lexer.cpp" />
+    <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
+    <ClCompile Include="..\comp442_compilers\Parser.cpp" />
+    <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
+    <ClCompile Include="..\comp442_compilers\Production.cpp" />
+    <ClCompile Include="..\comp442_compilers\specification.cpp" />
+    <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
+    <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
+    <ClCompile Include="ParserGenerator_tests.cpp" />
+    <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />
+    <ClCompile Include="Parser_tests.cpp" />
+    <ClCompile Include="Production_tests.cpp" />
     <ClCompile Include="specification_tests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -163,6 +181,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dfa_tests.cpp" />
+    <ClCompile Include="Symbol_tests.cpp" />
+    <ClCompile Include="Utils_test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\comp442_compilers\ReadMe.txt" />
+    <Text Include="grammar.txt" />
+    <Text Include="TestGrammarFile.txt" />
+    <Text Include="TestLexerSourceFile.txt" />
+    <Text Include="TestSource1.txt" />
+    <Text Include="TestSource2.txt" />
+    <Text Include="TestSource3.txt" />
+    <Text Include="TestSource4.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

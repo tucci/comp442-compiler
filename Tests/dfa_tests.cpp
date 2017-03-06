@@ -3,25 +3,25 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace LexerTests
+namespace Tests
 {		
 	TEST_CLASS(DfaTest)
 	{
 	public:
 
-		TEST_METHOD(getStartingStateTest) {
+		TEST_METHOD(Dfa_getStartingStateTest) {
 			Dfa dfa;
 			State* test = dfa.createStartState();
 			Assert::IsTrue(test == dfa.getStartingState());
 		};
 
-		TEST_METHOD(createStartState1) {
+		TEST_METHOD(Dfa_createStartState1) {
 			Dfa dfa;
 			State* test = dfa.createStartState();
 			Assert::IsTrue(test->isStartState);
 		};
 
-		TEST_METHOD(createStartState2) {
+		TEST_METHOD(Dfa_createStartState2) {
 			Dfa dfa;
 			State* start1 = dfa.createStartState();
 			State* test3 = dfa.createState();
@@ -30,7 +30,7 @@ namespace LexerTests
 			Assert::IsTrue(start2->isStartState);
 		};
 
-		TEST_METHOD(createStateDefault) {
+		TEST_METHOD(Dfa_createStateDefault) {
 			Dfa dfa;
 			State* test = dfa.createState();
 			Assert::IsFalse(test->isStartState);
@@ -38,25 +38,25 @@ namespace LexerTests
 			Assert::AreEqual(static_cast<int>(TokenType::non_token), static_cast<int>(test->tokenType));
 		}
 
-		TEST_METHOD(createStateFinal) {
+		TEST_METHOD(Dfa_createStateFinal) {
 			Dfa dfa;
 			State* test = dfa.createState(true);
 			Assert::IsTrue(test->isFinalState);
 		}
 
-		TEST_METHOD(createStateBacktrack) {
+		TEST_METHOD(Dfa_createStateBacktrack) {
 			Dfa dfa;
 			State* test = dfa.createState(false, true);
 			Assert::IsTrue(test->needsToBacktrack);
 		}
 
-		TEST_METHOD(createStateWithTokenType) {
+		TEST_METHOD(Dfa_createStateWithTokenType) {
 			Dfa dfa;
 			State* test = dfa.createState(false, false, TokenType::id);
 			Assert::AreEqual(static_cast<int>(TokenType::id), static_cast<int>(test->tokenType));
 		}
 
-		TEST_METHOD(addTransitionSuccessTrue) {
+		TEST_METHOD(Dfa_addTransitionSuccessTrue) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = dfa.createStartState();
@@ -66,7 +66,7 @@ namespace LexerTests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(addTransitionSuccessFalse) {
+		TEST_METHOD(Dfa_addTransitionSuccessFalse) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = dfa.createStartState();
@@ -77,7 +77,7 @@ namespace LexerTests
 			delete end;
 		}
 
-		TEST_METHOD(addTransitionSuccessFalse2) {
+		TEST_METHOD(Dfa_addTransitionSuccessFalse2) {
 			Dfa dfa;
 			std::string transition = "a";
 			State* start = new State();
@@ -89,7 +89,7 @@ namespace LexerTests
 			delete end;
 		}
 
-		TEST_METHOD(addElseTransition) {
+		TEST_METHOD(Dfa_addElseTransition) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -98,7 +98,7 @@ namespace LexerTests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(hasStateTrue) {
+		TEST_METHOD(Dfa_hasStateTrue) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			// Testing to see if the state we just added is in the dfa
@@ -106,7 +106,7 @@ namespace LexerTests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(hasStateTrue2) {
+		TEST_METHOD(Dfa_hasStateTrue2) {
 			Dfa dfa;
 			State* state = dfa.createState();
 			// Testing to see if the state we just added is in the dfa
@@ -114,7 +114,7 @@ namespace LexerTests
 			Assert::IsTrue(actual);
 		}
 
-		TEST_METHOD(hasStateFalse) {
+		TEST_METHOD(Dfa_hasStateFalse) {
 			Dfa dfa;
 			State state;
 			state.stateIdentifier = 2;
@@ -123,7 +123,7 @@ namespace LexerTests
 			Assert::IsFalse(actual);
 		}
 
-		TEST_METHOD(tableSuccess) {
+		TEST_METHOD(Dfa_tableSuccess) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -135,7 +135,7 @@ namespace LexerTests
 		}
 
 
-		TEST_METHOD(tableSuccessElseTransiton) {
+		TEST_METHOD(Dfa_tableSuccessElseTransiton) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -145,7 +145,7 @@ namespace LexerTests
 			Assert::AreEqual(end->stateIdentifier, actual->stateIdentifier);
 		}
 
-		TEST_METHOD(tableNULLTest) {
+		TEST_METHOD(Dfa_tableNULLTest) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* actual = dfa.table(start->stateIdentifier, "a");
@@ -153,7 +153,7 @@ namespace LexerTests
 			Assert::IsNull(actual);
 		}
 
-		TEST_METHOD(tableNULLTest2) {
+		TEST_METHOD(Dfa_tableNULLTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState();
@@ -163,8 +163,7 @@ namespace LexerTests
 			Assert::IsNull(actual);
 		}
 
-
-		TEST_METHOD(acceptsInputTest1) {
+		TEST_METHOD(Dfa_acceptsInputTest1) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* i1 = dfa.createState();
@@ -183,7 +182,7 @@ namespace LexerTests
 			Assert::IsFalse(dfa.acceptsInput("bac"));
 		}
 		
-		TEST_METHOD(acceptsInputTest2) {
+		TEST_METHOD(Dfa_acceptsInputTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);
@@ -200,7 +199,7 @@ namespace LexerTests
 			Assert::IsFalse(dfa.acceptsInput("abbb"));
 		}
 
-		TEST_METHOD(acceptsInputTest3) {
+		TEST_METHOD(Dfa_acceptsInputTest3) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);
@@ -220,7 +219,7 @@ namespace LexerTests
 			Assert::IsFalse(dfa.acceptsInput("aaa"));	
 		}
 
-		TEST_METHOD(stateFromInputTest1) {
+		TEST_METHOD(Dfa_stateFromInputTest1) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* i1 = dfa.createState();
@@ -234,7 +233,7 @@ namespace LexerTests
 			
 		}
 
-		TEST_METHOD(stateFromInputTest2) {
+		TEST_METHOD(Dfa_stateFromInputTest2) {
 			Dfa dfa;
 			State* start = dfa.createStartState();
 			State* end = dfa.createState(true);

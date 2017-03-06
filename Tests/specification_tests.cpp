@@ -3,11 +3,11 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace LexerTests {
+namespace Tests {
 	TEST_CLASS(SpecificationTest) {
 public:
 
-	TEST_METHOD(whitespaceTest) {
+	TEST_METHOD(Specifcation_whitespaceTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -22,7 +22,7 @@ public:
 		Assert::IsTrue(expected == tokenizer->table(start->stateIdentifier, "\r\n"));
 	};
 
-	TEST_METHOD(nonZeroTest) {
+	TEST_METHOD(Specifcation_nonZeroTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -41,7 +41,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(digitTest) {
+	TEST_METHOD(Specifcation_digitTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -57,7 +57,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(letterTest) {
+	TEST_METHOD(Specifcation_letterTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -73,7 +73,7 @@ public:
 		}
 	};
 
-	TEST_METHOD(floatTest) {
+	TEST_METHOD(Specifcation_floatTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -113,7 +113,7 @@ public:
 	};
 
 
-	TEST_METHOD(fractionTest) {
+	TEST_METHOD(Specifcation_fractionTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -139,7 +139,7 @@ public:
 	};
 
 
-	TEST_METHOD(integerTest) {
+	TEST_METHOD(Specifcation_integerTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -173,7 +173,7 @@ public:
 	};
 
 
-	TEST_METHOD(numTest) {
+	TEST_METHOD(Specifcation_numTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -242,7 +242,7 @@ public:
 
 
 
-	TEST_METHOD(alphaNumTest) {
+	TEST_METHOD(Specifcation_alphaNumTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -258,7 +258,7 @@ public:
 	};
 
 
-	TEST_METHOD(idTokenTest) {
+	TEST_METHOD(Specifcation_idTokenTest) {
 		Specification spec(false);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 		State* start = tokenizer->createStartState();
@@ -287,15 +287,18 @@ public:
 	};
 
 
-	TEST_METHOD(specificationTokenTest) {
+	TEST_METHOD(Specifcation_TokenTest) {
 		Specification spec(true);
 		std::shared_ptr<Dfa> tokenizer = spec.getSpec();
 
 		// Test all token types
 		std::unordered_map<std::string, TokenType>::const_iterator it = Specification::TOKEN_MAP.begin();
 		while (it != Specification::TOKEN_MAP.end()) {
-			TokenType type = spec.getTokenTypeForInput(it->first);
-			Assert::IsTrue(it->second == type);
+			if (it->first != Specification::REVERSE_TOKEN_MAP.at(TokenType::num)) {
+				TokenType type = spec.getTokenTypeForInput(it->first);
+				Assert::IsTrue(it->second == type);
+				
+			}
 			it++;
 		}
 

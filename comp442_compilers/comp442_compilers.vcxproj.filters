@@ -13,65 +13,168 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\lexer">
+      <UniqueIdentifier>{b8e97826-7bb0-4196-852c-5fb834ffbdc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lexer">
+      <UniqueIdentifier>{38029843-98b4-4550-94ff-2e73de518d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\grammar">
+      <UniqueIdentifier>{4115b1a6-a6d7-460e-85ef-a313ca0b59ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\grammar">
+      <UniqueIdentifier>{255e34a4-595f-47c3-bd94-eb475821ddcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser">
+      <UniqueIdentifier>{0fb6447e-4fe4-4887-b3d4-38c2b44e9908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\parser">
+      <UniqueIdentifier>{a4013c90-2c97-4fd4-a9c6-d28df52c6d4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\lexerOutput">
+      <UniqueIdentifier>{2fc9d1bf-e0d3-449f-a19b-740207c8f2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\sourcecode">
+      <UniqueIdentifier>{835bbd59-d9cb-4ba3-9158-ce3c161b8ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\parserOutput">
+      <UniqueIdentifier>{6f9e2caf-3c85-45c0-90d4-c8e0ffd11295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\grammar">
+      <UniqueIdentifier>{1924318c-7490-413f-87b2-4161471bb94a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-    <Text Include="SourceCode.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="lexerErrors.txt">
+      <Filter>Resource Files\lexerOutput</Filter>
     </Text>
-    <Text Include="errors.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="lexerOutput.txt">
+      <Filter>Resource Files\lexerOutput</Filter>
     </Text>
-    <Text Include="output.txt">
-      <Filter>Resource Files</Filter>
+    <Text Include="first_and_follow_sets.txt">
+      <Filter>Resource Files\parserOutput</Filter>
+    </Text>
+    <Text Include="grammar.txt">
+      <Filter>Resource Files\grammar</Filter>
+    </Text>
+    <Text Include="testgrammar.txt">
+      <Filter>Resource Files\grammar</Filter>
+    </Text>
+    <Text Include="parserErrors.txt">
+      <Filter>Resource Files\parserOutput</Filter>
+    </Text>
+    <Text Include="sourcefile.txt">
+      <Filter>Resource Files\sourcecode</Filter>
+    </Text>
+    <Text Include="sourceWithErrors.txt">
+      <Filter>Resource Files\sourcecode</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dfa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="specification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dfa.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="specification.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbol.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Terminal.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="NonTerminal.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Production.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Compiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>Header Files\lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="ParserGenerator.h">
+      <Filter>Header Files\parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lexer.cpp">
+      <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="specification.cpp">
+      <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="dfa.cpp">
+      <Filter>Source Files\lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Terminal.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="NonTerminal.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Production.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="Grammar.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dfa.cpp">
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Compiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="token.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\lexer</Filter>
     </ClCompile>
-    <ClCompile Include="lexer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="specification.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ParserGenerator.cpp">
+      <Filter>Source Files\parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="comp442_compilers.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="parsingtable.html">
+      <Filter>Resource Files\parserOutput</Filter>
+    </None>
+    <None Include="derivation.html">
+      <Filter>Resource Files\parserOutput</Filter>
+    </None>
   </ItemGroup>
 </Project>
