@@ -40,6 +40,7 @@ typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> Ter
 #include "Grammar.h"
 #include "Parser.h"
 #include "ParserGenerator.h"
+#include "SymbolTable.h"
 #include "Compiler.h"
 
 
