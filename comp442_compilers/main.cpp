@@ -20,21 +20,11 @@ int main() {
 						{{1,2,3,4}},
 						NULL };*/
 
-	//SymbolTableRecord record = { "f1",
-	//	SymbolKind::kind_function,
-	//	{ SymbolType::type_int, SymbolStructure::struct_simple },
-	//	/*Function data*/
-	//	{
-	//		{ // list of params
-	//			/*param 1*/	std::pair<TypeStruct, ArrayData> { {SymbolType::type_int, SymbolStructure::struct_array, ""},{{2, 2}}},
-	//			/*param 2*/	std::pair<TypeStruct, ArrayData> { {SymbolType::type_class, SymbolStructure::struct_array, "MyClass1"},{ { 6 } }},
-	//			/*param 3*/	std::pair<TypeStruct, ArrayData> { {SymbolType::type_class, SymbolStructure::struct_simple, "MyClass1"},{ }}
-	//		},
-	//		// return type 
-	//		std::pair<TypeStruct, ArrayData> { {SymbolType::type_float, SymbolStructure::struct_simple, ""}, {}}
-	//	},
-	//	{},
-	//	NULL };
+	/*SymbolTableRecord record = { "f1",
+		SymbolKind::kind_parameter,
+		{ SymbolType::type_class, SymbolStructure::struct_array, "MyClass1", {1,2,3,4} },
+		{},
+		NULL };*/
 
 	SymbolTableRecord record = { "f1",
 		SymbolKind::kind_function,
@@ -42,12 +32,24 @@ int main() {
 		/*Function data*/
 		{
 			{ // list of params
+				/*param 1*/	{SymbolType::type_int, SymbolStructure::struct_array, "",{2, 2}},
+				/*param 2*/	{SymbolType::type_class, SymbolStructure::struct_array, "MyClass1", { 6 }},
+				/*param 3*/	{SymbolType::type_class, SymbolStructure::struct_simple, "MyClass1",{ }}
 			},
 			// return type 
-			std::pair<TypeStruct, ArrayData> { {SymbolType::type_float, SymbolStructure::struct_simple, ""}, {}}
+			{SymbolType::type_float, SymbolStructure::struct_simple, "", {}}
 		},
-		{},
 		NULL };
+
+	//SymbolTableRecord record = { "f1",
+	//	SymbolKind::kind_function,
+	//	{ SymbolType::type_int, SymbolStructure::struct_simple, "", {} },
+	//	{ // function data
+	//		{/* list of params */},
+	//		// return type 
+	//		 {SymbolType::type_float, SymbolStructure::struct_simple, "", {}},
+	//	},
+	//	NULL };
 
 	std::cout << record.toString();
 
