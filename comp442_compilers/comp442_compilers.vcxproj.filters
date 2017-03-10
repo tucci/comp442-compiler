@@ -128,6 +128,12 @@
     <ClInclude Include="SymbolTable.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
+    <ClInclude Include="SymbolTableData.h">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticSymbol.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -174,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="SymbolTable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticSymbol.cpp">
+      <Filter>Source Files\grammar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

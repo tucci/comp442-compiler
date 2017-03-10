@@ -29,6 +29,7 @@
 // Grammar
 #include "Symbol.h"
 #include "Terminal.h"
+#include "SemanticSymbol.h"
 #include "NonTerminal.h"
 #include "Production.h"
 // Typedef this huge monster when building the first/follow sets
@@ -40,6 +41,7 @@ typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> Ter
 #include "Grammar.h"
 #include "Parser.h"
 #include "ParserGenerator.h"
+#include "SymbolTableData.h"
 #include "SymbolTable.h"
 #include "Compiler.h"
 
