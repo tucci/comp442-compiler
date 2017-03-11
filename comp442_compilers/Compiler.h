@@ -4,7 +4,7 @@
 // A simple wrapper class that holds on the neccessary data and data structures to init our compiler
 class Compiler {
 public:
-	Compiler(std::string grammarFile="grammar.txt", std::string grammarStartSymbol="prog", bool outputToFile=true);
+	Compiler(std::string grammarFile="grammar_with_sdt.txt", std::string grammarStartSymbol="prog", bool outputToFile=true);
 	
 	~Compiler();
 	// Method used to turn the source code into the target code

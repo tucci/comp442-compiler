@@ -10,8 +10,10 @@ public:
 	~Production();
 	// Gets the lhs for this production
 	NonTerminal getNonTerminal() const;
-	// Gets the rhs for this production
+	// Gets the rhs for this production without sdt
 	std::vector<Symbol> getProduction() const;
+	// Gets the rhs for this production with sdt
+	std::vector<Symbol> getProductionSDT() const;
 	std::string toString() const;
 	// Overide << for easier print outs
 	friend std::ostream& operator<<(std::ostream& os, const Production& p);
@@ -20,8 +22,10 @@ public:
 private:
 	// the lhs non terminal
 	const NonTerminal mNonTerminal;
-	// the rhs for this production
+	// the rhs for this production without the semantic symbols
 	const std::vector<Symbol> mProduction;
+	// the rhs for this production with the semantic symbols
+	const std::vector<Symbol> mProductionWithSDT;
 };
 
 // Used when printing out the table

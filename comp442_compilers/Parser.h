@@ -48,6 +48,8 @@ private:
 	// Data structure to hold our parse stack
 	// Could use a std::stack, but they dont implement iterating, so we cant output stack contents
 	std::vector<Symbol> parseStack;
+	// stack that holds the semantic actions
+	std::vector<SemanticSymbol> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
 	// The index of the current token
@@ -56,6 +58,9 @@ private:
 	std::vector<SyntaxError> errors;
 	// Internally calls the lexer
 	void nextToken();
+	// Performs the given semantic action
+	// TODO: this might need other data other than the string
+	void performSemanticAction(const std::string& action);
 	// Handles the errors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order

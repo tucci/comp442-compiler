@@ -1,5 +1,5 @@
-prog			-> classDeclList progBody 
-classDecl		-> class id { varFuncDefList } ; 
+prog			-> #createGlobalTable# classDeclList progBody 
+classDecl		-> class id #createClassEntryAndTable# { varFuncDefList } ; 
 classDeclList		-> classDecl classDeclList 
 classDeclList		-> EPSILON 
 progBody		-> program funcBody ; funcDefList 

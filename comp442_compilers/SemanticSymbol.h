@@ -27,6 +27,7 @@ public:
 	// Whether the given string is a semantic string
 	// Checks the string if it matchs our semantic string pattern of #name#
 	static bool isSemanticPattern(const std::string& symbolString);
+	static std::vector<Symbol> filterOutSemanticSymbols(const std::vector<Symbol>& rhs);
 };
 
 #endif // !SEMANTIC_SYMBOL_H

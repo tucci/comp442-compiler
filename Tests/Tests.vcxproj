@@ -165,6 +165,7 @@
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
+    <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp" />

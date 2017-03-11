@@ -18,6 +18,7 @@ bool Parser::parse() {
 	while (parseStack.at(parseStack.size() - 1).getName() != SpecialTerminal::END_OF_FILE.getName()) {
 		Symbol x = parseStack.at(parseStack.size() - 1);
 		std::string stackContent = getStackContents();
+		// If this is a terminal match it
 		if (x.isTerminal()) {
 			Terminal tx = static_cast<Terminal&>(x);
 			addToDerivationList(getStackContents(), "", "");
@@ -29,8 +30,8 @@ bool Parser::parse() {
 				error = true;
 			}
 		} else {
-			// x is not a terminal so cast to non terminal
-			NonTerminal nx = static_cast<NonTerminal&>(x);
+			// This is not a terminal. So it is a non terminal
+			NonTerminal nx = static_cast<NonTerminal&>(x); // x is not a terminal so cast to non terminal
 			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
 			const Production p = parseTable.at(nx).at(lookaheadTerminal);
 			if (p != Production::ERROR_PRODUCTION) {
@@ -59,6 +60,10 @@ void Parser::nextToken() {
 	tokenIndex++;
 	consumedToken = lookAheadToken;
 	lookAheadToken = lexer->nextToken();
+}
+
+void Parser::performSemanticAction(const std::string& action) {
+	std::cout << "Performing action: " + action << std::endl;
 }
 
 void Parser::skipErrors() {
@@ -118,7 +123,10 @@ void Parser::skipErrors() {
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
-	std::vector<Symbol> rhs = production.getProduction();
+	// TODO: here the rhs should be the sdt version
+	std::vector<Symbol> rhs = production.getProductionSDT();
+
+	//std::vector<Symbol> rhs = production.getProduction();
 	std::string replaceWith;
 	std::string nonTerminalString = production.getNonTerminal().getName();
 	size_t replaceIndex = derivation.find(nonTerminalString);
@@ -130,8 +138,15 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 			derivation.replace(replaceIndex, replaceLength, "");
 			return;
 		}
-		parseStack.push_back(*it);
-		replaceWith = it->getName() + " " + replaceWith;
+		// If this is a semantic symbol, push it onto the semantic stack
+		if (it->isSemantic()) {
+			SemanticSymbol action = static_cast<SemanticSymbol&>(*it);
+			semanticStack.push_back(action);
+		} else {
+			parseStack.push_back(*it);
+			replaceWith = it->getName() + " " + replaceWith;
+		}
+		
 	}
 	
 	derivation.replace(replaceIndex, replaceLength, replaceWith);

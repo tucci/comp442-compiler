@@ -98,6 +98,9 @@
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestLexerSourceFile.txt">
