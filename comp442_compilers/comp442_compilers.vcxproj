@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="grammar_with_sdt.txt" />
     <Text Include="parserErrors.txt" />
     <Text Include="sourcefile.txt" />
     <Text Include="first_and_follow_sets.txt" />
