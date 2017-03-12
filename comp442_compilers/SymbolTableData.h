@@ -115,7 +115,7 @@ struct SymbolTableRecord {
 	// used when this type is a function type
 	FunctionData functionData;
 	// The link to the child symbol table
-	SymbolTable* link;
+	SymbolTable* scope;
 	// The address of the element in memory
 	int address;
 

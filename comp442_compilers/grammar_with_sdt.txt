@@ -1,20 +1,20 @@
 prog			-> #createGlobalTable# classDeclList progBody 
-classDecl		-> class id #createClassEntryAndTable# { varFuncDefList } ; 
+classDecl		-> class id #createClassEntryAndTable# { varFuncDefList } ; #endClassEntryAndTable#
 classDeclList		-> classDecl classDeclList 
 classDeclList		-> EPSILON 
-progBody		-> program funcBody ; funcDefList 
+progBody		-> program #createProgramTable# funcBody ; #endProgramTable# funcDefList 
 
-funcDef			-> type id funcDefRest
-funcDefRest		-> ( fParams ) funcBody ;
+funcDef			-> type #storeType# id #storeId# funcDefRest
+funcDefRest		-> #startFuncDef# ( #startParamEntry# fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
 funcDefList		-> funcDef funcDefList 
 funcDefList		-> EPSILON 
 funcBody		-> { varStatementList } 
 
-varDecl			-> type id varDeclRest
-varDeclNoId		-> typeNoId id varDeclRest
-varDeclRest		-> arraySizeList ; 
+varDecl			-> type #storeType# id #storeId# varDeclRest
+varDeclNoId		-> typeNoId #storeType# id #storeId# varDeclRest
+varDeclRest		-> arraySizeList ; #createVariableEntry#
 
-varFuncDefList		-> type id varFuncDefListRest varFuncDefList
+varFuncDefList		-> type #storeType# id #storeId# varFuncDefListRest varFuncDefList
 varFuncDefList		-> EPSILON
 varFuncDefListRest	-> varDeclRest
 varFuncDefListRest	-> funcDefRest
@@ -23,7 +23,7 @@ varStatementList	-> id varStatementListRest varStatementList
 varStatementList	-> varDeclNoId varStatementList
 varStatementList	-> noIdStartStatement varStatementList
 varStatementList	-> EPSILON
-varStatementListRest	-> id varDeclRest 
+varStatementListRest	-> #storeType# id #storeId# varDeclRest 
 varStatementListRest	-> assignStatRest ;
 
 statement		-> noIdStartStatement
@@ -95,7 +95,7 @@ dotidIndiceList		-> EPSILON
 indice			-> [ arithExprAEInt ] 
 indiceList		-> indice indiceList 
 indiceList		-> EPSILON 
-arraySize		-> [ integer ] 
+arraySize		-> [ integer #storeArraySize# ] 
 arraySizeList		-> arraySize arraySizeList 
 arraySizeList		-> EPSILON 
 
@@ -104,9 +104,9 @@ typeNoId		-> int
 type			-> typeNoId 
 type			-> id
 
-fParams			-> type id arraySizeList fParamsTailList 
+fParams			-> type #storeType# id #storeId# arraySizeList #createParameterEntry# fParamsTailList 
 fParams			-> EPSILON 
-fParamsTail		-> , type id arraySizeList 
+fParamsTail		-> , type #storeType# id #storeId# arraySizeList  #createParameterEntry#
 fParamsTailList		-> fParamsTail fParamsTailList 
 fParamsTailList		-> EPSILON 
 

@@ -26,7 +26,7 @@ public:
 		record.kind = SymbolKind::kind_variable;
 		record.typeStructure = { SymbolType::type_int, SymbolStructure::struct_simple, "", {} };
 		record.functionData = {};// none
-		record.link = NULL; // no Link
+		record.scope = NULL; // no scope
 		record.address = 0; // no address now
 		SymbolTableRecord* ptr = global.addRecord(record.name, record);
 		Assert::IsNotNull(ptr);
@@ -42,7 +42,7 @@ public:
 		record.kind = SymbolKind::kind_function;
 		record.typeStructure = {};
 		record.functionData = { {SymbolType::type_int, SymbolStructure::struct_simple, "", {}}, {} };
-		record.link = &functionTable; // no Link
+		record.scope = &functionTable; // no scope
 		record.address = 0; // no address now
 		SymbolTableRecord* ptr = global.addRecord(record.name, record);
 		Assert::IsNotNull(ptr);

@@ -9,6 +9,10 @@ SemanticSymbol::SemanticSymbol(std::string name) : Symbol(name, false, true) {
 SemanticSymbol::~SemanticSymbol() {
 }
 
+void SemanticSymbol::performAction(SymbolTable* currentTable, const Token& token) {
+	std::cout << "Performing action: " + mName <<  " on " << token.lexeme << std::endl;
+}
+
 
 bool SemanticSymbol::isSemanticPattern(const std::string& symbolName) {
 	// Does string match #name# pattern

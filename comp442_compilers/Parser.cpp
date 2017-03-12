@@ -30,18 +30,25 @@ bool Parser::parse() {
 				error = true;
 			}
 		} else {
-			// This is not a terminal. So it is a non terminal
-			NonTerminal nx = static_cast<NonTerminal&>(x); // x is not a terminal so cast to non terminal
-			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
-			const Production p = parseTable.at(nx).at(lookaheadTerminal);
-			if (p != Production::ERROR_PRODUCTION) {
-				std::string preStackContents = getStackContents();
+			
+			if (x.isSemantic()) {
+				SemanticSymbol ss = static_cast<SemanticSymbol&>(x);
+				ss.performAction(currentSymbolTable, consumedToken);
 				parseStack.pop_back();
-				inverseRHSMultiplePush(p, derivationString);
-				addToDerivationList(preStackContents, p.toString(), derivationString);
 			} else {
-				skipErrors();
-				error = true;
+				// This is not a terminal. So it is a non terminal
+				NonTerminal nx = static_cast<NonTerminal&>(x); // x is not a terminal so cast to non terminal
+				Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
+				const Production p = parseTable.at(nx).at(lookaheadTerminal);
+				if (p != Production::ERROR_PRODUCTION) {
+					std::string preStackContents = getStackContents();
+					parseStack.pop_back();
+					inverseRHSMultiplePush(p, derivationString);
+					addToDerivationList(preStackContents, p.toString(), derivationString);
+				} else {
+					skipErrors();
+					error = true;
+				}
 			}
 		}
 	}
@@ -60,10 +67,6 @@ void Parser::nextToken() {
 	tokenIndex++;
 	consumedToken = lookAheadToken;
 	lookAheadToken = lexer->nextToken();
-}
-
-void Parser::performSemanticAction(const std::string& action) {
-	std::cout << "Performing action: " + action << std::endl;
 }
 
 void Parser::skipErrors() {
@@ -101,25 +104,6 @@ void Parser::skipErrors() {
 	}
 	// Add the error we just found to the list
 	addError();
-
-
-
-
-	//NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
-	//Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
-	//addError();
-
-	//if (consumedToken.type != TokenType::end_of_file_token || ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
-	//	parseStack.pop_back();
-	//} else {
-	//	while (!ParserGenerator::inFirst(consumedTerminal, top, firstSet)
-	//		|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet) && !ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
-	//		nextToken();
-	//		consumedTerminal = tokenToTerminal(consumedToken, top);
-	//	}
-	//}
-
-
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
@@ -138,12 +122,9 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 			derivation.replace(replaceIndex, replaceLength, "");
 			return;
 		}
-		// If this is a semantic symbol, push it onto the semantic stack
-		if (it->isSemantic()) {
-			SemanticSymbol action = static_cast<SemanticSymbol&>(*it);
-			semanticStack.push_back(action);
-		} else {
-			parseStack.push_back(*it);
+		parseStack.push_back(*it);
+		// Dont add semantic values to the derivtion
+		if (!it->isSemantic()) {
 			replaceWith = it->getName() + " " + replaceWith;
 		}
 		
@@ -328,7 +309,10 @@ void Parser::outputAnalysis() {
 std::string Parser::getStackContents() {
 	std::string contents;
 	for (auto s : parseStack) {
-		contents.append(s.getName() + " ");
+		if (!s.isSemantic()) {
+			contents.append(s.getName() + " ");
+		}
+		
 	}
 	return contents;
 }

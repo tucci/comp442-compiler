@@ -39,6 +39,10 @@ private:
 	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
+	// Global symbol table
+	SymbolTable symbolTable;
+	// Current symbol table we are working in
+	SymbolTable* currentSymbolTable;
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
@@ -46,9 +50,9 @@ private:
 	// Data structe to hold the parse table
 	std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEqual>  parseTable;
 	// Data structure to hold our parse stack
-	// Could use a std::stack, but they dont implement iterating, so we cant output stack contents
 	std::vector<Symbol> parseStack;
 	// stack that holds the semantic actions
+	// TODO: delete if not needed
 	std::vector<SemanticSymbol> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
@@ -58,9 +62,6 @@ private:
 	std::vector<SyntaxError> errors;
 	// Internally calls the lexer
 	void nextToken();
-	// Performs the given semantic action
-	// TODO: this might need other data other than the string
-	void performSemanticAction(const std::string& action);
 	// Handles the errors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order

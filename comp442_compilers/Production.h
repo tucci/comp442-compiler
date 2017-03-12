@@ -14,6 +14,7 @@ public:
 	std::vector<Symbol> getProduction() const;
 	// Gets the rhs for this production with sdt
 	std::vector<Symbol> getProductionSDT() const;
+	// To string for production without sdt
 	std::string toString() const;
 	// Overide << for easier print outs
 	friend std::ostream& operator<<(std::ostream& os, const Production& p);

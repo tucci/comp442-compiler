@@ -6,6 +6,7 @@
 // TODO: figure out undefined ids/vars
 // TODO: figure out how to handle multiple defined var names/ 
 // TODO: figure out how to handle recursion
+// TODO: create for int i, semantic action
 // TODO: make sure array dimensions are done properly
 // TODO: type check return statement
 // TODO: type check assignment statement

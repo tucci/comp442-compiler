@@ -23,6 +23,7 @@ public:
 	
 	SemanticSymbol(std::string name);
 	~SemanticSymbol();
+	void performAction(SymbolTable* currentTable, const Token& token);
 
 	// Whether the given string is a semantic string
 	// Checks the string if it matchs our semantic string pattern of #name#
