@@ -79,7 +79,8 @@ struct FunctionData {
 	TypeStruct returnType;
 
 	// holds pairs of types and the array data if needed
-	std::vector<TypeStruct> parameters;
+	// where typestruct is the type, and string is the name of the param
+	std::vector<std::pair<TypeStruct, std::string>> parameters;
 
 	std::string toString() {
 		std::string s = "return type=" + returnType.toString();
@@ -87,8 +88,8 @@ struct FunctionData {
 		if (parameters.size() == 0) {
 			s += "nil";
 		} else {
-			for (TypeStruct& ts : parameters) {
-				s += ts.toString() + ", ";
+			for (std::pair<TypeStruct, std::string>& ts : parameters) {
+				s += ts.first.toString() + ", ";
 			}
 		}
 		s += "}";

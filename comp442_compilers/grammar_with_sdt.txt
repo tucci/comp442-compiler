@@ -1,11 +1,11 @@
-prog			-> #createGlobalTable# classDeclList progBody 
+prog			-> #createGlobalTable# classDeclList progBody #endGlobalTable#
 classDecl		-> class id #createClassEntryAndTable# { varFuncDefList } ; #endClassEntryAndTable#
 classDeclList		-> classDecl classDeclList 
 classDeclList		-> EPSILON 
 progBody		-> program #createProgramTable# funcBody ; #endProgramTable# funcDefList 
 
 funcDef			-> type #storeType# id #storeId# funcDefRest
-funcDefRest		-> #startFuncDef# ( #startParamEntry# fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
+funcDefRest		-> #startFuncDef# ( fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
 funcDefList		-> funcDef funcDefList 
 funcDefList		-> EPSILON 
 funcBody		-> { varStatementList } 
@@ -104,9 +104,9 @@ typeNoId		-> int
 type			-> typeNoId 
 type			-> id
 
-fParams			-> type #storeType# id #storeId# arraySizeList #createParameterEntry# fParamsTailList 
+fParams			-> type #storeType# id #storeId# arraySizeList #addParameter# fParamsTailList 
 fParams			-> EPSILON 
-fParamsTail		-> , type #storeType# id #storeId# arraySizeList  #createParameterEntry#
+fParamsTail		-> , type #storeType# id #storeId# arraySizeList  #addParameter#
 fParamsTailList		-> fParamsTail fParamsTailList 
 fParamsTailList		-> EPSILON 
 

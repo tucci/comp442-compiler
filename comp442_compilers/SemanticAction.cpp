@@ -13,7 +13,11 @@ void SemanticAction::performAction(const SemanticSymbol& symbol, SemanticContext
 
 
 void SemanticAction::createGlobalTable(SemanticActionContainer& container) {
+	
+}
 
+void SemanticAction::endGlobalTable(SemanticActionContainer& container) {
+	std::cout << "end global table" << std::endl;
 }
 	  
 void SemanticAction::createClassEntryAndTable(SemanticActionContainer& container) {
@@ -39,8 +43,7 @@ void SemanticAction::createProgramTable(SemanticActionContainer& container) {
 	record.kind = SymbolKind::kind_function;
 	// add this record to our current table
 	record = *(*container.currentTable)->addRecord(record.name, record, *container.currentTable);
-	_goToScope(container, &record);
-	
+	_goToScope(container, &record);	
 }
 
 void SemanticAction::endProgramTable(SemanticActionContainer& container) {
@@ -55,27 +58,85 @@ void SemanticAction::createVariableEntry(SemanticActionContainer& container) {
 	
 }
 
-void SemanticAction::createParameterEntry(SemanticActionContainer& container) {
-	SymbolTableRecord record;
-	record.kind = SymbolKind::kind_parameter;
-	_fillRecordFromContext(container, record);
-	(*container.currentTable)->addRecord(record.name, record);
+void SemanticAction::addParameter(SemanticActionContainer& container) {
+	
+
+	SymbolTableRecord& functionRecord = container.context.functionDataAggregate;
+	FunctionData& function = functionRecord.functionData;
+	std::pair<TypeStruct, std::string> typeAndName;
+
+	// The type of this param
+	TypeStruct& paramType = typeAndName.first;
+	// Get the name of this param
+	typeAndName.second = container.context.storeId;
+	//  Get the return type for this functin
+	SymbolType type = _storedTypeToType(container.context.storeType);
+	paramType.type = type;
+	// Set the name of the class of the return type
+	if (type == SymbolType::type_class) {
+		paramType.className = container.context.storeType;
+	}
+	// Even though we shouldn't have functions that return arrays, it is here for completeness sake
+	if (!container.context.storeArraySize.empty()) {
+		// this is an array
+		paramType.structure = SymbolStructure::struct_array;
+		paramType.dimensions = container.context.storeArraySize;
+	} else {
+		// this is not an array and is a simple structure
+		paramType.structure = SymbolStructure::struct_simple;
+	}
+
+	// Add this parameter to the parameter list
+	function.parameters.push_back(typeAndName);
+
 }
 
 void SemanticAction::createFuncEntryAndTable(SemanticActionContainer& container) {
 
+	SymbolTableRecord record = container.context.functionDataAggregate;
+	record = *(*container.currentTable)->addRecord(record.name, record, *container.currentTable);
+	_clearContext(container);
+	_goToScope(container, &record);
+	// We added the record to the symbol table, but now we have to create the child table/scope and add all the parameter entries to it
+	for (std::pair<TypeStruct, std::string>& param : record.functionData.parameters) {
+		SymbolTableRecord paramRecord;
+		paramRecord.kind = SymbolKind::kind_parameter;
+		paramRecord.name = param.second;
+		paramRecord.typeStructure = param.first;
+		(*container.currentTable)->addRecord(paramRecord.name, paramRecord);
+	}
 }
 
 void SemanticAction::endFuncEntryAndTable(SemanticActionContainer& container) {
-
+	_goToParentScope(container);
 }
 
 void SemanticAction::startFuncDef(SemanticActionContainer& container) {
+	SymbolTableRecord& functionRecord = container.context.functionDataAggregate;
+	FunctionData& function = functionRecord.functionData;
 
-}
+	// Set this to a function kind
+	functionRecord.kind = SymbolKind::kind_function;
+	// Set the name of this function from the stored id
+	functionRecord.name = container.context.storeId;
 
-void SemanticAction::startParamEntry(SemanticActionContainer& container) {
-
+	//  Get the return type for this functin
+	SymbolType type = _storedTypeToType(container.context.storeType);
+	function.returnType.type = type;
+	// Set the name of the class of the return type
+	if (type == SymbolType::type_class) {
+		function.returnType.className = container.context.storeType;
+	}
+	// Even though we shouldn't have functions that return arrays, it is here for completeness sake
+	if (!container.context.storeArraySize.empty()) {
+		// this is an array
+		function.returnType.structure = SymbolStructure::struct_array;
+		function.returnType.dimensions = container.context.storeArraySize;
+	} else {
+		// this is not an array and is a simple structure
+		function.returnType.structure = SymbolStructure::struct_simple;
+	}
+	
 }
 	  
 void SemanticAction::storeId(SemanticActionContainer& container) {
@@ -130,7 +191,7 @@ void SemanticAction::_fillRecordFromContext(SemanticActionContainer& container, 
 	} else {
 		// this is not an array and is a simple structure
 		record.typeStructure.structure = SymbolStructure::struct_simple;
-	}
+	}	
 	_clearContext(container);
 }
 
@@ -139,20 +200,22 @@ void SemanticAction::_clearContext(SemanticActionContainer& container) {
 	container.context.storeArraySize.clear();
 	container.context.storeId.clear();
 	container.context.storeType.clear();
+	// Clear record data;
+	container.context.functionDataAggregate = {};
 }
 
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticAction::ACTION_MAP = {
 	{ "#createGlobalTable#",		&SemanticAction::createGlobalTable },
+	{ "#endGlobalTable#",			&SemanticAction::endGlobalTable },
 	{ "#createClassEntryAndTable#",	&SemanticAction::createClassEntryAndTable },
 	{ "#endClassEntryAndTable#",	&SemanticAction::endClassEntryAndTable },
 	{ "#createProgramTable#",		&SemanticAction::createProgramTable },
 	{ "#endProgramTable#",			&SemanticAction::endProgramTable },
 	{ "#createVariableEntry#",		&SemanticAction::createVariableEntry },
-	{ "#createParameterEntry#",		&SemanticAction::createParameterEntry },
+	{ "#addParameter#",				&SemanticAction::addParameter },
 	{ "#createFuncEntryAndTable#",	&SemanticAction::createFuncEntryAndTable },
 	{ "#endFuncEntryAndTable#",		&SemanticAction::endFuncEntryAndTable },
 	{ "#startFuncDef#",				&SemanticAction::startFuncDef },
-	{ "#startParamEntry#",			&SemanticAction::startParamEntry },
 	{ "#storeId#",					&SemanticAction::storeId },
 	{ "#storeType#",				&SemanticAction::storeType },
 	{ "#storeArraySize#",			&SemanticAction::storeArraySize },
