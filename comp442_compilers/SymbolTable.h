@@ -16,14 +16,12 @@ class SymbolTable {
 public:
 	// Create a symbol table with no parent
 	SymbolTable();
-	// Create a symbol table with the given parent symbol table
-	SymbolTable(SymbolTable* parent);
 	~SymbolTable();
 	// Finds the given identifer into the symbol table
 	// returns a pair, where the second value is if the value is found, and the first value is a pointer to the record
 	std::pair<SymbolTableRecord*, bool> find(const std::string& identifier);
 	// Adds the given record with the identifer to the symbol table
-	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record);
+	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent=NULL);
 	// Remove the record if it the identifer is in the symbol table. Returns true if the deletion was successful, false otherwise
 	bool removeRecord(const std::string& identifier);
 

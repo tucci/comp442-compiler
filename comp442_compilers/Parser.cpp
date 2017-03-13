@@ -2,6 +2,7 @@
 
 
 Parser::Parser() {
+	currentSymbolTable = &symbolTable;
 }
 
 
@@ -32,8 +33,8 @@ bool Parser::parse() {
 		} else {
 			
 			if (x.isSemantic()) {
-				SemanticSymbol ss = static_cast<SemanticSymbol&>(x);
-				ss.performAction(currentSymbolTable, consumedToken);
+				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
+				SemanticAction::performAction(semanticSymbol, context, &currentSymbolTable, consumedToken);
 				parseStack.pop_back();
 			} else {
 				// This is not a terminal. So it is a non terminal
@@ -343,3 +344,4 @@ void Parser::addError() {
 		errors.push_back(error);
 	}
 }
+

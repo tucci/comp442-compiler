@@ -6,9 +6,6 @@ SymbolTable::SymbolTable() {
 	parent = NULL;
 }
 
-SymbolTable::SymbolTable(SymbolTable* parent) {
-	this->parent = parent;
-}
 
 
 SymbolTable::~SymbolTable() {
@@ -26,12 +23,18 @@ std::pair<SymbolTableRecord*, bool> SymbolTable::find(const std::string& identif
 	return std::make_pair<SymbolTableRecord*, bool>(&found->second, true);
 }
 
-SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record) {
+SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent) {
 	// TODO: figure out if how we want to deal with records that are already in the table
 	// TODO: remove the auto
 	auto emplacement = table.emplace(identifier, record);
+	SymbolTableRecord* addedRecord = &emplacement.first->second;
+	if (parent != NULL) {
+		// TODO: dont add a symbol table if no link is needed
+		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
+		addedRecord->scope->parent = parent;
+	}
 	// Return a pointer to this table
-	return &emplacement.first->second;
+	return addedRecord;
 }
 
 bool SymbolTable::removeRecord(const std::string& identifier) {

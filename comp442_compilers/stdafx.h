@@ -25,8 +25,7 @@
 #include "specification.h"
 #include "lexer.h"
 
-#include "SymbolTableData.h"
-#include "SymbolTable.h"
+
 
 // Grammar
 #include "Symbol.h"
@@ -36,6 +35,10 @@
 #include "Production.h"
 #include "Grammar.h"
 
+#include "SymbolTableData.h"
+#include "SymbolTable.h"
+#include "SemanticContext.h"
+#include "SemanticAction.h"
 
 // Typedef this huge monster when building the first/follow sets
 typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;

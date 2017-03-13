@@ -39,10 +39,14 @@ private:
 	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
+
 	// Global symbol table
 	SymbolTable symbolTable;
 	// Current symbol table we are working in
 	SymbolTable* currentSymbolTable;
+	// The current semantic context that holds the data for the current parse
+	SemanticContext context;
+
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
