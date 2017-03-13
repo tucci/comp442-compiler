@@ -13,7 +13,6 @@ void SemanticAction::performAction(const SemanticSymbol& symbol, SemanticContext
 
 
 void SemanticAction::createGlobalTable(SemanticActionContainer& container) {
-	
 }
 
 void SemanticAction::endGlobalTable(SemanticActionContainer& container) {

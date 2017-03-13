@@ -108,10 +108,7 @@ void Parser::skipErrors() {
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
-	// TODO: here the rhs should be the sdt version
 	std::vector<Symbol> rhs = production.getProductionSDT();
-
-	//std::vector<Symbol> rhs = production.getProduction();
 	std::string replaceWith;
 	std::string nonTerminalString = production.getNonTerminal().getName();
 	size_t replaceIndex = derivation.find(nonTerminalString);

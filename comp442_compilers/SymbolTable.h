@@ -31,6 +31,8 @@ public:
 	// The link to the parent table of this symbol table
 	SymbolTable* parent;
 	
+	// A name to be added to the table for easier outputing
+	std::string tableTagName;
 private:
 	// TODO function overloading may be allowed, storing the name as a key might not work
 	std::unordered_map<std::string, SymbolTableRecord> table;

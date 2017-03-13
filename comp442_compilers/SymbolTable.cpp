@@ -9,7 +9,7 @@ SymbolTable::SymbolTable() {
 
 
 SymbolTable::~SymbolTable() {
-	// TODO: do we have to delete it ourselves. should we change to smart pointers
+
 }
 
 std::pair<SymbolTableRecord*, bool> SymbolTable::find(const std::string& identifier) {
@@ -29,7 +29,6 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	auto emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
-		// TODO: dont add a symbol table if no link is needed
 		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
 		addedRecord->scope->parent = parent;
 	}
@@ -47,7 +46,7 @@ bool SymbolTable::removeRecord(const std::string& identifier) {
 }
 
 std::string SymbolTable::toString() {
-	// TODO: implment this
+	// TODO: implment this, with the tag names
 	return "testToString";
 }
 
