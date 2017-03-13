@@ -25,12 +25,11 @@ void SemanticAction::createClassEntryAndTable(SemanticActionContainer& container
 	// add this record to our current table
 	
 	record = *(*container.currentTable)->addRecord(record.name, record, *container.currentTable);
-	*container.currentTable = record.scope.get();
+	_goToScope(container, &record);
 	
 }
 void SemanticAction::endClassEntryAndTable(SemanticActionContainer& container) {
-	// Leave the current scope and go to the parent scope
-	(*container.currentTable) = (*container.currentTable)->parent;
+	_goToParentScope(container);
 }
 	  
 void SemanticAction::createProgramTable(SemanticActionContainer& container) {
@@ -41,11 +40,12 @@ void SemanticAction::createProgramTable(SemanticActionContainer& container) {
 	record.kind = SymbolKind::kind_function;
 	// add this record to our current table
 	record = *(*container.currentTable)->addRecord(record.name, record, *container.currentTable);
-	*container.currentTable = record.scope.get();
+	_goToScope(container, &record);
+	
 }
 
 void SemanticAction::endProgramTable(SemanticActionContainer& container) {
-
+	_goToParentScope(container);
 }
 	  
 void SemanticAction::createVariableEntry(SemanticActionContainer& container) {
@@ -82,6 +82,16 @@ void SemanticAction::storeType(SemanticActionContainer& container) {
 
 void SemanticAction::storeArraySize(SemanticActionContainer& container) {
 	container.context.storeArraySize.push_back(std::stoi(container.token.lexeme));
+}
+
+
+void SemanticAction::_goToParentScope(SemanticActionContainer& container) {
+	// Leave the current scope and go to the parent scope
+	(*container.currentTable) = (*container.currentTable)->parent;
+}
+
+void SemanticAction::_goToScope(SemanticActionContainer& container, SymbolTableRecord* record) {
+	*container.currentTable = record->scope.get();
 }
 
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticAction::ACTION_MAP = {

@@ -35,6 +35,10 @@ private:
 	static void storeId(SemanticActionContainer& container);
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
+
+
+	static void _goToParentScope(SemanticActionContainer& container);
+	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
 	
 	
 };
