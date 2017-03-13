@@ -39,6 +39,11 @@ private:
 
 	static void _goToParentScope(SemanticActionContainer& container);
 	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
+	static SymbolType _storedTypeToType(const std::string& storeType);
+	// Partialy fills the record, you must specify the record kind
+	static void _fillRecordFromContext(SemanticActionContainer& container, SymbolTableRecord& record);
+	// Clears the values from the context
+	static void _clearContext(SemanticActionContainer& container);
 	
 	
 };
