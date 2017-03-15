@@ -40,24 +40,27 @@ bool SymbolTable::removeRecord(const std::string& identifier) {
 		return true;
 	}
 	return false;
-	
 }
 
 std::string SymbolTable::toString() {
+	std::queue<SymbolTable*> queue;
 	std::string output;
-	std::vector<SymbolTable*> scopes;
-	output += "\nTag: " + tableTagName + "\n";
-	for (auto record : table) {
-		output += record.first + " -> " + record.second.toString();
-		SymbolTable* scope = record.second.scope.get();
-		if (scope != NULL) {
-			scopes.push_back(scope);
+	queue.push(this);
+
+	while (queue.size() > 0) {
+		SymbolTable* n = queue.front();
+		queue.pop();
+		output += "\nTag: " + n->tableTagName + "\n";
+		for (auto record : n->table) {
+			SymbolTable* scope = record.second.scope.get();
+			output += record.first + " -> " + record.second.toString();
+			if (scope != NULL) {
+				queue.push((scope));
+			}
 		}
-	}
-	for (SymbolTable* scope : scopes) {
-		output += scope->toString();
 	}
 	return output;
 }
+
 
 

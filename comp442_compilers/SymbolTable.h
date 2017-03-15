@@ -1,6 +1,7 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
+#include <queue>
 
 // TODO: output symbol table as html
 // TODO: figure out undefined ids/vars
@@ -23,6 +24,7 @@ public:
 	bool removeRecord(const std::string& identifier);
 
 	// Outputs the contents of the symbol table and any child symbol table
+	// Does a breadth first traversal
 	std::string toString();
 
 	// The link to the parent table of this symbol table
