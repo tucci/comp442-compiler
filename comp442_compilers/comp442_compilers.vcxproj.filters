@@ -137,9 +137,6 @@
     <ClInclude Include="SemanticAction.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticContext.h">
-      <Filter>Header Files\parser\semantics</Filter>
-    </ClInclude>
     <ClInclude Include="SymbolTableData.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>

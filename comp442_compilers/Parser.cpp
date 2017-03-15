@@ -2,6 +2,7 @@
 
 
 Parser::Parser() {
+	symbolTable.tableTagName = "Global";
 	currentSymbolTable = &symbolTable;
 }
 
@@ -34,7 +35,7 @@ bool Parser::parse() {
 			
 			if (x.isSemantic()) {
 				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
-				SemanticAction::performAction(semanticSymbol, context, &currentSymbolTable, consumedToken);
+				SemanticAction::performAction(semanticSymbol, semanticStack, &currentSymbolTable, consumedToken);
 				parseStack.pop_back();
 			} else {
 				// This is not a terminal. So it is a non terminal
@@ -302,6 +303,8 @@ void Parser::outputAnalysis() {
 	}
 
 	parserErrors.close();
+	// Output symbol table
+	std::cout << symbolTable.toString();
 }
 
 std::string Parser::getStackContents() {

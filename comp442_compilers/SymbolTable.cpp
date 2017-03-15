@@ -31,6 +31,7 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	if (parent != NULL) {
 		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
 		addedRecord->scope->parent = parent;
+		addedRecord->scope->tableTagName = parent->tableTagName + "." + identifier;
 	}
 	// Return a pointer to this table
 	return addedRecord;
@@ -46,8 +47,20 @@ bool SymbolTable::removeRecord(const std::string& identifier) {
 }
 
 std::string SymbolTable::toString() {
-	// TODO: implment this, with the tag names
-	return "testToString";
+	std::string output;
+	std::vector<SymbolTable*> scopes;
+	output += "\nTag: " + tableTagName + "\n";
+	for (auto record : table) {
+		output += record.first + " -> " + record.second.toString();
+		SymbolTable* scope = record.second.scope.get();
+		if (scope != NULL) {
+			scopes.push_back(scope);
+		}
+	}
+	for (SymbolTable* scope : scopes) {
+		output += scope->toString();
+	}
+	return output;
 }
 
 

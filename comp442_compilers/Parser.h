@@ -44,9 +44,7 @@ private:
 	SymbolTable symbolTable;
 	// Current symbol table we are working in
 	SymbolTable* currentSymbolTable;
-	// The current semantic context that holds the data for the current parse
-	SemanticContext context;
-
+	
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
@@ -57,7 +55,7 @@ private:
 	std::vector<Symbol> parseStack;
 	// stack that holds the semantic actions
 	// TODO: delete if not needed
-	std::vector<SemanticSymbol> semanticStack;
+	std::vector<SymbolTableRecord> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
 	// The index of the current token

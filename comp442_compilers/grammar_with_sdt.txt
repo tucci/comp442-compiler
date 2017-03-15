@@ -104,9 +104,9 @@ typeNoId		-> int
 type			-> typeNoId 
 type			-> id
 
-fParams			-> type #storeType# id #storeId# arraySizeList #addParameter# fParamsTailList 
+fParams			-> #addParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
 fParams			-> EPSILON 
-fParamsTail		-> , type #storeType# id #storeId# arraySizeList  #addParameter#
+fParamsTail		-> , #addParameter# type #storeType# id #storeId# arraySizeList 
 fParamsTailList		-> fParamsTail fParamsTailList 
 fParamsTailList		-> EPSILON 
 

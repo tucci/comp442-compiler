@@ -166,7 +166,6 @@
     <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SemanticAction.h" />
-    <ClInclude Include="SemanticContext.h" />
     <ClInclude Include="SemanticSymbol.h" />
     <ClInclude Include="specification.h" />
     <ClInclude Include="stdafx.h" />

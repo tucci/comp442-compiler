@@ -88,8 +88,8 @@ struct FunctionData {
 		if (parameters.size() == 0) {
 			s += "nil";
 		} else {
-			for (std::pair<TypeStruct, std::string>& ts : parameters) {
-				s += ts.first.toString() + ", ";
+			for (std::pair<TypeStruct, std::string>& param : parameters) {
+				s += param.first.toString() + " " + param.second + ", ";
 			}
 		}
 		s += "}";

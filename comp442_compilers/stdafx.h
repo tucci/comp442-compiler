@@ -37,7 +37,6 @@
 
 #include "SymbolTableData.h"
 #include "SymbolTable.h"
-#include "SemanticContext.h"
 #include "SemanticAction.h"
 
 // Typedef this huge monster when building the first/follow sets
