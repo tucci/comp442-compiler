@@ -165,7 +165,7 @@
     <ClInclude Include="ParserGenerator.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SemanticAction.h" />
+    <ClInclude Include="SemanticActions.h" />
     <ClInclude Include="SemanticSymbol.h" />
     <ClInclude Include="specification.h" />
     <ClInclude Include="stdafx.h" />
@@ -187,7 +187,7 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ParserGenerator.cpp" />
     <ClCompile Include="Production.cpp" />
-    <ClCompile Include="SemanticAction.cpp" />
+    <ClCompile Include="SemanticActions.cpp" />
     <ClCompile Include="SemanticSymbol.cpp" />
     <ClCompile Include="specification.cpp" />
     <ClCompile Include="stdafx.cpp">

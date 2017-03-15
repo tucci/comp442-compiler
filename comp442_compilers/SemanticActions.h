@@ -5,7 +5,7 @@
 #include "SymbolTable.h"
 #include "Token.h"
 
-// A simple container that gets passed
+// A simple container that gets passed to each semantic action
 struct SemanticActionContainer {
 	const SemanticSymbol& symbol;
 	std::vector<SymbolTableRecord>& semanticStack;
@@ -14,7 +14,7 @@ struct SemanticActionContainer {
 	const Token& token;
 };
 
-class SemanticAction {
+class SemanticActions {
 public:
 	// Map of action name to function pointers that call the action
 	static std::unordered_map<std::string, void (*)(SemanticActionContainer&)> ACTION_MAP;
@@ -39,7 +39,6 @@ private:
 
 	static void _goToParentScope(SemanticActionContainer& container);
 	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
-	static SymbolType _stringToType(const std::string& storeType);	
 	
 	
 };

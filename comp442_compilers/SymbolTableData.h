@@ -42,6 +42,20 @@ static std::string typeToString(SymbolType type) {
 	}
 }
 
+static SymbolType stringToType(const std::string& str) {
+	if (str == Specification::REVERSE_TOKEN_MAP.at(TokenType::int_token)) {
+		// this is a int type
+		return SymbolType::type_int;
+	} else if (str == Specification::REVERSE_TOKEN_MAP.at(TokenType::float_token)) {
+		// this is a float type
+		return SymbolType::type_float;
+	} else {
+		// This is a class
+		return SymbolType::type_class;
+	}
+} 
+	
+
 static std::string structureToString(SymbolStructure structure) {
 	switch (structure) {
 	case struct_simple:	return "struct_simple"; break;
@@ -98,10 +112,8 @@ struct FunctionData {
 };
 
 
-
 // Forward declration
 class SymbolTable;
-
 
 // A simple record that will go into the symbol tables
 struct SymbolTableRecord {

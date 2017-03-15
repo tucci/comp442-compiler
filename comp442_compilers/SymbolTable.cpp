@@ -6,8 +6,6 @@ SymbolTable::SymbolTable() {
 	parent = NULL;
 }
 
-
-
 SymbolTable::~SymbolTable() {
 
 }
@@ -25,8 +23,7 @@ std::pair<SymbolTableRecord*, bool> SymbolTable::find(const std::string& identif
 
 SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent) {
 	// TODO: figure out if how we want to deal with records that are already in the table
-	// TODO: remove the auto
-	auto emplacement = table.emplace(identifier, record);
+	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
 		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());

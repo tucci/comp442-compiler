@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "SemanticAction.h"
-
+#include "SemanticActions.h"
+#include "SymbolTableData.h"
 
 // A simple data structure that keeps some context during the semantic actions
 static struct SemanticContext {
 	bool inParam;
+	bool phase2;
 } context;
 
 
-void SemanticAction::performAction(const SemanticSymbol& symbol, std::vector<SymbolTableRecord>& semanticStack, SymbolTable** currentTable, const Token& token) {
+void SemanticActions::performAction(const SemanticSymbol& symbol, std::vector<SymbolTableRecord>& semanticStack, SymbolTable** currentTable, const Token& token) {
 	if (semanticStack.empty()) {
 		semanticStack.push_back(SymbolTableRecord());
 	}
@@ -18,18 +19,18 @@ void SemanticAction::performAction(const SemanticSymbol& symbol, std::vector<Sym
 }
 
 
-void SemanticAction::createGlobalTable(SemanticActionContainer& container) {
+void SemanticActions::createGlobalTable(SemanticActionContainer& container) {
 	// The perform action adds something to the stack, and we dont need it for the global table
 	// so pop it off right away
 	container.semanticStack.pop_back();
 }
 
-void SemanticAction::endGlobalTable(SemanticActionContainer& container) {
+void SemanticActions::endGlobalTable(SemanticActionContainer& container) {
 	// Pop the left over record
 	container.semanticStack.pop_back();
 }
 	  
-void SemanticAction::createClassEntryAndTable(SemanticActionContainer& container) {
+void SemanticActions::createClassEntryAndTable(SemanticActionContainer& container) {
 	// Add the class name
 	container.top.name = container.token.lexeme;
 	// Add that this is a class type
@@ -40,11 +41,11 @@ void SemanticAction::createClassEntryAndTable(SemanticActionContainer& container
 	container.semanticStack.pop_back();
 	
 }
-void SemanticAction::endClassEntryAndTable(SemanticActionContainer& container) {
+void SemanticActions::endClassEntryAndTable(SemanticActionContainer& container) {
 	_goToParentScope(container);
 }
 	  
-void SemanticAction::createProgramTable(SemanticActionContainer& container) {
+void SemanticActions::createProgramTable(SemanticActionContainer& container) {
 	
 	// Add the class name
 	container.top.name = container.token.lexeme;
@@ -56,23 +57,23 @@ void SemanticAction::createProgramTable(SemanticActionContainer& container) {
 	container.semanticStack.pop_back();
 }
 
-void SemanticAction::endProgramTable(SemanticActionContainer& container) {
+void SemanticActions::endProgramTable(SemanticActionContainer& container) {
 	_goToParentScope(container);
 }
 	  
-void SemanticAction::createVariableEntry(SemanticActionContainer& container) {
+void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	container.top.kind = SymbolKind::kind_variable;
 	(*container.currentTable)->addRecord(container.top.name, container.top);
 	container.semanticStack.pop_back();
 }
 
-void SemanticAction::addParameter(SemanticActionContainer& container) {
+void SemanticActions::addParameter(SemanticActionContainer& container) {
 	// Push a new param to the function data parameters
 	container.top.functionData.parameters.push_back(std::pair<TypeStruct, std::string>());
 	context.inParam = true;
 }
 
-void SemanticAction::createFuncEntryAndTable(SemanticActionContainer& container) {
+void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container) {
 	context.inParam = false;
 	container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
 	// Pop this record of the semantic stack and it to our table entry
@@ -88,11 +89,11 @@ void SemanticAction::createFuncEntryAndTable(SemanticActionContainer& container)
 	container.semanticStack.pop_back();
 }
 
-void SemanticAction::endFuncEntryAndTable(SemanticActionContainer& container) {
+void SemanticActions::endFuncEntryAndTable(SemanticActionContainer& container) {
 	_goToParentScope(container);
 }
 
-void SemanticAction::startFuncDef(SemanticActionContainer& container) {
+void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 	// Set this to a function kind
 	container.top.kind = SymbolKind::kind_function;
 	// Move the data from type struture to the function return type structure
@@ -102,7 +103,7 @@ void SemanticAction::startFuncDef(SemanticActionContainer& container) {
 	
 }
 	  
-void SemanticAction::storeId(SemanticActionContainer& container) {
+void SemanticActions::storeId(SemanticActionContainer& container) {
 	if (context.inParam) {
 		container.top.functionData.parameters.back().second = container.token.lexeme;
 	} else {
@@ -110,8 +111,8 @@ void SemanticAction::storeId(SemanticActionContainer& container) {
 	}
 }
 
-void SemanticAction::storeType(SemanticActionContainer& container) {
-	SymbolType type = _stringToType(container.token.lexeme);
+void SemanticActions::storeType(SemanticActionContainer& container) {
+	SymbolType type = stringToType(container.token.lexeme);
 	std::string className = type == SymbolType::type_class ? container.token.lexeme : "";
 
 	if (context.inParam) {
@@ -125,7 +126,7 @@ void SemanticAction::storeType(SemanticActionContainer& container) {
 
 }
 
-void SemanticAction::storeArraySize(SemanticActionContainer& container) {
+void SemanticActions::storeArraySize(SemanticActionContainer& container) {
 	if (context.inParam) {
 		std::pair<TypeStruct, std::string>& param = container.top.functionData.parameters.back();
 		param.first.dimensions.push_back(std::stoi(container.token.lexeme));
@@ -139,43 +140,29 @@ void SemanticAction::storeArraySize(SemanticActionContainer& container) {
 }
 
 // --------------------------------- INTERNAL HELPER METHODS ----------------------------------
-void SemanticAction::_goToParentScope(SemanticActionContainer& container) {
+void SemanticActions::_goToParentScope(SemanticActionContainer& container) {
 	// Leave the current scope and go to the parent scope
 	(*container.currentTable) = (*container.currentTable)->parent;
 }
 
-void SemanticAction::_goToScope(SemanticActionContainer& container, SymbolTableRecord* record) {
+void SemanticActions::_goToScope(SemanticActionContainer& container, SymbolTableRecord* record) {
 	*container.currentTable = record->scope.get();
 }
 
-SymbolType SemanticAction::_stringToType(const std::string& storeType) {
-	// TODO: dont hardcode this
-	if (storeType == "int") {
-		// this is a int type
-		return SymbolType::type_int;
-	} else if (storeType == "float") {
-		// this is a float type
-		return SymbolType::type_float;
-	} else {
-		// This is a class
-		return SymbolType::type_class;
-	}
-}
-
-
-std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticAction::ACTION_MAP = {
-	{ "#createGlobalTable#",		&SemanticAction::createGlobalTable },
-	{ "#endGlobalTable#",			&SemanticAction::endGlobalTable },
-	{ "#createClassEntryAndTable#",	&SemanticAction::createClassEntryAndTable },
-	{ "#endClassEntryAndTable#",	&SemanticAction::endClassEntryAndTable },
-	{ "#createProgramTable#",		&SemanticAction::createProgramTable },
-	{ "#endProgramTable#",			&SemanticAction::endProgramTable },
-	{ "#createVariableEntry#",		&SemanticAction::createVariableEntry },
-	{ "#addParameter#",				&SemanticAction::addParameter },
-	{ "#createFuncEntryAndTable#",	&SemanticAction::createFuncEntryAndTable },
-	{ "#endFuncEntryAndTable#",		&SemanticAction::endFuncEntryAndTable },
-	{ "#startFuncDef#",				&SemanticAction::startFuncDef },
-	{ "#storeId#",					&SemanticAction::storeId },
-	{ "#storeType#",				&SemanticAction::storeType },
-	{ "#storeArraySize#",			&SemanticAction::storeArraySize },
+// Map from semantic action name to function pointer that handles that action
+std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActions::ACTION_MAP = {
+	{ "#createGlobalTable#",		&SemanticActions::createGlobalTable },
+	{ "#endGlobalTable#",			&SemanticActions::endGlobalTable },
+	{ "#createClassEntryAndTable#",	&SemanticActions::createClassEntryAndTable },
+	{ "#endClassEntryAndTable#",	&SemanticActions::endClassEntryAndTable },
+	{ "#createProgramTable#",		&SemanticActions::createProgramTable },
+	{ "#endProgramTable#",			&SemanticActions::endProgramTable },
+	{ "#createVariableEntry#",		&SemanticActions::createVariableEntry },
+	{ "#addParameter#",				&SemanticActions::addParameter },
+	{ "#createFuncEntryAndTable#",	&SemanticActions::createFuncEntryAndTable },
+	{ "#endFuncEntryAndTable#",		&SemanticActions::endFuncEntryAndTable },
+	{ "#startFuncDef#",				&SemanticActions::startFuncDef },
+	{ "#storeId#",					&SemanticActions::storeId },
+	{ "#storeType#",				&SemanticActions::storeType },
+	{ "#storeArraySize#",			&SemanticActions::storeArraySize },
 };

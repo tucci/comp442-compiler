@@ -54,7 +54,6 @@ private:
 	// Data structure to hold our parse stack
 	std::vector<Symbol> parseStack;
 	// stack that holds the semantic actions
-	// TODO: delete if not needed
 	std::vector<SymbolTableRecord> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;

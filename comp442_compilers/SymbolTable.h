@@ -2,16 +2,13 @@
 #define SYMBOL_TABLE_H
 
 
-// TODO: output symbol table
+// TODO: output symbol table as html
 // TODO: figure out undefined ids/vars
 // TODO: figure out how to handle multiple defined var names/ 
 // TODO: figure out how to handle recursion
-// TODO: create for int i, semantic action
-// TODO: make sure array dimensions are done properly
 // TODO: type check return statement
 // TODO: type check assignment statement
-// TODO: function calls should have right amount
-// TODO: when adding a link we'll need to set up the data in this record and add it to the nested table. ex func data, class data
+// TODO: type check function calls params have right amount and types
 class SymbolTable {
 public:
 	// Create a symbol table with no parent

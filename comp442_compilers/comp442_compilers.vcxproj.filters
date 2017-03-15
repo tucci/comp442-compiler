@@ -134,10 +134,10 @@
     <ClInclude Include="SemanticSymbol.h">
       <Filter>Header Files\grammar</Filter>
     </ClInclude>
-    <ClInclude Include="SemanticAction.h">
+    <ClInclude Include="SymbolTableData.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
-    <ClInclude Include="SymbolTableData.h">
+    <ClInclude Include="SemanticActions.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -190,7 +190,7 @@
     <ClCompile Include="SemanticSymbol.cpp">
       <Filter>Source Files\grammar</Filter>
     </ClCompile>
-    <ClCompile Include="SemanticAction.cpp">
+    <ClCompile Include="SemanticActions.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
   </ItemGroup>

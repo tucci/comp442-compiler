@@ -37,7 +37,7 @@
 
 #include "SymbolTableData.h"
 #include "SymbolTable.h"
-#include "SemanticAction.h"
+#include "SemanticActions.h"
 
 // Typedef this huge monster when building the first/follow sets
 typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;
