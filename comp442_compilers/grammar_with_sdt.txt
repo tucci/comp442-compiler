@@ -30,7 +30,7 @@ statement		-> noIdStartStatement
 statement		-> assignStat ; 
 statementList		-> statement statementList 
 statementList		-> EPSILON 
-noIdStartStatement      -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
+noIdStartStatement      -> for ( type #storeType# id #storeId# #createVariableEntry# assignOp expr ; relExpr ; assignStat ) statBlock ; 
 noIdStartStatement      -> if ( expr ) then statBlock elseBlock ; 
 noIdStartStatement      -> get ( variable ) ; 
 noIdStartStatement      -> put ( expr ) ; 
