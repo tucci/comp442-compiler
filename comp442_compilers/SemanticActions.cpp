@@ -22,7 +22,7 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
 	if (phase2) {
 		//std::cout << "error check on";
 	}
-	if (!shouldSkip(symbol)) {
+	if (!_shouldSkip(symbol)) {
 		if (semanticStack.empty()) {
 			semanticStack.push_back(SymbolTableRecord());
 		}
@@ -53,7 +53,7 @@ void SemanticActions::createClassEntryAndTable(SemanticActionContainer& containe
 		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
 		_goToScope(container, &container.top);
 	} else {
-		if  (isRedefined(*found.first, container.top)) {
+		if  (_isRedefined(*found.first, container.top)) {
 			context.skipClass = true;
 			if (context.inPhase2) {
 				SemanticError error;
@@ -105,7 +105,7 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	if (!found.second && !context.inPhase2) {
 		(*container.currentTable)->addRecord(container.top.name, container.top);
 	} else {
-		if (isRedefined(*found.first, container.top)) {
+		if (_isRedefined(*found.first, container.top)) {
 			if (context.inPhase2) {
 				SemanticError error;
 				error.tokenLine = container.token.tokenLine;
@@ -161,7 +161,7 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 	container.top.typeStructure = {};
 
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
-	if (found.second && isRedefined(*found.first, container.top)) {
+	if (found.second && _isRedefined(*found.first, container.top)) {
 		context.skipFunction = true;
 		if (context.inPhase2) {
 			SemanticError error;
@@ -176,7 +176,26 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 	  
 void SemanticActions::storeId(SemanticActionContainer& container) {
 	if (context.inParam) {
-		container.top.functionData.parameters.back().second = container.token.lexeme;
+		bool isRedefinition = false;
+		// Check to see if we are adding a redefined parameter
+		for (auto param : container.top.functionData.parameters) {
+			if (param.second == container.token.lexeme) {
+				isRedefinition = true;
+				if (context.inPhase2) {
+					// We have a redefinnition
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Parameter " + container.token.lexeme + " redeclared on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+				}
+			}
+		}
+		if (!isRedefinition) {
+			container.top.functionData.parameters.back().second = container.token.lexeme;
+		} else {
+			// Remove this parameter from the list
+			container.top.functionData.parameters.pop_back();
+		}
 	} else {
 		container.top.name = container.token.lexeme;
 		container.top.definedLocation = container.token.tokenIndex;
@@ -220,11 +239,11 @@ void SemanticActions::_goToScope(SemanticActionContainer& container, SymbolTable
 	*container.currentTable = record->scope.get();
 }
 
-bool SemanticActions::isRedefined(SymbolTableRecord& found, SymbolTableRecord& record) {
+bool SemanticActions::_isRedefined(SymbolTableRecord& found, SymbolTableRecord& record) {
 	return found.definedLocation != record.definedLocation;
 }
 
-bool SemanticActions::shouldSkip(const SemanticSymbol& symbol) {
+bool SemanticActions::_shouldSkip(const SemanticSymbol& symbol) {
 	if (context.skipClass && symbol.getName() != "#endClassEntryAndTable#") {
 		return true;
 	}

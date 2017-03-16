@@ -49,14 +49,15 @@ private:
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
 
-
+	// Internal methods
 	static void _goToParentScope(SemanticActionContainer& container);
 	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
-	static bool isRedefined(SymbolTableRecord& found, SymbolTableRecord& record);
-	static bool shouldSkip(const SemanticSymbol& symbol);
+	static bool _isRedefined(SymbolTableRecord& found, SymbolTableRecord& record);
+	static bool _shouldSkip(const SemanticSymbol& symbol);
 	
 	
 };
 
 
 #endif // !SEMANTIC_ACTION
+
