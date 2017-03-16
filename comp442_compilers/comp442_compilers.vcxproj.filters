@@ -49,6 +49,9 @@
     <Filter Include="Source Files\parser\semantics">
       <UniqueIdentifier>{c7d6a876-9c01-402e-9974-270b1af764cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\semanticOutput">
+      <UniqueIdentifier>{e2619e03-77d1-4a9d-970c-e216ce1fac98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lexerErrors.txt">
@@ -77,6 +80,12 @@
     </Text>
     <Text Include="grammar_with_sdt.txt">
       <Filter>Resource Files\grammar</Filter>
+    </Text>
+    <Text Include="semanticErrors.txt">
+      <Filter>Resource Files\semanticOutput</Filter>
+    </Text>
+    <Text Include="symbolTables.txt">
+      <Filter>Resource Files\semanticOutput</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

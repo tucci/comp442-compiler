@@ -91,7 +91,6 @@ static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const Ter
 	return std::pair<TerminalSet, bool>(unionedSet, hasChanges);
 }
 
-// TODO: move to utils
 static bool isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }

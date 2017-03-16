@@ -147,12 +147,14 @@
   <ItemGroup>
     <Text Include="grammar_with_sdt.txt" />
     <Text Include="parserErrors.txt" />
+    <Text Include="semanticErrors.txt" />
     <Text Include="sourcefile.txt" />
     <Text Include="first_and_follow_sets.txt" />
     <Text Include="lexerErrors.txt" />
     <Text Include="grammar.txt" />
     <Text Include="lexerOutput.txt" />
     <Text Include="sourceWithErrors.txt" />
+    <Text Include="symbolTables.txt" />
     <Text Include="testgrammar.txt" />
   </ItemGroup>
   <ItemGroup>

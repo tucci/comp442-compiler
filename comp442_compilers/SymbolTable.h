@@ -1,9 +1,7 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-#include <queue>
 
-// TODO: output symbol table as html/file
 // TODO: figure out undefined id : variable/class/function
 // TODO: figure out member: data member, method, deeply nested
 // TODO: figure out how to handle forward/circular references/two phase

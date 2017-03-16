@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <queue>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -42,6 +43,7 @@
 // Typedef this huge monster when building the first/follow sets
 typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;
 typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> TerminalToProductionMap;
+
 // Util code
 #include "Utils.h"
 

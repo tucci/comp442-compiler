@@ -169,11 +169,11 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 	if (got == mNonTerminalSymbols.end()) {
 		// This is not a non terminal symbol and is a terminal symbol
 		std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(symbolString));
-		auto got = mTerminalSymbols.find(terminal);
-		if (got == mTerminalSymbols.end()) {
+		std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual>::iterator found = mTerminalSymbols.find(terminal);
+		if (found == mTerminalSymbols.end()) {
 			throw std::exception("symbolString is not a valid symbol");
 		} else {
-			return *got->get();
+			return *found->get();
 		}
 		
 	} else {

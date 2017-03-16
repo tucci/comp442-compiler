@@ -2,8 +2,8 @@
 
 
 Parser::Parser() {
-	symbolTable.tableTagName = "Global";
-	currentSymbolTable = &symbolTable;
+	globalTable.tableTagName = "Global";
+	currentSymbolTable = &globalTable;
 }
 
 
@@ -35,7 +35,7 @@ bool Parser::parse() {
 			
 			if (x.isSemantic()) {
 				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
-				SemanticActions::performAction(semanticSymbol, semanticStack, &currentSymbolTable, consumedToken, phase2, semanticErrors);
+				SemanticActions::performAction(semanticSymbol, semanticStack, globalTable, &currentSymbolTable, consumedToken, phase2, semanticErrors);
 				parseStack.pop_back();	
 			} else {
 				// This is not a terminal. So it is a non terminal
@@ -313,7 +313,7 @@ void Parser::outputAnalysis() {
 void Parser::outputSymbolTable() {
 	std::ofstream symbolTableOutput;
 	symbolTableOutput.open("symbolTables.txt");
-	symbolTableOutput << symbolTable.toString();
+	symbolTableOutput << globalTable.toString();
 	symbolTableOutput.close();
 }
 

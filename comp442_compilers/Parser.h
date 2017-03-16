@@ -39,7 +39,7 @@ private:
 	Token lookAheadToken;
 
 	// Global symbol table
-	SymbolTable symbolTable;
+	SymbolTable globalTable;
 	// Current symbol table we are working in
 	SymbolTable* currentSymbolTable;
 	

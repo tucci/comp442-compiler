@@ -13,21 +13,21 @@ static struct SemanticContext {
 
 void SemanticActions::performAction(const SemanticSymbol& symbol,
                                     std::vector<SymbolTableRecord>& semanticStack,
+                                    SymbolTable& globalTable,
                                     SymbolTable** currentTable,
                                     const Token& token,
-                                    bool phase2, 
-									std::vector<SemanticError>& semanticErrors) {
+                                    bool phase2, std::vector<SemanticError>& semanticErrors) {
 
 	context.inPhase2 = phase2;
 	if (phase2) {
-		//std::cout << "error check on";
+		std::cout << "error check on";
 	}
 	if (!_shouldSkip(symbol)) {
 		if (semanticStack.empty()) {
 			semanticStack.push_back(SymbolTableRecord());
 		}
 		SymbolTableRecord& top = semanticStack.back();
-		SemanticActionContainer container = { symbol, semanticStack, top, currentTable, token, semanticErrors };
+		SemanticActionContainer container = { symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors };
 		ACTION_MAP.at(symbol.getName())(container);
 	}
 }
@@ -173,15 +173,15 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 
 	
 }
-	  
+
 void SemanticActions::storeId(SemanticActionContainer& container) {
 	if (context.inParam) {
 		bool isRedefinition = false;
 		// Check to see if we are adding a redefined parameter
 		for (auto param : container.top.functionData.parameters) {
 			if (param.second == container.token.lexeme) {
-				isRedefinition = true;
 				if (context.inPhase2) {
+				isRedefinition = true;
 					// We have a redefinnition
 					SemanticError error;
 					error.tokenLine = container.token.tokenLine;

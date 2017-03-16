@@ -16,6 +16,7 @@ struct SemanticError {
 struct SemanticActionContainer {
 	const SemanticSymbol& symbol;
 	std::vector<SymbolTableRecord>& semanticStack;
+	SymbolTable& globalTable;
 	SymbolTableRecord& top;
 	SymbolTable** currentTable;
 	const Token& token;
@@ -28,6 +29,7 @@ public:
 	static std::unordered_map<std::string, void (*)(SemanticActionContainer&)> ACTION_MAP;
 	static void performAction(const SemanticSymbol& symbol,
 		std::vector<SymbolTableRecord>& semanticStack,
+		SymbolTable& globalTable,
 		SymbolTable** currentTable,
 		const Token& token,
 		bool phase2,
@@ -45,6 +47,7 @@ private:
 	static void createFuncEntryAndTable(SemanticActionContainer& container);
 	static void endFuncEntryAndTable(SemanticActionContainer& container);
 	static void startFuncDef(SemanticActionContainer& container);
+
 	static void storeId(SemanticActionContainer& container);
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
