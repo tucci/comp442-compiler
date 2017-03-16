@@ -48,9 +48,12 @@ private:
 	static void endFuncEntryAndTable(SemanticActionContainer& container);
 	static void startFuncDef(SemanticActionContainer& container);
 
+	static void checkTypeGlobal(SemanticActionContainer& container);
+
 	static void storeId(SemanticActionContainer& container);
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
+
 
 	// Internal methods
 	static void _goToParentScope(SemanticActionContainer& container);

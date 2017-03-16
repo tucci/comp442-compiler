@@ -174,6 +174,20 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 	
 }
 
+void SemanticActions::checkTypeGlobal(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		std::string typeName = container.token.lexeme;
+		std::pair<SymbolTableRecord*, bool> found = container.globalTable.find(typeName);
+		if (!found.second) {
+			// We have a type being used that is not found in the global table
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Type " + typeName + " not defined on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+		}
+	}
+}
+
 void SemanticActions::storeId(SemanticActionContainer& container) {
 	if (context.inParam) {
 		bool isRedefinition = false;
@@ -267,6 +281,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 	{ "#createFuncEntryAndTable#",	&SemanticActions::createFuncEntryAndTable },
 	{ "#endFuncEntryAndTable#",		&SemanticActions::endFuncEntryAndTable },
 	{ "#startFuncDef#",				&SemanticActions::startFuncDef },
+	{ "#checkTypeGlobal#",			&SemanticActions::checkTypeGlobal },
 	{ "#storeId#",					&SemanticActions::storeId },
 	{ "#storeType#",				&SemanticActions::storeType },
 	{ "#storeArraySize#",			&SemanticActions::storeArraySize },
