@@ -1,8 +1,8 @@
 prog			-> #createGlobalTable# classDeclList progBody #endGlobalTable#
-classDecl		-> class id #createClassEntryAndTable# { varFuncDefList } ; #endClassEntryAndTable#
+classDecl		-> class id #storeId# #createClassEntryAndTable# { varFuncDefList } ; #endClassEntryAndTable#
 classDeclList		-> classDecl classDeclList 
 classDeclList		-> EPSILON 
-progBody		-> program #createProgramTable# funcBody ; #endProgramTable# funcDefList 
+progBody		-> program #storeId# #createProgramTable# funcBody ; #endProgramTable# funcDefList 
 
 funcDef			-> type #storeType# id #storeId# funcDefRest
 funcDefRest		-> #startFuncDef# ( fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#

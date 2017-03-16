@@ -32,7 +32,8 @@ void Compiler::setSourceFile(std::string sourceFile) {
 // Analyses the syntax of the source code
 bool Compiler::analyzeSyntax() {
 	std::cout << "Analyzing Syntax..." << std::endl;
-	bool parsedSuccessfully = parser->parse();
+	parser->buildSymbolTable();
+	bool parsedSuccessfully = parser->parse(); // Phase 2 parse
 
 	if (writeOutputs) {
 		parser->outputAnalysis();

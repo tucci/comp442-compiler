@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\comp442_compilers\SemanticContext.h" />
     <ClInclude Include="..\comp442_compilers\token.h" />
     <ClInclude Include="..\comp442_compilers\Utils.h" />
     <ClInclude Include="stdafx.h" />
@@ -166,7 +165,7 @@
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
-    <ClCompile Include="..\comp442_compilers\SemanticAction.cpp" />
+    <ClCompile Include="..\comp442_compilers\SemanticActions.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />

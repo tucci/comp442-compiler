@@ -34,9 +34,10 @@ bool Parser::parse() {
 		} else {
 			
 			if (x.isSemantic()) {
+				// TODO: figure out how to syntax handle syntaxErrors and skip it when we do semantic stuff
 				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
-				SemanticActions::performAction(semanticSymbol, semanticStack, &currentSymbolTable, consumedToken);
-				parseStack.pop_back();
+				SemanticActions::performAction(semanticSymbol, semanticStack, &currentSymbolTable, consumedToken, phase2, semanticErrors);
+				parseStack.pop_back();	
 			} else {
 				// This is not a terminal. So it is a non terminal
 				NonTerminal nx = static_cast<NonTerminal&>(x); // x is not a terminal so cast to non terminal
@@ -66,7 +67,6 @@ bool Parser::parse() {
 }
 
 void Parser::nextToken() {
-	tokenIndex++;
 	consumedToken = lookAheadToken;
 	lookAheadToken = lexer->nextToken();
 }
@@ -87,7 +87,7 @@ void Parser::skipErrors() {
 					// Hack: Avoids infinite loops
 					// This "should" rarely happen 
 					if (loopCount == 1000) {
-						// Output which ever errors we alreay have						
+						// Output which ever syntaxErrors we alreay have						
 						outputAnalysis();
 						// Throw expection so that main could catch and deallocate our memory
 						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;
@@ -151,6 +151,13 @@ Terminal Parser::tokenToTerminal(const Token& token, const NonTerminal& nt) {
 	}
 	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));	
 	return t;
+}
+
+void Parser::buildSymbolTable() {
+	parse();
+	phase2 = true;
+	lexer->resetToStart();
+	parseStack.pop_back();
 }
 
 void Parser::outputParserDataToFile() {
@@ -294,7 +301,7 @@ void Parser::outputAnalysis() {
 	std::ofstream parserErrors;
 	parserErrors.open("parserErrors.txt");
 
-	for (SyntaxError error : errors) {		
+	for (SyntaxError error : syntaxErrors) {		
 		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";
 		if (error.token.type != TokenType::non_token) {
 			parserErrors << " after \"" << error.token.lexeme << "\"";
@@ -303,9 +310,14 @@ void Parser::outputAnalysis() {
 	}
 
 	parserErrors.close();
+	// TODO: move these to there own methods
 	// Output symbol table
 	std::cout << symbolTable.toString();
+	for (SemanticError& error : semanticErrors) {
+		std::cout << error.message << std::endl;
+	}
 }
+
 
 std::string Parser::getStackContents() {
 	std::string contents;
@@ -323,16 +335,16 @@ void Parser::addToDerivationList(const std::string& stackContents, const std::st
 }
 
 void Parser::addError() {
-	SyntaxError error = { tokenIndex , consumedToken, lookAheadToken };
+	SyntaxError error = { consumedToken.tokenLine , consumedToken, lookAheadToken };
 
 	bool isDuplicate;
 
-	// Logic to avoid outputing duplcate errors
-	if (errors.size() == 0) {
+	// Logic to avoid outputing duplcate syntaxErrors
+	if (syntaxErrors.size() == 0) {
 		isDuplicate = false;
 	} else {
 		// Compare the top error with the current error
-		SyntaxError topError = errors.at(errors.size() - 1);
+		SyntaxError topError = syntaxErrors.at(syntaxErrors.size() - 1);
 		isDuplicate = error.tokenPosition == topError.tokenPosition
 			&& error.token.tokenLine == topError.token.tokenLine
 			&& error.token.lexeme == topError.token.lexeme;
@@ -341,7 +353,7 @@ void Parser::addError() {
 	// If this is not a duplicate error, add it to the error list
 	if (!isDuplicate) {
 		// Add the error to the error list
-		errors.push_back(error);
+		syntaxErrors.push_back(error);
 	}
 }
 

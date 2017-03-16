@@ -27,9 +27,6 @@
     <ClInclude Include="..\comp442_compilers\Utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\comp442_compilers\SemanticContext.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -104,7 +101,7 @@
     <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\comp442_compilers\SemanticAction.cpp">
+    <ClCompile Include="..\comp442_compilers\SemanticActions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

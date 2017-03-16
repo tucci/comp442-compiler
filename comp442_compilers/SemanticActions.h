@@ -1,9 +1,16 @@
 #ifndef SEMANTIC_ACTION_H
 #define SEMANTIC_ACTION_H
 
+// TODO: rewrite this in stdafx
 #include "SemanticSymbol.h"
 #include "SymbolTable.h"
+#include "SymbolTableData.h"
 #include "Token.h"
+
+struct SemanticError {
+	int tokenLine;// the line it is defined
+	std::string message; // the message for this semantic error
+};
 
 // A simple container that gets passed to each semantic action
 struct SemanticActionContainer {
@@ -12,15 +19,21 @@ struct SemanticActionContainer {
 	SymbolTableRecord& top;
 	SymbolTable** currentTable;
 	const Token& token;
+	std::vector<SemanticError>& semanticErrors;
 };
 
 class SemanticActions {
 public:
 	// Map of action name to function pointers that call the action
 	static std::unordered_map<std::string, void (*)(SemanticActionContainer&)> ACTION_MAP;
-	static void performAction(const SemanticSymbol& symbol, std::vector<SymbolTableRecord>& semanticStack, SymbolTable** currentTable, const Token& token);
+	static void performAction(const SemanticSymbol& symbol,
+		std::vector<SymbolTableRecord>& semanticStack,
+		SymbolTable** currentTable,
+		const Token& token,
+		bool phase2,
+		std::vector<SemanticError>& semanticErrors);
 private:
-	// All over our semantic actions in the grammar
+	// All of our semantic actions in the grammar
 	static void createGlobalTable(SemanticActionContainer& container);
 	static void endGlobalTable(SemanticActionContainer& container);
 	static void createClassEntryAndTable(SemanticActionContainer& container);
@@ -39,6 +52,8 @@ private:
 
 	static void _goToParentScope(SemanticActionContainer& container);
 	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
+	static bool isRedefined(SymbolTableRecord& found, SymbolTableRecord& record);
+	static bool shouldSkip(const SemanticSymbol& symbol);
 	
 	
 };

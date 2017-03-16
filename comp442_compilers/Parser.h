@@ -17,16 +17,14 @@ struct SyntaxError {
 	Token lookaheadToken;
 };
 
+
 class Parser {
+	friend class Compiler;
 	friend class ParserGenerator;
 public:
 	~Parser();
 	// Parse method 
 	bool parse();
-	// Outputs the data about the fisrt/follow sets and parsing table
-	void outputParserDataToFile();
-	// Outputs the derivation and any errors
-	void outputAnalysis();
 private:
 	// Parser Generator will create this parser for us
 	Parser();
@@ -57,25 +55,33 @@ private:
 	std::vector<SymbolTableRecord> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
-	// The index of the current token
-	int tokenIndex;
+	// Flag to indicate if we are in phase 2 of the semantic checking
+	bool phase2;
 	// The list of syntax errors during parsing
-	std::vector<SyntaxError> errors;
+	std::vector<SyntaxError> syntaxErrors;
+	// The list of semantic erroors during parsing
+	std::vector<SemanticError> semanticErrors;
+	// Builds the symbol table
+	void buildSymbolTable();
+	// Outputs the data about the fisrt/follow sets and parsing table
+	void outputParserDataToFile();
+	// Outputs the derivation and any syntaxErrors
+	void outputAnalysis();
 	// Internally calls the lexer
 	void nextToken();
-	// Handles the errors
+	// Handles the syntaxErrors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
 	// Matches the terminal to the token from our lexer
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
 	// Creates the tokens complementary terminal depending on the non terminal. Used to convert num to integer sometimes
-	Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);
+	static Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);
 	// Gets the contents of the stack when called
 	std::string getStackContents();
 	// Adds a derivation to the current derivation list
 	void addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString);
-	// Helper method to add errors to our error list
+	// Helper method to add syntaxErrors to our error list
 	void addError();
 };
 
