@@ -3,9 +3,11 @@
 
 #include <queue>
 
-// TODO: output symbol table as html
-// TODO: figure out undefined ids/vars
-// TODO: figure out how to handle multiple defined var names/ 
+// TODO: output symbol table as html/file
+// TODO: figure out undefined id : variable/class/function
+// TODO: figure out member: data member, method, deeply nested
+// TODO: figure out how to handle forward/circular references/two phase
+// TODO: figure out how to handle multiple defined var names
 // TODO: figure out how to handle recursion
 // TODO: type check return statement
 // TODO: type check assignment statement

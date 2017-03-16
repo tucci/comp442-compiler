@@ -196,10 +196,6 @@ void Lexer::backupChar() {
 	}
 }
 
-// TODO: move to utils
-bool Lexer::isNewLine(char c) {
-	return c == '\n\r' || c == '\n' || c == '\r';
-}
 
 void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 

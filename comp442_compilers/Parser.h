@@ -67,6 +67,10 @@ private:
 	void outputParserDataToFile();
 	// Outputs the derivation and any syntaxErrors
 	void outputAnalysis();
+	// Outputs the symbol table to a file
+	void outputSymbolTable();
+	// Outputs the semantic errors
+	void outputSemanticErrors();
 	// Internally calls the lexer
 	void nextToken();
 	// Handles the syntaxErrors

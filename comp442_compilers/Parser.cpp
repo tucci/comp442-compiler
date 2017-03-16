@@ -34,7 +34,6 @@ bool Parser::parse() {
 		} else {
 			
 			if (x.isSemantic()) {
-				// TODO: figure out how to syntax handle syntaxErrors and skip it when we do semantic stuff
 				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
 				SemanticActions::performAction(semanticSymbol, semanticStack, &currentSymbolTable, consumedToken, phase2, semanticErrors);
 				parseStack.pop_back();	
@@ -308,14 +307,23 @@ void Parser::outputAnalysis() {
 		}
 		parserErrors << std::endl;
 	}
-
 	parserErrors.close();
-	// TODO: move these to there own methods
-	// Output symbol table
-	std::cout << symbolTable.toString();
+}
+
+void Parser::outputSymbolTable() {
+	std::ofstream symbolTableOutput;
+	symbolTableOutput.open("symbolTables.txt");
+	symbolTableOutput << symbolTable.toString();
+	symbolTableOutput.close();
+}
+
+void Parser::outputSemanticErrors() {
+	std::ofstream semanticErrorsOutput;
+	semanticErrorsOutput.open("semanticErrors.txt");
 	for (SemanticError& error : semanticErrors) {
-		std::cout << error.message << std::endl;
+		semanticErrorsOutput << error.message << std::endl;
 	}
+	semanticErrorsOutput.close();
 }
 
 

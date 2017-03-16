@@ -34,10 +34,13 @@ bool Compiler::analyzeSyntax() {
 	std::cout << "Analyzing Syntax..." << std::endl;
 	parser->buildSymbolTable();
 	bool parsedSuccessfully = parser->parse(); // Phase 2 parse
+	
 
 	if (writeOutputs) {
 		parser->outputAnalysis();
 		lexer->writeTokensToFile();
+		parser->outputSymbolTable();
+		parser->outputSemanticErrors();
 	}
 
 	if (parsedSuccessfully) {
