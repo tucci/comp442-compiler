@@ -111,13 +111,16 @@ struct FunctionData {
 	};
 };
 
+struct Attributes {
+	Expression expr;
+};
 
 // Forward declration
 class SymbolTable;
 
 // A simple record that will go into the symbol tables
 struct SymbolTableRecord {
-	// Whether this identifier has been declared properly
+	// TODO: implment Whether this identifier has been declared properly
 	bool properlyDeclared;
 	// The name of this symbol
 	std::string name;
@@ -133,6 +136,10 @@ struct SymbolTableRecord {
 	int definedLocation;
 	// The address of the element in memory
 	int address;
+
+	// The attributes of this semantic record
+	// Used to build up expressions and other values while parsing
+	Attributes attr;
 
 	std::string toString() {
 

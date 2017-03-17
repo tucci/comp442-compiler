@@ -149,6 +149,9 @@
     <ClInclude Include="SemanticActions.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
+    <ClInclude Include="Expression.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -200,6 +203,9 @@
       <Filter>Source Files\grammar</Filter>
     </ClCompile>
     <ClCompile Include="SemanticActions.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
   </ItemGroup>
