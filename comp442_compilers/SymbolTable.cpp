@@ -28,7 +28,8 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	if (parent != NULL) {
 		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
 		addedRecord->scope->parent = parent;
-		addedRecord->scope->tableTagName = parent->tableTagName + "." + identifier;
+		addedRecord->scope->resolvedName = parent->resolvedName + "." + identifier;
+		addedRecord->scope->name = identifier;
 	}
 	// Return a pointer to this table
 	return addedRecord;
@@ -50,7 +51,7 @@ std::string SymbolTable::toString() {
 	while (queue.size() > 0) {
 		SymbolTable* n = queue.front();
 		queue.pop();
-		output += "\nTag: " + n->tableTagName + "\n";
+		output += "\nTag: " + n->resolvedName + "\n";
 		for (auto record : n->table) {
 			SymbolTable* scope = record.second.scope.get();
 			output += record.first + " -> " + record.second.toString();

@@ -47,9 +47,8 @@ private:
 	static void createFuncEntryAndTable(SemanticActionContainer& container);
 	static void endFuncEntryAndTable(SemanticActionContainer& container);
 	static void startFuncDef(SemanticActionContainer& container);
-
 	static void checkTypeGlobal(SemanticActionContainer& container);
-
+	static void checkCircular(SemanticActionContainer& container);
 	static void storeId(SemanticActionContainer& container);
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
@@ -60,7 +59,9 @@ private:
 	static void _goToScope(SemanticActionContainer& container, SymbolTableRecord* record);
 	static bool _isRedefined(SymbolTableRecord& found, SymbolTableRecord& record);
 	static bool _shouldSkip(const SemanticSymbol& symbol);
-	
+	static bool _isCircularDependent(SymbolTable& global, SymbolTable& firstTable, SymbolTable& dependentTable, const std::string& dependency);
+	static bool _isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency);
+	static void _unmarkAllTables(SymbolTable& global);
 	
 };
 

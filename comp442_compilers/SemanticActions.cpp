@@ -19,9 +19,6 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
                                     bool phase2, std::vector<SemanticError>& semanticErrors) {
 
 	context.inPhase2 = phase2;
-	if (phase2) {
-		std::cout << "error check on";
-	}
 	if (!_shouldSkip(symbol)) {
 		if (semanticStack.empty()) {
 			semanticStack.push_back(SymbolTableRecord());
@@ -188,6 +185,24 @@ void SemanticActions::checkTypeGlobal(SemanticActionContainer& container) {
 	}
 }
 
+void SemanticActions::checkCircular(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		// The class that the current definition is being defined in
+		std::string definedInClass = (*container.currentTable)->name; // Ex: ClassA
+		// Get the class name we are defining in this class
+		std::string className = container.token.lexeme; // ClassB
+
+		if (_isCircularDependent(container.globalTable, **container.currentTable, className)) {
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Circular dependency of " + className + " on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+		}
+		_unmarkAllTables(container.globalTable);
+
+	}
+}
+
 void SemanticActions::storeId(SemanticActionContainer& container) {
 	if (context.inParam) {
 		bool isRedefinition = false;
@@ -267,6 +282,53 @@ bool SemanticActions::_shouldSkip(const SemanticSymbol& symbol) {
 	return false;
 }
 
+bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& firstTable, SymbolTable& dependentTable, const std::string& dependency) {
+	
+	if (dependentTable.marked) {
+		return true;
+	}
+	dependentTable.marked = true;
+
+	std::pair<SymbolTableRecord*, bool> dependencyTable = global.find(dependency);
+	if (dependencyTable.second && dependencyTable.first->kind == SymbolKind::kind_class) {
+		SymbolTable* possibleDependentTable = dependencyTable.first->scope.get();
+		std::vector<SymbolTable*> possibleDepencies;
+
+		for (auto identifier : possibleDependentTable->table) {
+			if (identifier.second.typeStructure.type == SymbolType::type_class) {
+				std::pair<SymbolTableRecord*, bool> scope = global.find(identifier.second.typeStructure.className);
+				possibleDepencies.push_back(scope.first->scope.get());
+			}
+		}
+
+
+		for (auto d : possibleDepencies) {
+			// if the table is locally dependent on itself then this is table is circular because the other table is dependent on itself
+			if (_isCircularDependent(global, firstTable, *possibleDependentTable, d->name) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	// Table not found in global table
+	// Possible not defined
+	return false;
+	
+}
+
+bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency) {
+	return _isCircularDependent(global, dependentTable, dependentTable, dependency);
+}
+
+void SemanticActions::_unmarkAllTables(SymbolTable& global) {
+	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type record : global.table) {
+		if (record.second.kind == SymbolKind::kind_class) {
+			record.second.scope->marked = false;
+		}
+	}
+}
+
 
 // Map from semantic action name to function pointer that handles that action
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActions::ACTION_MAP = {
@@ -282,6 +344,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 	{ "#endFuncEntryAndTable#",		&SemanticActions::endFuncEntryAndTable },
 	{ "#startFuncDef#",				&SemanticActions::startFuncDef },
 	{ "#checkTypeGlobal#",			&SemanticActions::checkTypeGlobal },
+	{ "#checkCircular#",			&SemanticActions::checkCircular },
 	{ "#storeId#",					&SemanticActions::storeId },
 	{ "#storeType#",				&SemanticActions::storeType },
 	{ "#storeArraySize#",			&SemanticActions::storeArraySize },

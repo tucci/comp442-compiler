@@ -12,6 +12,7 @@
 // TODO: type check function calls params have right amount and types
 class SymbolTable {
 public:
+	friend class SemanticActions;
 	// Create a symbol table with no parent
 	SymbolTable();
 	~SymbolTable();
@@ -31,10 +32,15 @@ public:
 	SymbolTable* parent;
 	
 	// A name to be added to the table for easier outputing
-	std::string tableTagName;
+	std::string resolvedName;
+	// The base name for this table
+	std::string name;
 private:
-	// TODO function overloading may be allowed, storing the name as a key might not work
 	std::unordered_map<std::string, SymbolTableRecord> table;
+	// Used during circular table
+	bool marked;
+
+	
 };
 
 #endif // !SYMBOL_TABLE_H

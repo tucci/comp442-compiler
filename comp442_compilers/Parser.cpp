@@ -2,7 +2,8 @@
 
 
 Parser::Parser() {
-	globalTable.tableTagName = "Global";
+	globalTable.resolvedName = "Global";
+	globalTable.name = "Global";
 	currentSymbolTable = &globalTable;
 }
 
