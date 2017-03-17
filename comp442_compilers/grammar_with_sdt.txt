@@ -14,7 +14,7 @@ varDecl					-> type #storeType# id #storeId# varDeclRest
 varDeclNoId				-> typeNoId #storeType# id #storeId# varDeclRest
 varDeclRest				-> arraySizeList ; #createVariableEntry#
 
-varFuncDefList			-> type #storeType# id #storeId# varFuncDefListRest varFuncDefList
+varFuncDefList			-> type #checkCircular# #storeType# id #storeId# varFuncDefListRest varFuncDefList
 varFuncDefList			-> EPSILON
 varFuncDefListRest		-> varDeclRest
 varFuncDefListRest		-> funcDefRest
