@@ -21,6 +21,19 @@ std::pair<SymbolTableRecord*, bool> SymbolTable::find(const std::string& identif
 	return std::make_pair<SymbolTableRecord*, bool>(&found->second, true);
 }
 
+std::pair<SymbolTableRecord*, bool> SymbolTable::findInParents(const std::string& identifier) {
+	std::unordered_map<std::string, SymbolTableRecord>::iterator found = table.find(identifier);
+
+	if (found == table.end()) {
+		if (parent != NULL) {
+			return parent->findInParents(identifier);
+		}
+		return std::make_pair<SymbolTableRecord*, bool>(NULL, false);
+	}
+	// Identifer is found, and return a pointer to it
+	return std::make_pair<SymbolTableRecord*, bool>(&found->second, true);
+}
+
 SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent) {
 	// TODO: figure out if how we want to deal with records that are already in the table
 	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);

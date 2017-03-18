@@ -1,5 +1,6 @@
 #ifndef SYMBOL_TABLE_DATA_H
 #define SYMBOL_TABLE_DATA_H
+#include "Statement.h"
 
 
 // List of symbols kinds
@@ -113,6 +114,7 @@ struct FunctionData {
 
 struct Attributes {
 	Expression expr;
+	Statement statmenent;
 };
 
 // Forward declration
@@ -138,7 +140,7 @@ struct SymbolTableRecord {
 	int address;
 
 	// The attributes of this semantic record
-	// Used to build up expressions and other values while parsing
+	// Used to build up expressions/statments and other values while parsing
 	Attributes attr;
 
 	std::string toString() {

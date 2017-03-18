@@ -2,9 +2,9 @@
 #define SYMBOL_TABLE_H
 
 
-// TODO: figure out undefined id : variable/class/function
+// TODO: figure out undefined id : variable/function
 // TODO: figure out member: data member, method, deeply nested
-// TODO: figure out how to handle forward/circular references/two phase
+// TODO: figure out ids that are used before they are defined
 // TODO: figure out how to handle multiple defined var names
 // TODO: figure out how to handle recursion
 // TODO: type check return statement
@@ -19,6 +19,9 @@ public:
 	// Finds the given identifer into the symbol table
 	// returns a pair, where the second value is if the value is found, and the first value is a pointer to the record
 	std::pair<SymbolTableRecord*, bool> find(const std::string& identifier);
+	// Finds the given identifer into the symbol table or parent tables
+	// returns a pair, where the second value is if the value is found, and the first value is a pointer to the record
+	std::pair<SymbolTableRecord*, bool> findInParents(const std::string& identifier);
 	// Adds the given record with the identifer to the symbol table
 	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent=NULL);
 	// Remove the record if it the identifer is in the symbol table. Returns true if the deletion was successful, false otherwise

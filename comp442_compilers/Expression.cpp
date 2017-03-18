@@ -3,23 +3,42 @@
 
 
 Expression::Expression() {
+	isFunc = false;
 }
 
-Expression::Expression(std::string fullName) {
-	// TODO: implment this, or do we even need this
-}
 
 
 Expression::~Expression() {
 }
 
-void Expression::addIdNest(std::string id) {
-	fragments.push_back({ true, false, id });
+void Expression::addVar(std::string id) {
+	ExpressionFragment fragment;
+	fragment.type = ExpressionFragmentType::fragment_var;
+	fragment.var.identifier = id;
+	fragments.push_back(fragment);
 }
 
-void Expression::addIndice(std::string id) {
-	fragments.push_back({ false, true, id });
+void Expression::addIndice(Expression subExpr) {
+	ExpressionFragment fragment;
+	fragment.type = ExpressionFragmentType::fragment_indice;
+	fragment.indiceValue = subExpr;
+	fragments.push_back(fragment);
 }
+
+void Expression::addNumeric(std::string numeric) {
+	ExpressionFragment fragment;
+	fragment.type = ExpressionFragmentType::fragment_numeric;
+	fragment.numericValue = numeric;
+	fragments.push_back(fragment);
+}
+
+void Expression::addOperator(std::string op) {
+	ExpressionFragment fragment;
+	fragment.type = ExpressionFragmentType::fragment_operator;
+	fragment.operatorValue = op;
+	fragments.push_back(fragment);
+}
+
 
 void Expression::setFunc(bool isFunc) {
 	this->isFunc = isFunc;
@@ -30,13 +49,18 @@ std::string Expression::toFullName() {
 	for (int i = 0; i < fragments.size(); ++i) {
 		ExpressionFragment fragment = fragments[i];
 		if (i == 0) {
-			fullName.append(fragment.value);
-		} else {
-			if (fragment.isId) {
-				fullName.append("." + fragment.value);
+			if (fragment.type == ExpressionFragmentType::fragment_var) {
+				fullName.append(fragment.var.identifier);
 			}
-			if (fragment.isIndice) {
-				fullName.append("[" + fragment.value + "]");
+			else if (fragment.type == ExpressionFragmentType::fragment_numeric) {
+				fullName.append(fragment.numericValue);
+			}
+		} else {
+			if (fragment.type == ExpressionFragmentType::fragment_var) {
+				fullName.append("." + fragment.var.identifier);
+			}
+			else if (fragment.type == ExpressionFragmentType::fragment_indice) {
+				fullName.append("[" + fragment.indiceValue.toFullName() + "]");
 			}
 		}
 	}
@@ -53,4 +77,5 @@ const std::vector<ExpressionFragment>& Expression::getFragments() {
 bool Expression::isFunction() {
 	return isFunc;
 }
+
 

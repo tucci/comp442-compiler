@@ -171,6 +171,7 @@
     <ClInclude Include="SemanticActions.h" />
     <ClInclude Include="SemanticSymbol.h" />
     <ClInclude Include="specification.h" />
+    <ClInclude Include="Statement.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="SymbolTableData.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terminal.h" />
     <ClInclude Include="token.h" />
+    <ClInclude Include="Variable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compiler.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="SemanticActions.cpp" />
     <ClCompile Include="SemanticSymbol.cpp" />
     <ClCompile Include="specification.cpp" />
+    <ClCompile Include="Statement.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -204,6 +207,7 @@
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="token.cpp" />
+    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="comp442_compilers.rc" />

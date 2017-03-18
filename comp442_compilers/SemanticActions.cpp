@@ -24,7 +24,8 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
 			semanticStack.push_back(SymbolTableRecord());
 		}
 		SymbolTableRecord& top = semanticStack.back();
-		SemanticActionContainer container = { symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors };
+		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors};
+
 		ACTION_MAP.at(symbol.getName())(container);
 	}
 }
@@ -40,7 +41,7 @@ void SemanticActions::endGlobalTable(SemanticActionContainer& container) {
 	// Pop the left over record
 	container.semanticStack.pop_back();
 }
-	  
+
 void SemanticActions::createClassEntryAndTable(SemanticActionContainer& container) {
 	// Add that this is a class type
 	container.top.kind = SymbolKind::kind_class;
@@ -49,8 +50,9 @@ void SemanticActions::createClassEntryAndTable(SemanticActionContainer& containe
 	if (!found.second && !context.inPhase2) {
 		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
 		_goToScope(container, &container.top);
-	} else {
-		if  (_isRedefined(*found.first, container.top)) {
+	}
+	else {
+		if (_isRedefined(*found.first, container.top)) {
 			context.skipClass = true;
 			if (context.inPhase2) {
 				SemanticError error;
@@ -58,24 +60,26 @@ void SemanticActions::createClassEntryAndTable(SemanticActionContainer& containe
 				error.message = "Class " + container.top.name + " redeclared on line " + std::to_string(error.tokenLine);
 				container.semanticErrors.push_back(error);
 			}
-			
-		} else {
+
+		}
+		else {
 			_goToScope(container, found.first);
 		}
 	}
-	
+
 	container.semanticStack.pop_back();
-	
+
 }
+
 void SemanticActions::endClassEntryAndTable(SemanticActionContainer& container) {
 	if (!context.skipClass) {
 		_goToParentScope(container);
 	}
 	context.skipClass = false;
 }
-	  
+
 void SemanticActions::createProgramTable(SemanticActionContainer& container) {
-	
+
 	// Add that this is a class type
 	container.top.kind = SymbolKind::kind_function;
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
@@ -84,24 +88,26 @@ void SemanticActions::createProgramTable(SemanticActionContainer& container) {
 		// add this record to our current table
 		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
 		_goToScope(container, &container.top);
-	} else {
+	}
+	else {
 		_goToScope(container, found.first);
 	}
-	
+
 	container.semanticStack.pop_back();
 }
 
 void SemanticActions::endProgramTable(SemanticActionContainer& container) {
 	_goToParentScope(container);
 }
-	  
+
 void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	container.top.kind = SymbolKind::kind_variable;
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
-	
+
 	if (!found.second && !context.inPhase2) {
 		(*container.currentTable)->addRecord(container.top.name, container.top);
-	} else {
+	}
+	else {
 		if (_isRedefined(*found.first, container.top)) {
 			if (context.inPhase2) {
 				SemanticError error;
@@ -111,7 +117,7 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 			}
 		}
 	}
-	
+
 	container.semanticStack.pop_back();
 }
 
@@ -136,7 +142,8 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 			paramRecord.typeStructure = param.first;
 			(*container.currentTable)->addRecord(paramRecord.name, paramRecord);
 		}
-	} else {
+	}
+	else {
 		_goToScope(container, found.first);
 	}
 	container.semanticStack.pop_back();
@@ -146,7 +153,7 @@ void SemanticActions::endFuncEntryAndTable(SemanticActionContainer& container) {
 	if (!context.skipFunction) {
 		_goToParentScope(container);
 	}
-	context.skipFunction= false;
+	context.skipFunction = false;
 }
 
 void SemanticActions::startFuncDef(SemanticActionContainer& container) {
@@ -168,7 +175,7 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 		}
 	}
 
-	
+
 }
 
 void SemanticActions::checkTypeGlobal(SemanticActionContainer& container) {
@@ -210,7 +217,7 @@ void SemanticActions::storeId(SemanticActionContainer& container) {
 		for (auto param : container.top.functionData.parameters) {
 			if (param.second == container.token.lexeme) {
 				if (context.inPhase2) {
-				isRedefinition = true;
+					isRedefinition = true;
 					// We have a redefinnition
 					SemanticError error;
 					error.tokenLine = container.token.tokenLine;
@@ -221,11 +228,13 @@ void SemanticActions::storeId(SemanticActionContainer& container) {
 		}
 		if (!isRedefinition) {
 			container.top.functionData.parameters.back().second = container.token.lexeme;
-		} else {
+		}
+		else {
 			// Remove this parameter from the list
 			container.top.functionData.parameters.pop_back();
 		}
-	} else {
+	}
+	else {
 		container.top.name = container.token.lexeme;
 		container.top.definedLocation = container.token.tokenIndex;
 	}
@@ -239,7 +248,8 @@ void SemanticActions::storeType(SemanticActionContainer& container) {
 		std::pair<TypeStruct, std::string>& param = container.top.functionData.parameters.back();
 		param.first.type = type;
 		param.first.className = className;
-	} else {
+	}
+	else {
 		container.top.typeStructure.type = type;
 		container.top.typeStructure.className = className;
 	}
@@ -251,12 +261,254 @@ void SemanticActions::storeArraySize(SemanticActionContainer& container) {
 		std::pair<TypeStruct, std::string>& param = container.top.functionData.parameters.back();
 		param.first.dimensions.push_back(std::stoi(container.token.lexeme));
 		param.first.structure = SymbolStructure::struct_array;
-	} else {
+	}
+	else {
 		container.top.typeStructure.dimensions.push_back(std::stoi(container.token.lexeme));
 		// Set this type structure to an array since we know that it has some dimension
 		container.top.typeStructure.structure = SymbolStructure::struct_array;
 	}
 }
+
+void SemanticActions::addIdExprFragment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.addVar(container.token.lexeme);
+	}
+}
+
+
+void SemanticActions::addNumericExprFragment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.addNumeric(container.token.lexeme);
+	}
+}
+
+void SemanticActions::setFuncExprFragment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.setFunc(true);
+	}
+
+}
+
+void SemanticActions::addSignExprFragment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.setFunc(true);
+	}
+}
+
+void SemanticActions::operatorExprFragment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.addOperator(container.token.lexeme);
+	}
+
+}
+
+
+
+void SemanticActions::checkExpr(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		checkVar(container);
+		std::cout << "expr";
+	}
+}
+
+void SemanticActions::pushExpr(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		SymbolTableRecord record;
+		container.semanticStack.push_back(record);
+	}
+}
+
+void SemanticActions::popExpr(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		SymbolTableRecord popped = container.top;
+		checkVar(container);
+		container.semanticStack.back().attr.expr.addIndice(popped.attr.expr);
+	}
+}
+
+void SemanticActions::pushVar(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		SymbolTableRecord record;
+		container.semanticStack.push_back(record);
+	}
+}
+
+
+void SemanticActions::popVar(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		// get the first id, check if that id is in the current table
+		// If it isn't then check parents. Keep going until found. 
+		// If not found -> undefined var/func error
+		// If found then it is either a primative int/float or class
+		// if it is int/float, then type check/good and pop this off the stack
+		// if it class, then check if that class has that identifier, if it doesnt -> error, undefined
+		// keep going until we hit error or end. If we are at end and everything is defined then check if it is a func
+		// try to see if the corresponding table record is also a function. If not, then error -> identifier is not a function
+
+		Expression expr = container.top.attr.expr;
+		std::vector<ExpressionFragment> fragments = expr.getFragments();
+
+		SymbolTable* currentScope = *container.currentTable;
+		std::string lastId;
+		// This expression is nested	
+		for (int i = 0; i < fragments.size(); i++) {
+			ExpressionFragment fragment = fragments[i];
+
+			if (fragment.type == ExpressionFragmentType::fragment_numeric) {
+				// this is an simple int/float
+				container.semanticStack.pop_back();
+				return;
+			}
+			if (fragment.type == ExpressionFragmentType::fragment_indice) {
+				std::pair<SymbolTableRecord*, bool> fragmentFound = (currentScope)->find(lastId);
+				if (fragmentFound.second) {
+					if (fragmentFound.first->typeStructure.structure != SymbolStructure::struct_array) {
+						// Not found, this variable is undefined
+						SemanticError error;
+						error.tokenLine = container.token.tokenLine;
+						error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
+						container.semanticErrors.push_back(error);
+						container.semanticStack.pop_back();
+						return;
+					}
+				} else {
+					// Not found, this variable is undefined
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+					container.semanticStack.pop_back();
+					return;
+				}
+
+			}
+
+			if (fragment.type == ExpressionFragmentType::fragment_var) {
+				std::pair<SymbolTableRecord*, bool> fragmentFound = (currentScope)->findInParents(fragments[i].var.identifier);
+
+				if (fragmentFound.second) {
+					lastId = fragmentFound.first->name;
+					switch (fragmentFound.first->typeStructure.structure) {
+					case struct_simple: {
+						// Type class
+						if (fragmentFound.first->typeStructure.type == SymbolType::type_class) {
+							// Get the symbol table for this class type
+							std::string className = fragmentFound.first->typeStructure.className;
+							currentScope = container.globalTable.find(className).first->scope.get();
+						}
+						// Type int/float
+						else {
+							if (i == fragments.size() - 1) {
+								container.semanticStack.pop_back();
+								return;
+							} else {
+								SemanticError error;
+								error.tokenLine = container.token.tokenLine;
+								error.message = "Identifier " + expr.toFullName() + " is not an object on line " + std::to_string(error.tokenLine);
+								container.semanticErrors.push_back(error);
+								container.semanticStack.pop_back();
+								return;
+							}
+
+						}
+						break;
+					}
+					case struct_array: {
+						// Type class
+						if (fragmentFound.first->typeStructure.type == SymbolType::type_class) {
+							if (i < fragments.size() - 1 && fragments[i + 1].type == ExpressionFragmentType::fragment_indice) {
+								i++;
+								// Get the symbol table for this class type
+								std::string className = fragmentFound.first->typeStructure.className;
+								currentScope = container.globalTable.find(className).first->scope.get();
+							} else {
+								SemanticError error;
+								error.tokenLine = container.token.tokenLine;
+								error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
+								container.semanticErrors.push_back(error);
+
+							}
+						} else {
+							// Simple int/float
+
+						}
+						break;
+
+					}
+					default: {
+						break;
+					};
+					}
+
+				} else {
+
+					// Not found, this variable is undefined
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Identifier " + expr.toFullName() + " is undefined on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+					container.semanticStack.pop_back();
+					return;
+				}
+
+			}
+		}
+	}
+}
+
+
+
+void SemanticActions::pushStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		SymbolTableRecord record;
+		container.semanticStack.push_back(record);
+	}
+}
+
+void SemanticActions::popStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		if (context.inPhase2) {
+			container.semanticStack.pop_back();
+		}
+	}
+}
+
+void SemanticActions::assignmentStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::assignStat;
+	}
+}
+
+void SemanticActions::forStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::forStat;
+	}
+}
+
+void SemanticActions::ifelseStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::ifelseStat;
+	}
+}
+
+void SemanticActions::getStatement(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::getStat;
+	}
+}
+
+void SemanticActions::putStatment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::putStat;
+	}
+}
+
+void SemanticActions::returnStatment(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statmenent.statType = StatmentType::returnStat;
+	}
+}
+
 
 // --------------------------------- INTERNAL HELPER METHODS ----------------------------------
 void SemanticActions::_goToParentScope(SemanticActionContainer& container) {
@@ -276,14 +528,14 @@ bool SemanticActions::_shouldSkip(const SemanticSymbol& symbol) {
 	if (context.skipClass && symbol.getName() != "#endClassEntryAndTable#") {
 		return true;
 	}
-	if (context.skipFunction&& symbol.getName() != "#endFuncEntryAndTable#") {
+	if (context.skipFunction && symbol.getName() != "#endFuncEntryAndTable#") {
 		return true;
 	}
 	return false;
 }
 
 bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& firstTable, SymbolTable& dependentTable, const std::string& dependency) {
-	
+
 	if (dependentTable.marked) {
 		return true;
 	}
@@ -291,20 +543,20 @@ bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& fir
 
 	std::pair<SymbolTableRecord*, bool> dependencyTable = global.find(dependency);
 	if (dependencyTable.second && dependencyTable.first->kind == SymbolKind::kind_class) {
-		SymbolTable* possibleDependentTable = dependencyTable.first->scope.get();
-		std::vector<SymbolTable*> possibleDepencies;
+		SymbolTable* possibleDependentTable = dependencyTable.first->scope.getp();
+		std::vector<SymbolTable*> possibleDependencies;
 
 		for (auto identifier : possibleDependentTable->table) {
 			if (identifier.second.typeStructure.type == SymbolType::type_class) {
 				std::pair<SymbolTableRecord*, bool> scope = global.find(identifier.second.typeStructure.className);
-				possibleDepencies.push_back(scope.first->scope.get());
+				possibleDependencies.push_back(scope.first->scope.get());
 			}
 		}
 
 
-		for (auto d : possibleDepencies) {
+		for (auto d : possibleDependencies) {
 			// if the table is locally dependent on itself then this is table is circular because the other table is dependent on itself
-			if (_isCircularDependent(global, firstTable, *possibleDependentTable, d->name) ) {
+			if (_isCircularDependent(global, firstTable, *possibleDependentTable, d->name)) {
 				return true;
 			}
 		}
@@ -314,7 +566,7 @@ bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& fir
 	// Table not found in global table
 	// Possible not defined
 	return false;
-	
+
 }
 
 bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency) {
@@ -332,20 +584,44 @@ void SemanticActions::_unmarkAllTables(SymbolTable& global) {
 
 // Map from semantic action name to function pointer that handles that action
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActions::ACTION_MAP = {
-	{ "#createGlobalTable#",		&SemanticActions::createGlobalTable },
-	{ "#endGlobalTable#",			&SemanticActions::endGlobalTable },
-	{ "#createClassEntryAndTable#",	&SemanticActions::createClassEntryAndTable },
-	{ "#endClassEntryAndTable#",	&SemanticActions::endClassEntryAndTable },
-	{ "#createProgramTable#",		&SemanticActions::createProgramTable },
-	{ "#endProgramTable#",			&SemanticActions::endProgramTable },
-	{ "#createVariableEntry#",		&SemanticActions::createVariableEntry },
-	{ "#addParameter#",				&SemanticActions::addParameter },
-	{ "#createFuncEntryAndTable#",	&SemanticActions::createFuncEntryAndTable },
-	{ "#endFuncEntryAndTable#",		&SemanticActions::endFuncEntryAndTable },
-	{ "#startFuncDef#",				&SemanticActions::startFuncDef },
-	{ "#checkTypeGlobal#",			&SemanticActions::checkTypeGlobal },
-	{ "#checkCircular#",			&SemanticActions::checkCircular },
-	{ "#storeId#",					&SemanticActions::storeId },
-	{ "#storeType#",				&SemanticActions::storeType },
-	{ "#storeArraySize#",			&SemanticActions::storeArraySize },
-};
+			{"#createGlobalTable#", &SemanticActions::createGlobalTable},
+			{"#endGlobalTable#", &SemanticActions::endGlobalTable},
+			{"#createClassEntryAndTable#", &SemanticActions::createClassEntryAndTable},
+			{"#endClassEntryAndTable#", &SemanticActions::endClassEntryAndTable},
+			{"#createProgramTable#", &SemanticActions::createProgramTable},
+			{"#endProgramTable#", &SemanticActions::endProgramTable},
+			{"#createVariableEntry#", &SemanticActions::createVariableEntry},
+			{"#addParameter#", &SemanticActions::addParameter},
+			{"#createFuncEntryAndTable#", &SemanticActions::createFuncEntryAndTable},
+			{"#endFuncEntryAndTable#", &SemanticActions::endFuncEntryAndTable},
+			{"#startFuncDef#", &SemanticActions::startFuncDef},
+			{"#checkTypeGlobal#", &SemanticActions::checkTypeGlobal},
+			{"#checkCircular#", &SemanticActions::checkCircular},
+			{ "#storeId#", &SemanticActions::storeId },
+			{ "#storeType#", &SemanticActions::storeType },
+			{ "#storeArraySize#", &SemanticActions::storeArraySize },
+			// Expression building
+			{"#addIdExprFragment#", &SemanticActions::addIdExprFragment},
+			{"#addNumericExprFragment#", &SemanticActions::addNumericExprFragment},
+			{"#operatorExprFragment#", &SemanticActions::operatorExprFragment},
+			{"#setFuncExprFragment#", &SemanticActions::setFuncExprFragment},
+			{"#addSignExprFragment#", &SemanticActions::addSignExprFragment},
+			{"#checkExpr#", &SemanticActions::checkExpr},
+			{"#pushExpr#", &SemanticActions::pushExpr},
+			{"#popExpr#", &SemanticActions::popExpr},
+			// Var building
+			{ "#pushVar#", &SemanticActions::pushVar},
+			{ "#popVar#", &SemanticActions::popVar},
+			// Statement building
+			{"#pushStatement#", &SemanticActions::pushStatement },
+			{"#popStatement#", &SemanticActions::popStatement},
+			{"#assignmentStatement#", &SemanticActions::assignmentStatement},
+			{"#forStatement#", &SemanticActions::forStatement},
+			{"#ifelseStatement#", &SemanticActions::ifelseStatement},
+			{"#getStatement#", &SemanticActions::getStatement},
+			{"#putStatment#", &SemanticActions::putStatment},
+			{"#returnStatment#", &SemanticActions::returnStatment},
+
+			
+			
+	};

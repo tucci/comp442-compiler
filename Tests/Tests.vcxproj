@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
+    <ClCompile Include="..\comp442_compilers\Expression.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
@@ -168,9 +169,11 @@
     <ClCompile Include="..\comp442_compilers\SemanticActions.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
+    <ClCompile Include="..\comp442_compilers\Statement.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp" />
     <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
+    <ClCompile Include="..\comp442_compilers\Variable.cpp" />
     <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />

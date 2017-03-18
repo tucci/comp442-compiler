@@ -53,6 +53,33 @@ private:
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
 
+	// Expression building actions
+	static void addIdExprFragment(SemanticActionContainer& container);
+	static void addNumericExprFragment(SemanticActionContainer& container);
+	static void setFuncExprFragment(SemanticActionContainer& container);
+	static void addSignExprFragment(SemanticActionContainer& container);
+	static void operatorExprFragment(SemanticActionContainer& container);
+	static void checkExpr(SemanticActionContainer& container);
+	static void pushExpr(SemanticActionContainer& container);
+	static void popExpr(SemanticActionContainer& container);
+
+	// Variable building acction
+	static void pushVar(SemanticActionContainer& container);
+	static void popVar(SemanticActionContainer& container);
+
+
+	// Statemtent building actions
+	static void pushStatement(SemanticActionContainer& container);
+	static void popStatement(SemanticActionContainer& container);
+	static void assignmentStatement(SemanticActionContainer& container);
+	static void forStatement(SemanticActionContainer& container);
+	static void ifelseStatement(SemanticActionContainer& container);
+	static void getStatement(SemanticActionContainer& container);
+	static void putStatment(SemanticActionContainer& container);
+	static void returnStatment(SemanticActionContainer& container);
+
+	
+
 
 	// Internal methods
 	static void _goToParentScope(SemanticActionContainer& container);
@@ -67,4 +94,5 @@ private:
 
 
 #endif // !SEMANTIC_ACTION
+
 

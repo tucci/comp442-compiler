@@ -152,6 +152,12 @@
     <ClInclude Include="Expression.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
+    <ClInclude Include="Statement.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -206,6 +212,12 @@
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
     <ClCompile Include="Expression.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
   </ItemGroup>
