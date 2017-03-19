@@ -3,9 +3,6 @@
 
 
 // TODO: figure out undefined id : variable/function
-// TODO: figure out member: data member, method, deeply nested
-// TODO: figure out ids that are used before they are defined
-// TODO: figure out how to handle multiple defined var names
 // TODO: figure out how to handle recursion
 // TODO: type check return statement
 // TODO: type check assignment statement

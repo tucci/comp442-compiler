@@ -298,8 +298,6 @@ void SemanticActions::operatorExprFragment(SemanticActionContainer& container) {
 
 }
 
-
-
 void SemanticActions::checkExpr(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 
@@ -345,159 +343,41 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 void SemanticActions::pushVar(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		SymbolTableRecord record;
-		record.attr.type = AttributeType::attr_var;
-		
+		record.attr.type = AttributeType::attr_var;		
 		container.semanticStack.push_back(record);
 	}
 }
 
 void SemanticActions::popVar(SemanticActionContainer& container) {
 	if (context.inPhase2) {
+		_checkVarError(container);
+
 		SymbolTableRecord popped = container.top;
 		std::cout << popped.attr.var.toFullName() << std::endl;
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
 		switch (top.attr.type) {
-			case attr_expr: {
-				top.attr.expr.addVar(popped.attr.var);
-				break;
-			}
-			case attr_statement: {
-				switch (top.attr.statmenent.statType) {
-					case assignStat: top.attr.statmenent.statData.assignStatement.var = popped.attr.var; break;
-					case forStat: break;
-					case ifelseStat: break;
-					case getStat: top.attr.statmenent.statData.getStatement.var = popped.attr.var;break;
-					case putStat: break;
-					case returnStat: break;
-					default: ;
-				}
-				break;
-			} ;
-			case attr_var: {
-				break;
-			}
-			default: ;
+		case attr_expr: {
+			top.attr.expr.addVar(popped.attr.var);
+			break;
 		}
-
-		//	// get the first id, check if that id is in the current table
-		//	// If it isn't then check parents. Keep going until found. 
-		//	// If not found -> undefined var/func error
-		//	// If found then it is either a primative int/float or class
-		//	// if it is int/float, then type check/good and pop this off the stack
-		//	// if it class, then check if that class has that identifier, if it doesnt -> error, undefined
-		//	// keep going until we hit error or end. If we are at end and everything is defined then check if it is a func
-		//	// try to see if the corresponding table record is also a function. If not, then error -> identifier is not a function
-
-		//	Expression expr = container.top.attr.expr;
-		//	std::vector<ExpressionFragment> fragments = expr.getFragments();
-
-		//	SymbolTable* currentScope = *container.currentTable;
-		//	std::string lastId;
-		//	// This expression is nested	
-		//	for (int i = 0; i < fragments.size(); i++) {
-		//		ExpressionFragment fragment = fragments[i];
-
-		//		if (fragment.type == ExpressionFragmentType::fragment_numeric) {
-		//			// this is an simple int/float
-		//			container.semanticStack.pop_back();
-		//			return;
-		//		}
-		//		if (fragment.type == ExpressionFragmentType::fragment_indice) {
-		//			std::pair<SymbolTableRecord*, bool> fragmentFound = (currentScope)->find(lastId);
-		//			if (fragmentFound.second) {
-		//				if (fragmentFound.first->typeStructure.structure != SymbolStructure::struct_array) {
-		//					// Not found, this variable is undefined
-		//					SemanticError error;
-		//					error.tokenLine = container.token.tokenLine;
-		//					error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
-		//					container.semanticErrors.push_back(error);
-		//					container.semanticStack.pop_back();
-		//					return;
-		//				}
-		//			} else {
-		//				// Not found, this variable is undefined
-		//				SemanticError error;
-		//				error.tokenLine = container.token.tokenLine;
-		//				error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
-		//				container.semanticErrors.push_back(error);
-		//				container.semanticStack.pop_back();
-		//				return;
-		//			}
-
-		//		}
-
-		//		if (fragment.type == ExpressionFragmentType::fragment_var) {
-		//			std::pair<SymbolTableRecord*, bool> fragmentFound = (currentScope)->findInParents(fragments[i].var.identifier);
-
-		//			if (fragmentFound.second) {
-		//				lastId = fragmentFound.first->name;
-		//				switch (fragmentFound.first->typeStructure.structure) {
-		//				case struct_simple: {
-		//					// Type class
-		//					if (fragmentFound.first->typeStructure.type == SymbolType::type_class) {
-		//						// Get the symbol table for this class type
-		//						std::string className = fragmentFound.first->typeStructure.className;
-		//						currentScope = container.globalTable.find(className).first->scope.get();
-		//					}
-		//					// Type int/float
-		//					else {
-		//						if (i == fragments.size() - 1) {
-		//							container.semanticStack.pop_back();
-		//							return;
-		//						} else {
-		//							SemanticError error;
-		//							error.tokenLine = container.token.tokenLine;
-		//							error.message = "Identifier " + expr.toFullName() + " is not an object on line " + std::to_string(error.tokenLine);
-		//							container.semanticErrors.push_back(error);
-		//							container.semanticStack.pop_back();
-		//							return;
-		//						}
-
-		//					}
-		//					break;
-		//				}
-		//				case struct_array: {
-		//					// Type class
-		//					if (fragmentFound.first->typeStructure.type == SymbolType::type_class) {
-		//						if (i < fragments.size() - 1 && fragments[i + 1].type == ExpressionFragmentType::fragment_indice) {
-		//							i++;
-		//							// Get the symbol table for this class type
-		//							std::string className = fragmentFound.first->typeStructure.className;
-		//							currentScope = container.globalTable.find(className).first->scope.get();
-		//						} else {
-		//							SemanticError error;
-		//							error.tokenLine = container.token.tokenLine;
-		//							error.message = "Identifier " + expr.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
-		//							container.semanticErrors.push_back(error);
-
-		//						}
-		//					} else {
-		//						// Simple int/float
-
-		//					}
-		//					break;
-
-		//				}
-		//				default: {
-		//					break;
-		//				};
-		//				}
-
-		//			} else {
-
-		//				// Not found, this variable is undefined
-		//				SemanticError error;
-		//				error.tokenLine = container.token.tokenLine;
-		//				error.message = "Identifier " + expr.toFullName() + " is undefined on line " + std::to_string(error.tokenLine);
-		//				container.semanticErrors.push_back(error);
-		//				container.semanticStack.pop_back();
-		//				return;
-		//			}
-
-		//		}
-		//	}
-		//}
+		case attr_statement: {
+			switch (top.attr.statmenent.statType) {
+			case assignStat: top.attr.statmenent.statData.assignStatement.var = popped.attr.var; break;
+			case forStat: break;
+			case ifelseStat: break;
+			case getStat: top.attr.statmenent.statData.getStatement.var = popped.attr.var; break;
+			case putStat: break;
+			case returnStat: break;
+			default:;
+			}
+			break;
+		};
+		case attr_var: {
+			break;
+		}
+		default:;
+		}
 	}
 }
 
@@ -505,6 +385,9 @@ void SemanticActions::addToVar(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		VariableFragment fragment;
 		fragment.identifier = container.token.lexeme;
+		if (container.top.attr.var.vars.size() == 0) {
+			container.top.attr.var.location = container.token.tokenIndex;
+		}
 		container.top.attr.var.vars.push_back(fragment);
 	}
 }
@@ -637,6 +520,124 @@ void SemanticActions::_unmarkAllTables(SymbolTable& global) {
 			record.second.scope->marked = false;
 		}
 	}
+}
+
+void SemanticActions::_checkVarError(SemanticActionContainer& container) {
+	Variable var = container.top.attr.var;
+	VariableFragment varFragment;
+
+	SymbolTable* currentScope = (*container.currentTable);
+	std::string currentIdentifier;
+
+	for (int i = 0; i < var.vars.size(); ++i) {
+		varFragment = var.vars[i];
+		currentIdentifier = varFragment.identifier;
+		// Finds in current scope, or parent scopes
+		std::pair<SymbolTableRecord*, bool> found;// = currentScope->findInParents(currentIdentifier);
+		if (i == 0) {
+			found = currentScope->findInParents(currentIdentifier);
+		} else {
+			found = currentScope->find(currentIdentifier);
+		}
+		SymbolTableRecord* varDefinition = found.first;
+
+		if (!found.second) {
+			// Not found, this variable is undefined
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Identifier " + var.toFullName() + " is undefined on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+		} else {
+
+
+			if (varDefinition->kind == SymbolKind::kind_function && !var.isFunc) {
+				// The definition is a function, but it is not being used as a function
+				SemanticError error;
+				error.tokenLine = container.token.tokenLine;
+				error.message = "Identifier " + var.toFullName() + " is not a function on line " + std::to_string(error.tokenLine);
+				container.semanticErrors.push_back(error);
+			} else if (varDefinition->kind != SymbolKind::kind_function && var.isFunc) {
+				// The definition is not a function, but it is being used as a function
+				SemanticError error;
+				error.tokenLine = container.token.tokenLine;
+				error.message = "Identifier " + var.toFullName() + " is not a function on line " + std::to_string(error.tokenLine);
+				container.semanticErrors.push_back(error);
+			}
+
+			// If the var is being used before it has been declared
+			// If it is a function, then we can ignore it's location
+			if (varDefinition->kind != SymbolKind::kind_function && i == 0 && varDefinition->definedLocation > var.location) {
+				SemanticError error;
+				error.tokenLine = container.token.tokenLine;
+				error.message = "Identifier " + var.toFullName() + " is used before it is defined on line " + std::to_string(error.tokenLine);
+				container.semanticErrors.push_back(error);
+			}
+
+
+			switch (varDefinition->typeStructure.structure) {
+			case struct_simple: {
+				// trying to index a variable, but the variable is not an array
+				if (varFragment.indices.size() != 0) {
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Identifier " + var.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+				}
+				break;
+			}
+			case struct_array: {
+				//  Trying to use a array without indexing into it
+				if (varFragment.indices.size() == 0) {
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Identifier " + var.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+				} else {
+					// Compare dimension length 
+					// The dimensions are different
+					if (varDefinition->typeStructure.dimensions.size() != varFragment.indices.size()) {
+						SemanticError error;
+						error.tokenLine = container.token.tokenLine;
+						error.message = "Array " + var.toFullName() + " has wrong dimensions on line " + std::to_string(error.tokenLine);
+						container.semanticErrors.push_back(error);
+					} else {
+						// Compare each size in the dimension
+						// TODO: We cant compare sizes at compile time as we dont know what the values of the expressions are
+						//std::vector<int> dimensions = varDefinition->typeStructure.dimensions;
+						//for (int i = 0; i < dimensions.size(); ++i) {
+						//	//if (dimensions[i] != std::stoi(varFragment.indices[i]))
+						//}
+					}
+
+				}
+				break;
+			}
+			default:;
+			}
+
+			// This is a object
+			if (varDefinition->typeStructure.type == SymbolType::type_class) {
+				// We need to nest down the object structure
+				// Get the symbol table for this class type
+				std::string className = varDefinition->typeStructure.className;
+				currentScope = container.globalTable.find(className).first->scope.get();
+			} else {
+				// this is an int/float
+				if (var.vars.size() - i > 1) {
+					// However it is being used as it was an object
+					SemanticError error;
+					error.tokenLine = container.token.tokenLine;
+					error.message = "Identifier " + var.toFullName() + " is not an object on line " + std::to_string(error.tokenLine);
+					container.semanticErrors.push_back(error);
+					return; // Early return
+				}
+				
+				
+			}
+
+		}
+	}
+
 }
 
 

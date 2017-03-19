@@ -43,6 +43,7 @@ public:
 	~Variable();
 	std::vector<VariableFragment> vars;
 	std::string toFullName();
+	int location;
 	bool isFunc;
 
 };

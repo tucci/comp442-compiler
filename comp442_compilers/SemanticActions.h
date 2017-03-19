@@ -89,6 +89,8 @@ private:
 	static bool _isCircularDependent(SymbolTable& global, SymbolTable& firstTable, SymbolTable& dependentTable, const std::string& dependency);
 	static bool _isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency);
 	static void _unmarkAllTables(SymbolTable& global);
+	static void _checkVarError(SemanticActionContainer& container);
+	
 	
 };
 
