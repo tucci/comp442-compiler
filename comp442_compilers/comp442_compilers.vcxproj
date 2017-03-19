@@ -180,7 +180,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terminal.h" />
     <ClInclude Include="token.h" />
-    <ClInclude Include="Variable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compiler.cpp" />
@@ -207,7 +206,6 @@
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="token.cpp" />
-    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="comp442_compilers.rc" />

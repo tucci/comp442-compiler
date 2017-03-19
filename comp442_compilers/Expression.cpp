@@ -3,7 +3,6 @@
 
 
 Expression::Expression() {
-	isFunc = false;
 }
 
 
@@ -11,18 +10,12 @@ Expression::Expression() {
 Expression::~Expression() {
 }
 
-void Expression::addVar(std::string id) {
-	ExpressionFragment fragment;
-	fragment.type = ExpressionFragmentType::fragment_var;
-	fragment.var.identifier = id;
-	fragments.push_back(fragment);
-}
+void Expression::addVar(Variable var) {
+	ExpressionFragment exprFragment;
+	exprFragment.type = ExpressionFragmentType::fragment_var;
+	exprFragment.var = var;
+	fragments.push_back(exprFragment);
 
-void Expression::addIndice(Expression subExpr) {
-	ExpressionFragment fragment;
-	fragment.type = ExpressionFragmentType::fragment_indice;
-	fragment.indiceValue = subExpr;
-	fragments.push_back(fragment);
 }
 
 void Expression::addNumeric(std::string numeric) {
@@ -40,32 +33,23 @@ void Expression::addOperator(std::string op) {
 }
 
 
-void Expression::setFunc(bool isFunc) {
-	this->isFunc = isFunc;
-}
 
 std::string Expression::toFullName() {
 	std::string fullName;
 	for (int i = 0; i < fragments.size(); ++i) {
 		ExpressionFragment fragment = fragments[i];
-		if (i == 0) {
-			if (fragment.type == ExpressionFragmentType::fragment_var) {
-				fullName.append(fragment.var.identifier);
+		
+		if (fragment.type == ExpressionFragmentType::fragment_var) {
+			if (i != 0 && fragments.size() > 0 && fragments[i - 1].type != ExpressionFragmentType::fragment_operator) {
+				fullName.append(".");
 			}
-			else if (fragment.type == ExpressionFragmentType::fragment_numeric) {
-				fullName.append(fragment.numericValue);
-			}
-		} else {
-			if (fragment.type == ExpressionFragmentType::fragment_var) {
-				fullName.append("." + fragment.var.identifier);
-			}
-			else if (fragment.type == ExpressionFragmentType::fragment_indice) {
-				fullName.append("[" + fragment.indiceValue.toFullName() + "]");
-			}
+			fullName.append(fragment.var.toFullName());
+		} else if (fragment.type == ExpressionFragmentType::fragment_numeric) {
+			fullName.append(fragment.numericValue);
+		} else if (fragment.type == ExpressionFragmentType::fragment_operator) {
+			fullName.append(fragment.operatorValue);
 		}
-	}
-	if (isFunc) {
-		fullName.append("()");
+		
 	}
 	return fullName;
 }
@@ -74,8 +58,33 @@ const std::vector<ExpressionFragment>& Expression::getFragments() {
 	return fragments;
 }
 
-bool Expression::isFunction() {
-	return isFunc;
+
+Variable::Variable() {
+	isFunc = false;
+}
+
+Variable::~Variable() {
+}
+
+std::string Variable::toFullName() {
+	std::string varName;
+	for (int i = 0; i < vars.size(); ++i) {
+		VariableFragment frag = vars[i];
+		if (i == 0) {
+			varName.append(frag.identifier);
+		} else {
+			varName.append("." + frag.identifier);
+		}
+		for (Expression& indice : frag.indices) {
+			varName.append("[" + indice.toFullName() + "]");
+		}
+		
+	}
+	if (isFunc) {
+		varName.append("()");
+	}
+	
+	return varName;
 }
 
 

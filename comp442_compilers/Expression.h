@@ -6,47 +6,49 @@
 // student, parent, 0, name would all fragments
 
 
-
-
-
-
-
-
-
+class Variable;
 struct ExpressionFragment; 
 
 class Expression {	
-public:
-	Expression();
-	// Builds this expression from a full name string
+public:// Builds this expression from a full name string
 	// ex builds an expression object from the string student.parent[1].name()
+	Expression();
 	~Expression();
-	void addVar(std::string id);
-	void addIndice(Expression subExpr);
+	void addVar(Variable var);
 	void addNumeric(std::string numeric);
 	void addOperator(std::string op);
-	void setFunc(bool isFunc);
 	std::string toFullName();
 	const std::vector<ExpressionFragment>& getFragments();
-	bool isFunction();
 private:
-	std::vector<ExpressionFragment> fragments;
-	bool isFunc;
-	
+	std::vector<ExpressionFragment> fragments;	
 };
 
 
 
 enum ExpressionFragmentType {
 	fragment_var,
-	fragment_indice,
 	fragment_numeric,
 	fragment_operator
 };
 
+
+struct VariableFragment {
+	std::string identifier;
+	std::vector<Expression> indices;
+};
+
+class Variable {
+public:
+	Variable();
+	~Variable();
+	std::vector<VariableFragment> vars;
+	std::string toFullName();
+	bool isFunc;
+
+};
+
 struct ExpressionFragment {
 	ExpressionFragmentType type;
-	Expression indiceValue;
 	Variable var;
 	std::string numericValue;
 	std::string operatorValue;

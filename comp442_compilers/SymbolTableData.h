@@ -112,9 +112,17 @@ struct FunctionData {
 	};
 };
 
+enum AttributeType {
+	attr_expr,
+	attr_statement,
+	attr_var
+};
+
 struct Attributes {
+	AttributeType type;
 	Expression expr;
 	Statement statmenent;
+	Variable var;
 };
 
 // Forward declration

@@ -54,18 +54,18 @@ private:
 	static void storeArraySize(SemanticActionContainer& container);
 
 	// Expression building actions
-	static void addIdExprFragment(SemanticActionContainer& container);
 	static void addNumericExprFragment(SemanticActionContainer& container);
-	static void setFuncExprFragment(SemanticActionContainer& container);
 	static void addSignExprFragment(SemanticActionContainer& container);
 	static void operatorExprFragment(SemanticActionContainer& container);
 	static void checkExpr(SemanticActionContainer& container);
 	static void pushExpr(SemanticActionContainer& container);
 	static void popExpr(SemanticActionContainer& container);
 
-	// Variable building acction
+	// Variable building action
 	static void pushVar(SemanticActionContainer& container);
 	static void popVar(SemanticActionContainer& container);
+	static void addToVar(SemanticActionContainer& container);
+	static void setFunc(SemanticActionContainer& container);
 
 
 	// Statemtent building actions

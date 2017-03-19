@@ -110,9 +110,6 @@
     <ClCompile Include="..\comp442_compilers\Statement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\comp442_compilers\Variable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TestLexerSourceFile.txt">

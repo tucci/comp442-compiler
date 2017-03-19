@@ -173,7 +173,6 @@
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp" />
     <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
-    <ClCompile Include="..\comp442_compilers\Variable.cpp" />
     <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />

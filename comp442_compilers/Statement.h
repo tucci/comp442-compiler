@@ -17,7 +17,10 @@ struct AssignStatment {
 
 struct ForStatement {};
 struct IfElseStatement {};
-struct GetStatement{};
+
+struct GetStatement {
+	Variable var;
+};
 struct PutStatment{};
 struct ReturnStatment{};
 
