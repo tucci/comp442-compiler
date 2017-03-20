@@ -8,7 +8,8 @@ enum SymbolKind {
 	kind_variable,
 	kind_parameter,
 	kind_function,
-	kind_class
+	kind_class,
+	kind_error
 };
 
 // List of symbol types that can be in the lanaguage
@@ -22,7 +23,8 @@ enum SymbolType {
 // List of structures that can be in the language
 enum SymbolStructure {
 	struct_simple,
-	struct_array
+	struct_array,
+	struct_error,
 };
 
 static std::string kindToString(SymbolKind kind) {
@@ -69,6 +71,16 @@ static std::string structureToString(SymbolStructure structure) {
 
 // A simple wrapper around type/struct
 struct TypeStruct {
+	TypeStruct (): type(type_none), structure(struct_simple) {}
+	TypeStruct(SymbolType stype, SymbolStructure sstructure) : type(stype), structure(sstructure) {	}
+	TypeStruct(SymbolType stype, SymbolStructure sstructure, std::string sclassName, std::vector<int> dim) 
+	: type(stype),
+	structure(sstructure),
+	className(sclassName),
+	dimensions(dim){
+
+	}
+
 	SymbolType type;
 	SymbolStructure structure;
 	std::string className; // Used if there is a class name
