@@ -92,9 +92,6 @@
     <ClCompile Include="..\comp442_compilers\Compiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SymbolTableTests.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -108,6 +105,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\comp442_compilers\Statement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolTableData_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable_tests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolTable_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,6 +143,9 @@
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="TestSource4.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="SymbolTableTestSource.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

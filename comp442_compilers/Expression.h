@@ -1,17 +1,15 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-// A fragment of an expression 
-// Ex: if we have an expression student.parent[0].name()
-// student, parent, 0, name would all fragments
 
 
 class Variable;
 struct ExpressionFragment; 
 
+// TODO: we might want to re implement as a tree when we do the code generation
 class Expression {	
-public:// Builds this expression from a full name string
-	// ex builds an expression object from the string student.parent[1].name()
+public:
+
 	Expression();
 	~Expression();
 	void addVar(Variable var);
@@ -23,13 +21,6 @@ private:
 	std::vector<ExpressionFragment> fragments;	
 };
 
-
-
-enum ExpressionFragmentType {
-	fragment_var,
-	fragment_numeric,
-	fragment_operator
-};
 
 
 struct VariableFragment {
@@ -46,6 +37,13 @@ public:
 	int location;
 	bool isFunc;
 
+};
+
+
+enum ExpressionFragmentType {
+	fragment_var,
+	fragment_numeric,
+	fragment_operator
 };
 
 struct ExpressionFragment {

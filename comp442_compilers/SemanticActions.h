@@ -1,7 +1,6 @@
 #ifndef SEMANTIC_ACTION_H
 #define SEMANTIC_ACTION_H
 
-// TODO: rewrite this in stdafx
 #include "SemanticSymbol.h"
 #include "SymbolTable.h"
 #include "SymbolTableData.h"

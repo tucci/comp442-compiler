@@ -1,131 +1,131 @@
-prog			-> classDeclList progBody 
-classDecl		-> class id { varFuncDefList } ; 
-classDeclList		-> classDecl classDeclList 
-classDeclList		-> EPSILON 
-progBody		-> program funcBody ; funcDefList 
+prog					-> #createGlobalTable# classDeclList progBody #endGlobalTable#
+classDecl				-> class id #storeId# #createClassEntryAndTable# { varFuncDefList } ; #endClassEntryAndTable#
+classDeclList			-> classDecl classDeclList 
+classDeclList			-> EPSILON 
+progBody				-> program #storeId# #createProgramTable# funcBody ; #endProgramTable# funcDefList 
 
-funcDef			-> type id funcDefRest
-funcDefRest		-> ( fParams ) funcBody ;
-funcDefList		-> funcDef funcDefList 
-funcDefList		-> EPSILON 
-funcBody		-> { varStatementList } 
+funcDef					-> type #storeType# id #storeId# funcDefRest
+funcDefRest				-> #startFuncDef# ( fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
+funcDefList				-> funcDef funcDefList 
+funcDefList				-> EPSILON 
+funcBody				-> { varStatementList } 
 
-varDecl			-> type id varDeclRest
-varDeclNoId		-> typeNoId id varDeclRest
-varDeclRest		-> arraySizeList ; 
+varDecl					-> type #storeType# id #storeId# varDeclRest
+varDeclNoId				-> typeNoId #storeType# id #storeId# varDeclRest
+varDeclRest				-> arraySizeList ; #createVariableEntry#
 
-varFuncDefList		-> type id varFuncDefListRest varFuncDefList
-varFuncDefList		-> EPSILON
-varFuncDefListRest	-> varDeclRest
-varFuncDefListRest	-> funcDefRest
+varFuncDefList			-> type #checkCircular# #storeType# id #storeId# varFuncDefListRest varFuncDefList
+varFuncDefList			-> EPSILON
+varFuncDefListRest		-> varDeclRest
+varFuncDefListRest		-> funcDefRest
 
-varStatementList	-> id varStatementListRest varStatementList
-varStatementList	-> varDeclNoId varStatementList
-varStatementList	-> noIdStartStatement varStatementList
-varStatementList	-> EPSILON
-varStatementListRest	-> id varDeclRest 
-varStatementListRest	-> assignStatRest ;
+varStatementList		-> id varStatementListRest varStatementList
+varStatementList		-> varDeclNoId varStatementList
+varStatementList		-> noIdStartStatement varStatementList
+varStatementList		-> EPSILON
+varStatementListRest	-> #checkTypeGlobal# #storeType# id #storeId# varDeclRest 
+varStatementListRest	-> #pushStatement# #assignmentStatement# #pushVar# #addToVar# assignStatRest ; #popStatement#
 
-statement		-> noIdStartStatement
-statement		-> assignStat ; 
-statementList		-> statement statementList 
-statementList		-> EPSILON 
-noIdStartStatement      -> for ( type id assignOp expr ; relExpr ; assignStat ) statBlock ; 
-noIdStartStatement      -> if ( expr ) then statBlock elseBlock ; 
-noIdStartStatement      -> get ( variable ) ; 
-noIdStartStatement      -> put ( expr ) ; 
-noIdStartStatement      -> return ( expr ) ;
-elseBlock		-> else statBlock
-elseBlock		-> EPSILON
-assignStat		-> id assignStatRest
-assignStat		-> assignStatRest
-assignStatRest		-> indiceList assignStatRestRest
-assignStatRestRest	-> . variable assignOp expr 
-assignStatRestRest	-> assignOp expr 
-statBlock		-> { statementList } 
-statBlock		-> statement 
-statBlock		-> EPSILON 
+statement				-> noIdStartStatement
+statement				-> #pushStatement# assignStat ; #popStatement#
+statementList			-> statement statementList 
+statementList			-> EPSILON 
+noIdStartStatement      -> #pushStatement# #forStatement# for ( type #storeType# id #storeId# #createVariableEntry# assignOp expr ; relExpr ; assignStat ) statBlock ; #popStatement#
+noIdStartStatement      -> #pushStatement# #ifelseStatement# if ( expr ) then statBlock elseBlock ; #popStatement#
+noIdStartStatement      -> #pushStatement# #getStatement# get ( #pushVar# variable #popVar# ) ; #popStatement#
+noIdStartStatement      -> #pushStatement# #putStatement# put ( expr ) ; #popStatement#
+noIdStartStatement      -> #pushStatement# #returnStatement# return ( expr ) ; #popStatement#
+elseBlock				-> else statBlock
+elseBlock				-> EPSILON
+assignStat				-> #assignmentStatement# #pushVar# id #addToVar# assignStatRest
+assignStat				-> assignStatRest
+assignStatRest			-> indiceList assignStatRestRest
+assignStatRestRest		-> . variable #popVar# assignOp expr #checkExpr#
+assignStatRestRest		-> #popVar# assignOp expr #checkExpr#
+statBlock				-> { statementList } 
+statBlock				-> statement 
+statBlock				-> EPSILON 
 
-expr			-> arithExpr exprRest
-exprRest 		-> relOp arithExpr 
-exprRest 		-> EPSILON
-relExpr			-> arithExpr relOp arithExpr
+expr					-> #pushExpr# arithExpr exprRest #popExpr#
+exprRest 				-> relOp arithExpr 
+exprRest 				-> EPSILON
+relExpr					-> arithExpr relOp arithExpr
 
 
-sign			-> + 
-sign			-> - 
+sign					-> + #addSignExprFragment#
+sign					-> - #addSignExprFragment#
 
-arithExpr		-> term arithExprRest
-arithExprRest 		-> addOp term arithExprRest
-arithExprRest 		-> EPSILON
-term			-> factor termRest
-termRest 		-> multOp factor termRest
-termRest		-> EPSILON
-factor			-> ( arithExpr ) 
-factor			-> num 
-factor			-> not factor 
-factor			-> sign factor 
-factor			-> id factorRest
-factorRest		-> dotidnest factorRest 
-factorRest		-> ( aParams )
-factorRest		-> indice factorRestRest 
-factorRest		-> EPSILON
-factorRestRest		-> indice factorRestRest 
-factorRestRest		-> dotidnest factorRest
-factorRestRest		-> EPSILON
+arithExpr				-> term arithExprRest
+arithExprRest 			-> addOp #operatorExprFragment# term arithExprRest
+arithExprRest 			-> EPSILON
+term					-> factor termRest
+termRest 				-> multOp #operatorExprFragment# factor termRest
+termRest				-> EPSILON
+factor					-> ( arithExpr ) 
+factor					-> num #addNumericExprFragment#
+factor					-> not factor 
+factor					-> sign factor 
+factor					-> #pushVar# id #addToVar# factorRest #popVar#
+factorRest				-> dotidnest factorRest 
+factorRest				-> #setFunc# ( aParams )
+factorRest				-> indice factorRestRest 
+factorRest				-> EPSILON 
+factorRestRest			-> indice factorRestRest 
+factorRestRest			-> dotidnest factorRest
+factorRestRest			-> EPSILON
 
-arithExprAEInt	-> termAEInt arithExprAEIntRest
-arithExprAEIntRest	-> addOp termAEInt arithExprAEIntRest
-arithExprAEIntRest	-> EPSILON
-termAEInt			-> factorAEInt termAEIntRest
-termAEIntRest		-> multOp factorAEInt termAEIntRest
-termAEIntRest		-> EPSILON
-factorAEInt	-> ( arithExprAEInt )
-factorAEInt -> integer
-factorAEInt -> not factorAEInt
-factorAEInt	-> sign factorAEInt
-factorAEInt	-> id factorRest
+arithExprAEInt			-> termAEInt arithExprAEIntRest
+arithExprAEIntRest		-> addOp #operatorExprFragment# termAEInt arithExprAEIntRest
+arithExprAEIntRest		-> EPSILON
+termAEInt				-> factorAEInt termAEIntRest
+termAEIntRest			-> multOp #operatorExprFragment# factorAEInt termAEIntRest
+termAEIntRest			-> EPSILON
+factorAEInt				-> ( arithExprAEInt )
+factorAEInt				-> integer #addNumericExprFragment#
+factorAEInt				-> not factorAEInt
+factorAEInt				-> sign factorAEInt
+factorAEInt				-> #pushVar# id #addToVar# factorRest #popVar#
 
-variable		-> id dotidIndiceList
-dotidnest		-> . id
-dotidIndice		-> dotidnest
-dotidIndice		-> indice
-dotidIndiceList		-> dotidIndice dotidIndiceList
-dotidIndiceList		-> EPSILON 
-indice			-> [ arithExprAEInt ] 
-indiceList		-> indice indiceList 
-indiceList		-> EPSILON 
-arraySize		-> [ integer ] 
-arraySizeList		-> arraySize arraySizeList 
-arraySizeList		-> EPSILON 
+variable				-> id #addToVar# dotidIndiceList 
+dotidnest				-> . id #addToVar#
+dotidIndice				-> dotidnest
+dotidIndice				-> indice
+dotidIndiceList			-> dotidIndice dotidIndiceList
+dotidIndiceList			-> EPSILON 
+indice					-> [ #pushExpr# arithExprAEInt #popExpr# ] 
+indiceList				-> indice indiceList 
+indiceList				-> EPSILON 
+arraySize				-> [ integer #storeArraySize# ] 
+arraySizeList			-> arraySize arraySizeList 
+arraySizeList			-> EPSILON 
 
-typeNoId		-> float
-typeNoId		-> int
-type			-> typeNoId 
-type			-> id
+typeNoId				-> float
+typeNoId				-> int
+type					-> typeNoId 
+type					-> id #checkTypeGlobal#
 
-fParams			-> type id arraySizeList fParamsTailList 
-fParams			-> EPSILON 
-fParamsTail		-> , type id arraySizeList 
-fParamsTailList		-> fParamsTail fParamsTailList 
-fParamsTailList		-> EPSILON 
+fParams					-> #addParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
+fParams					-> EPSILON 
+fParamsTail				-> , #addParameter# type #storeType# id #storeId# arraySizeList 
+fParamsTailList			-> fParamsTail fParamsTailList 
+fParamsTailList			-> EPSILON 
 
-aParams			-> expr aParamsTailList 
-aParams			-> EPSILON 
-aParamsTail		-> , expr 
-aParamsTailList		-> aParamsTail aParamsTailList 
-aParamsTailList		-> EPSILON 
+aParams					-> expr aParamsTailList 
+aParams					-> EPSILON 
+aParamsTail				-> , expr 
+aParamsTailList			-> aParamsTail aParamsTailList 
+aParamsTailList			-> EPSILON 
 
-assignOp          	-> = 
-relOp           	-> == 
-relOp             	-> <>
-relOp             	-> <
-relOp           	-> >
-relOp           	-> <=
-relOp           	-> >=
-addOp			-> + 
-addOp			-> - 
-addOp			-> or 
-multOp			-> * 
-multOp			-> / 
-multOp			-> and 
+assignOp          		-> =
+relOp           		-> == 
+relOp             		-> <>
+relOp             		-> <
+relOp           		-> >
+relOp           		-> <=
+relOp           		-> >=
+addOp					-> + 
+addOp					-> - 
+addOp					-> or 
+multOp					-> * 
+multOp					-> / 
+multOp					-> and 

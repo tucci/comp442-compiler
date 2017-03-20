@@ -5,6 +5,7 @@ Parser::Parser() {
 	globalTable.resolvedName = "Global";
 	globalTable.name = "Global";
 	currentSymbolTable = &globalTable;
+	phase2 = false;
 }
 
 
@@ -88,7 +89,7 @@ void Parser::skipErrors() {
 					// This "should" rarely happen 
 					if (loopCount == 1000) {
 						// Output which ever syntaxErrors we alreay have						
-						outputAnalysis();
+						outputDerivationAndErrors();
 						// Throw expection so that main could catch and deallocate our memory
 						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;
 						throw std::exception("There was an unrecoverable error during parsing the file.");
@@ -153,11 +154,12 @@ Terminal Parser::tokenToTerminal(const Token& token, const NonTerminal& nt) {
 	return t;
 }
 
-void Parser::buildSymbolTable() {
+const SymbolTable& Parser::buildSymbolTable() {
 	parse();
 	phase2 = true;
 	lexer->resetToStart();
 	parseStack.pop_back();
+	return globalTable;
 }
 
 void Parser::outputParserDataToFile() {
@@ -268,7 +270,7 @@ void Parser::outputParserDataToFile() {
 	parsingTableOutput.close(); // close file
 }
 
-void Parser::outputAnalysis() {
+void Parser::outputDerivationAndErrors() {
 
 	std::ofstream parserDerivation;
 	parserDerivation.open("derivation.html");

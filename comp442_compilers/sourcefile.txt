@@ -1,34 +1,54 @@
-class MyClass1 {
- int mc1v1[2][4];
- float mc1v2;
- MyClass2 mc1v3[3];
- int mc1f1(int p1, MyClass2 p2[3]) {
-	MyClass2 fv1[3];
- };
 
- int f2(MyClass1 f2p1[3]) {
-	int mc1v1;
- };
+class Student {
+	int age;
+	String name;
+	float height;
+	int name;
 
+	int getAge() {
+		int test;
+		test = name.chars[2] * qt();
+	};
 };
 
-class MyClass2 {
- int mc1v1[2][4];
- float fp1;
- MyClass2 m2[3];
+class Student {};
+
+class String {
+	Char chars[10];
+};
+
+class Char {
+	ASCII ascii;
+};
+
+class ASCII {
+	int value;
 };
 
 program {
- int m1;
- float m2[3][2];
- MyClass2 m3[2];
+	
+	Student s;
+	int av;
+	int jj;
+	String str;
+
+	s = jj();
+
+	s = s.value(id.x, abc);
+	t.s[2] = 4;
+	int t[2];
+	x = s[av[id[44]][2]];
+	s.name.chars[2][3] = 32;
+	s.name.chars[3].value = qt();
+	str.chars[2].ascii.value = 10;
+	str = str.qt();
+
 
 };
 
-float f1(int fp1[2][2], float fp2) {
- MyClass1 fv1[3];
- int fv2;
-};
 
-int f2() {
+int qt() {
+	
+	int x;
+
 };

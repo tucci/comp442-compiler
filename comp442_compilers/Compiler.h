@@ -13,9 +13,13 @@ public:
 	void compile();
 	// Sets the source file for our compiler to compiler
 	void setSourceFile(std::string sourceFile);
-	// Checks the syntax of the source fie
-	bool analyzeSyntax();
+	
+	// Gets the symbol table for this program
+	const SymbolTable& getSymbolTable();
+	// Whether the source file has been parsed successfully
+	bool parsedSuccessfully;
 private:
+	// Whether to write the outputs
 	bool writeOutputs;
 	// The specfication for the token
 	std::shared_ptr<Specification> spec;

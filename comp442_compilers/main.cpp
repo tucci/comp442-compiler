@@ -8,7 +8,7 @@ int main() {
 	try {
 		//  Hold try catch for special cases
 		// inorder to free memory
-		cp.analyzeSyntax();
+		cp.compile();
 	} catch (std::exception e) {
 		std::cerr << e.what();
 	}

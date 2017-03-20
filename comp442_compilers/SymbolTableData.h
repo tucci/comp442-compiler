@@ -13,6 +13,7 @@ enum SymbolKind {
 
 // List of symbol types that can be in the lanaguage
 enum SymbolType {
+	type_none,
 	type_int,
 	type_float,
 	type_class,
@@ -39,7 +40,8 @@ static std::string typeToString(SymbolType type) {
 	case type_int:		return "type_int"; break;
 	case type_float:	return "type_float"; break;
 	case type_class:	return "type_class"; break;
-	default:			return "type_error"; break;
+	case type_none:		return "type_none"; break;
+	default:			return "type_none"; break;
 	}
 }
 
@@ -85,6 +87,14 @@ struct TypeStruct {
 		s += ":" + structureToString(structure);
 		return s;
 	}
+
+	friend bool operator==(const TypeStruct& lhs, const TypeStruct& rhs) {
+		if (lhs.type != rhs.type) return false;
+		if (lhs.structure != rhs.structure) return false;
+		if (lhs.className != rhs.className) return false;
+		if (lhs.dimensions != rhs.dimensions) return false;
+		return true;
+	}
 };
 
 // Holds all the data for a function declaration
@@ -110,6 +120,13 @@ struct FunctionData {
 		s += "}";
 		return s;
 	};
+
+	friend bool operator==(const FunctionData& lhs, const FunctionData& rhs) {
+		if (!(lhs.returnType == rhs.returnType)) return false;
+		if (lhs.parameters != rhs.parameters) return false;
+		return true;
+	}
+
 };
 
 enum AttributeType {
@@ -128,8 +145,12 @@ struct Attributes {
 // Forward declration
 class SymbolTable;
 
+
+
+
 // A simple record that will go into the symbol tables
-struct SymbolTableRecord {
+class SymbolTableRecord {
+public:
 	// TODO: implment Whether this identifier has been declared properly
 	bool properlyDeclared;
 	// The name of this symbol
@@ -147,6 +168,7 @@ struct SymbolTableRecord {
 	// The address of the element in memory
 	int address;
 
+
 	// The attributes of this semantic record
 	// Used to build up expressions/statments and other values while parsing
 	Attributes attr;
@@ -163,6 +185,14 @@ struct SymbolTableRecord {
 		return s + "\n";
 
 	};
+
+	friend bool operator==(const SymbolTableRecord& r1, const SymbolTableRecord& r2) {
+		if (r1.name != r2.name) return false;
+		if (r1.kind != r2.kind) return false;
+		if (!(r1.typeStructure == r2.typeStructure)) return false;
+		if (!(r1.functionData == r2.functionData)) return false;
+		return true;
+	}
 
 };
 

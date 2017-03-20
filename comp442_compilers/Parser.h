@@ -62,11 +62,11 @@ private:
 	// The list of semantic erroors during parsing
 	std::vector<SemanticError> semanticErrors;
 	// Builds the symbol table
-	void buildSymbolTable();
+	const SymbolTable& buildSymbolTable();
 	// Outputs the data about the fisrt/follow sets and parsing table
 	void outputParserDataToFile();
 	// Outputs the derivation and any syntaxErrors
-	void outputAnalysis();
+	void outputDerivationAndErrors();
 	// Outputs the symbol table to a file
 	void outputSymbolTable();
 	// Outputs the semantic errors

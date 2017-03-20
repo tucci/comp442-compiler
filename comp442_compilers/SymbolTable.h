@@ -2,7 +2,6 @@
 #define SYMBOL_TABLE_H
 
 
-// TODO: figure out undefined id : variable/function
 // TODO: figure out how to handle recursion
 // TODO: type check return statement
 // TODO: type check assignment statement
@@ -21,8 +20,7 @@ public:
 	std::pair<SymbolTableRecord*, bool> findInParents(const std::string& identifier);
 	// Adds the given record with the identifer to the symbol table
 	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent=NULL);
-	// Remove the record if it the identifer is in the symbol table. Returns true if the deletion was successful, false otherwise
-	bool removeRecord(const std::string& identifier);
+	friend bool operator==(const SymbolTable& lhs, const SymbolTable& rhs);
 
 	// Outputs the contents of the symbol table and any child symbol table
 	// Does a breadth first traversal

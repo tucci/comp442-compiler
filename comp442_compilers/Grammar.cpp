@@ -159,7 +159,6 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 	}
 	// If this this a semantic action, we'll return a semantic symbol
 	if (SemanticSymbol::isSemanticPattern(symbolString)) {
-		// TODO: this might become a dangling value. We might need to keep a refernce to all the semantic values in the grammar
 		SemanticSymbol semanticSymbol(symbolString);
 		return semanticSymbol;
 	}

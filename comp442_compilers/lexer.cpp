@@ -314,12 +314,11 @@ void Lexer::writeTokensToFile() {
 	for (int i = 0; i < outputTokens.size(); i++) {
 		const Token t = outputTokens.at(i);
 		if (t.type != TokenType::end_of_file_token) {
-			// TODO: this deoesnt work anymore
-			/*if (t.type == TokenType::error_token) {
+			if (t.type == TokenType::error_token) {
 				error << t;
 			} else {
 				output << t;
-			}*/
+			}
 		}
 	}
 	output.close();

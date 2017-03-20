@@ -4,10 +4,10 @@
 
 // A simple data structure that keeps some context during the semantic actions
 static struct SemanticContext {
-	bool inParam;
-	bool inPhase2;
-	bool skipClass;
-	bool skipFunction;
+	bool inParam = false;
+	bool inPhase2 = false;
+	bool skipClass = false;
+	bool skipFunction = false;
 } context;
 
 
@@ -52,9 +52,10 @@ void SemanticActions::endGlobalTable(SemanticActionContainer& container) {
 void SemanticActions::createClassEntryAndTable(SemanticActionContainer& container) {
 	// Add that this is a class type
 	container.top.kind = SymbolKind::kind_class;
-	// add this record to our current table
+	
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
 	if (!found.second && !context.inPhase2) {
+		// add this record to our current table
 		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
 		_goToScope(container, &container.top);
 	}
@@ -353,7 +354,6 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 		_checkVarError(container);
 
 		SymbolTableRecord popped = container.top;
-		std::cout << popped.attr.var.toFullName() << std::endl;
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
 		switch (top.attr.type) {
@@ -631,8 +631,6 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 					container.semanticErrors.push_back(error);
 					return; // Early return
 				}
-				
-				
 			}
 
 		}
@@ -643,6 +641,7 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 
 // Map from semantic action name to function pointer that handles that action
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActions::ACTION_MAP = {
+			// Symbol Table building
 			{"#createGlobalTable#", &SemanticActions::createGlobalTable},
 			{"#endGlobalTable#", &SemanticActions::endGlobalTable},
 			{"#createClassEntryAndTable#", &SemanticActions::createClassEntryAndTable},
@@ -684,3 +683,5 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			
 			
 	};
+
+

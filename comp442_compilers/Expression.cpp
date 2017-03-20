@@ -70,11 +70,12 @@ std::string Variable::toFullName() {
 	std::string varName;
 	for (int i = 0; i < vars.size(); ++i) {
 		VariableFragment frag = vars[i];
-		if (i == 0) {
-			varName.append(frag.identifier);
-		} else {
-			varName.append("." + frag.identifier);
-		}
+
+		if (i != 0) {
+			varName.append(".");
+		} 
+		varName.append(frag.identifier);
+		
 		for (Expression& indice : frag.indices) {
 			varName.append("[" + indice.toFullName() + "]");
 		}

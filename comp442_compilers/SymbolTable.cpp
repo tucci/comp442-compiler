@@ -35,7 +35,11 @@ std::pair<SymbolTableRecord*, bool> SymbolTable::findInParents(const std::string
 }
 
 SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent) {
-	// TODO: figure out if how we want to deal with records that are already in the table
+	// Newly added duplicate names are dropped right away
+	if (find(identifier).second) {
+		// If this record is already added, drop
+		return NULL;
+	}
 	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
@@ -48,13 +52,9 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	return addedRecord;
 }
 
-bool SymbolTable::removeRecord(const std::string& identifier) {
-	int numErased = table.erase(identifier);
-	if (numErased != 0) {
-		return true;
-	}
-	return false;
-}
+
+
+
 
 std::string SymbolTable::toString() {
 	std::queue<SymbolTable*> queue;
@@ -77,4 +77,23 @@ std::string SymbolTable::toString() {
 }
 
 
+bool operator==(const SymbolTable& lhs, const SymbolTable& rhs) {
+	if (lhs.table.size() != rhs.table.size()) return false;
+	if (lhs.name != rhs.name) return false;
+	if (lhs.resolvedName!= rhs.resolvedName) return false;
+	for (const std::unordered_map<std::string, SymbolTableRecord>::value_type& record : lhs.table) {
+		std::string lhsIdentifier = record.first;
+		std::unordered_map<std::string, SymbolTableRecord>::const_iterator foundInRhs = rhs.table.find(lhsIdentifier);
+		// It didnt find it
+		if (foundInRhs == rhs.table.end()) {
+			return false;
+		} else {
+			if (!(record.second == foundInRhs->second)) {
+				return false;
+			}
+		}
 
+		
+	}
+	return true;
+}
