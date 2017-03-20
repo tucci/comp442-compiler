@@ -182,7 +182,7 @@ public:
 		expected_globalTable__f1.name = "f1";
 		expected_globalTable__f1.kind = kind_function;
 		std::vector<std::pair<TypeStruct, std::string>> expected_globalTable__f1_parameters;
-		expected_globalTable__f1_parameters.push_back({ { type_int, struct_array, "",{2,2} }, "fp1" });
+		expected_globalTable__f1_parameters.push_back({ { type_int, struct_array, "", {2,2} }, "fp1" });
 		expected_globalTable__f1_parameters.push_back({ { type_float, struct_simple, "",{  } }, "fp2" });
 		expected_globalTable__f1.functionData = { { type_float, struct_simple, "",{} },expected_globalTable__f1_parameters };
 		SymbolTableRecord expected_globalTable__f2;
