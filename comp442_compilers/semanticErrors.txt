@@ -1,0 +1,19 @@
+Variable name redeclared on line 6
+Class Student redeclared on line 14
+Identifier jj() is not a function on line 35
+Identifier id.x is undefined on line 37
+Identifier id.x is undefined on line 37
+Identifier abc is undefined on line 37
+Identifier s.value[id.x][abc]() is not a function on line 37
+Identifier s.value[id.x][abc]() is undefined on line 37
+Identifier t.s[2] is used before it is defined on line 38
+Identifier t.s[2] is not an array on line 38
+Identifier t.s[2] is not an object on line 38
+Identifier x is undefined on line 40
+Identifier id[44] is undefined on line 40
+Identifier av[id[44]][2] is not an array on line 40
+Identifier s[av[id[44]][2]] is not an array on line 40
+Array s.name.chars[2][3] has wrong dimensions on line 41
+Identifier s.name.chars[3].value is undefined on line 42
+Identifier str.qt() is not a function on line 44
+Identifier str.qt() is undefined on line 44
