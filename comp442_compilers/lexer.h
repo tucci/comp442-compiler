@@ -16,6 +16,8 @@ public:
 	bool hasMoreTokens();
 	// Writes the tokens and error tokens to the file
 	void writeTokensToFile();
+	// Resets the lexer to the start of the token stream
+	void resetToStart();
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<Dfa> tokenizer;
@@ -30,12 +32,15 @@ private:
 	std::vector<char> source;
 	// The list of tokens in ourfile to be used when outputing to file
 	std::vector<Token> outputTokens;
+	// The current token we are at in the output tokens. used when doing phase 2
+	int tokenIndex;
 	// the size of the source file in bytes
 	// use streamoff to avoid data loss
 	std::streamoff sourceSizeInBytes;
 	// the current index of the source buffer we are indexing into
 	int sourceIndex;
-
+	// If the lexer has been reset
+	bool streamReset;
 	// This does all the actual work of getting the token
 	Token getLookaheadToken();
 	// Returns the token that is evaluated from this state
@@ -44,8 +49,6 @@ private:
 	char nextChar();
 	// moves the current sourceIndex back by one
 	void backupChar();
-	// Check if the character is a newline character
-	bool isNewLine(char);
 	// Handle the error for this state
 	void handleError(Token* token, std::string lexeme, State* errorType, std::string lookup);
 	// Method to handle comments while tokenizing

@@ -4,6 +4,7 @@ Lexer::Lexer() {
 }
 
 Lexer::Lexer(Specification* spec) {
+	streamReset = false;
 	tokenizer = spec->getSpec();
 }
 
@@ -12,12 +13,23 @@ Lexer::~Lexer() {
 
 Token Lexer::nextToken() {
 	Token token = lookaheadToken;
+	token.tokenIndex = tokenIndex;
+	tokenIndex++;
 	lookaheadToken = getLookaheadToken();
-	outputTokens.push_back(lookaheadToken);
+	if (!streamReset) {
+		outputTokens.push_back(lookaheadToken);
+	}
 	return token;
+	
+
 }
 
 Token Lexer::getLookaheadToken() {
+	// If the token stream has been reset, than we should not read from file again
+	// but instead read from the array that we already read
+	if (streamReset) {
+		return outputTokens.at(tokenIndex);
+	}
 	
 	// flag to see if we should add the transition char to the current lexeme we are building
 	bool shouldAddChar;
@@ -137,6 +149,7 @@ bool Lexer::setSource(std::string pathToFile) {
 		istream.close();
 		// lines start at index 1 and not 0 in files
 		currentLine = 1;
+		tokenIndex = -1;
 		nextToken();
 		readSuccess = true;// everything was read properly
 	}
@@ -183,9 +196,6 @@ void Lexer::backupChar() {
 	}
 }
 
-bool Lexer::isNewLine(char c) {
-	return c == '\n\r' || c == '\n' || c == '\r';
-}
 
 void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std::string lookup) {
 
@@ -304,15 +314,20 @@ void Lexer::writeTokensToFile() {
 	for (int i = 0; i < outputTokens.size(); i++) {
 		const Token t = outputTokens.at(i);
 		if (t.type != TokenType::end_of_file_token) {
-			// TODO: this deoesnt work anymore
-			/*if (t.type == TokenType::error_token) {
+			if (t.type == TokenType::error_token) {
 				error << t;
 			} else {
 				output << t;
-			}*/
+			}
 		}
 	}
 	output.close();
 	error.close();
 	std::cout << "Successfully wrote tokens to lexerOutput.txt and lexerErrors.txt" << std::endl;
+}
+
+void Lexer::resetToStart() {
+	tokenIndex = 0;
+	lookaheadToken = outputTokens.at(0);
+	streamReset = true;
 }

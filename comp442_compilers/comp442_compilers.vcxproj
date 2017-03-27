@@ -145,18 +145,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="grammar_with_sdt.txt" />
     <Text Include="parserErrors.txt" />
+    <Text Include="semanticErrors.txt" />
     <Text Include="sourcefile.txt" />
     <Text Include="first_and_follow_sets.txt" />
     <Text Include="lexerErrors.txt" />
     <Text Include="grammar.txt" />
     <Text Include="lexerOutput.txt" />
     <Text Include="sourceWithErrors.txt" />
+    <Text Include="symbolTables.txt" />
     <Text Include="testgrammar.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="dfa.h" />
+    <ClInclude Include="Expression.h" />
     <ClInclude Include="Grammar.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="NonTerminal.h" />
@@ -164,8 +168,13 @@
     <ClInclude Include="ParserGenerator.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SemanticActions.h" />
+    <ClInclude Include="SemanticSymbol.h" />
     <ClInclude Include="specification.h" />
+    <ClInclude Include="Statement.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SymbolTable.h" />
+    <ClInclude Include="SymbolTableData.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="targetver.h" />
@@ -175,6 +184,7 @@
   <ItemGroup>
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="dfa.cpp" />
+    <ClCompile Include="Expression.cpp" />
     <ClCompile Include="Grammar.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -182,7 +192,10 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ParserGenerator.cpp" />
     <ClCompile Include="Production.cpp" />
+    <ClCompile Include="SemanticActions.cpp" />
+    <ClCompile Include="SemanticSymbol.cpp" />
     <ClCompile Include="specification.cpp" />
+    <ClCompile Include="Statement.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -190,6 +203,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Symbol.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="token.cpp" />
   </ItemGroup>

@@ -52,7 +52,7 @@ enum TokenType {
 	program_token,	// program keyword
 };
 
-// A simple list of types of errors that can occur while scanning the source code
+// A simple list of types of syntaxErrors that can occur while scanning the source code
 enum ErrorType {
 	unknown_symbol, // Error for symbols our tokenizer doesnt understand
 	invalid_float, // Error for when floats don't follow the specification. I.e 1.00
@@ -75,6 +75,8 @@ struct Token {
 	TokenType type;
 	// the line in the source file this token can be found
 	int tokenLine;
+	// the token index in the stream
+	int tokenIndex;
 	// The error data structure in case this token is an error token
 	TokenError error;
 	// Override output for a token

@@ -72,6 +72,10 @@ template <class K, class V, class H, class E> static inline bool inMap(const K& 
 	return true;
 }
 
+template <class E> static inline bool inVector(const E& toFind, const std::vector<E> vector) {
+	return std::find(vector.begin(), vector.end(), toFind) != vector.end();
+}
+
 // second value, returns true if there were items in set2 that were not int set1. Adds items in set2 to set1
 static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const TerminalSet& set2) {
 	TerminalSet unionedSet(set1);
@@ -85,6 +89,10 @@ static std::pair<TerminalSet, bool> leftMerge(const TerminalSet& set1, const Ter
 		}
 	}
 	return std::pair<TerminalSet, bool>(unionedSet, hasChanges);
+}
+
+static bool isNewLine(char c) {
+	return c == '\n\r' || c == '\n' || c == '\r';
 }
 
 #endif // !UTILS_H

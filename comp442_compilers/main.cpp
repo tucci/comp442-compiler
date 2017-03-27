@@ -4,14 +4,18 @@
 using namespace std;
 int main() {
 	Compiler cp;
-	cp.setSourceFile("sourcefile.txt");
+ 	cp.setSourceFile("sourcefile.txt");
 	try {
 		//  Hold try catch for special cases
 		// inorder to free memory
-		cp.analyzeSyntax();
+		cp.compile();
 	} catch (std::exception e) {
-	
+		std::cerr << e.what();
 	}
+
+
+
+	
 
 
 	return 0;

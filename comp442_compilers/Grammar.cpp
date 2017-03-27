@@ -47,10 +47,12 @@ Grammar::Grammar(std::string filename, std::string startSymbol) {
 			std::vector<std::string> split = simpleSplit(*it);
 			// loop over rhs split
 			for (std::vector<std::string>::iterator st = split.begin(); st != split.end(); ++st) {
-				// Make sure we dont add non terminals and epislon to the terminal string
-				if (!isNonTerminal(*st) && !SpecialTerminal::isEpsilon(*st)) {
+				// Make sure we dont add non terminals and epislon to the terminal string or a semantic symbol
+				// skip semantic symbols here
+				if (!isNonTerminal(*st) && !SpecialTerminal::isEpsilon(*st) && !SemanticSymbol::isSemanticPattern(*st)) {
 					addTerminal(*st);
 				}
+				
 			}
 		}
 
@@ -107,6 +109,7 @@ const Terminal& Grammar::addTerminal(const std::string& terminalString) {
 }
 
 const Production& Grammar::addProduction(const NonTerminal& symbol, std::vector<Symbol> production) {
+	
 	// Creates a new production and adds it to our production list
 	std::shared_ptr<Production> productionRule = std::shared_ptr<Production>(new Production(symbol, production));
 	mProductions.push_back(productionRule);
@@ -154,17 +157,22 @@ Symbol Grammar::stringToSymbol(const std::string& symbolString) {
 	if (SpecialTerminal::isEpsilon(symbolString)) {
 		return SpecialTerminal::EPSILON;
 	}
+	// If this this a semantic action, we'll return a semantic symbol
+	if (SemanticSymbol::isSemanticPattern(symbolString)) {
+		SemanticSymbol semanticSymbol(symbolString);
+		return semanticSymbol;
+	}
 	// Check if this is a non terminal symbol
 	std::shared_ptr<NonTerminal> nonTerminal = std::shared_ptr<NonTerminal>(new NonTerminal(symbolString));
 	auto got = mNonTerminalSymbols.find(nonTerminal);
 	if (got == mNonTerminalSymbols.end()) {
 		// This is not a non terminal symbol and is a terminal symbol
 		std::shared_ptr<Terminal> terminal = std::shared_ptr<Terminal>(new Terminal(symbolString));
-		auto got = mTerminalSymbols.find(terminal);
-		if (got == mTerminalSymbols.end()) {
+		std::unordered_set<std::shared_ptr<Terminal>, SymbolHasher, SymbolEqual>::iterator found = mTerminalSymbols.find(terminal);
+		if (found == mTerminalSymbols.end()) {
 			throw std::exception("symbolString is not a valid symbol");
 		} else {
-			return *got->get();
+			return *found->get();
 		}
 		
 	} else {

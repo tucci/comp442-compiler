@@ -2,6 +2,10 @@
 
 
 Parser::Parser() {
+	globalTable.resolvedName = "Global";
+	globalTable.name = "Global";
+	currentSymbolTable = &globalTable;
+	phase2 = false;
 }
 
 
@@ -18,6 +22,7 @@ bool Parser::parse() {
 	while (parseStack.at(parseStack.size() - 1).getName() != SpecialTerminal::END_OF_FILE.getName()) {
 		Symbol x = parseStack.at(parseStack.size() - 1);
 		std::string stackContent = getStackContents();
+		// If this is a terminal match it
 		if (x.isTerminal()) {
 			Terminal tx = static_cast<Terminal&>(x);
 			addToDerivationList(getStackContents(), "", "");
@@ -29,18 +34,25 @@ bool Parser::parse() {
 				error = true;
 			}
 		} else {
-			// x is not a terminal so cast to non terminal
-			NonTerminal nx = static_cast<NonTerminal&>(x);
-			Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
-			const Production p = parseTable.at(nx).at(lookaheadTerminal);
-			if (p != Production::ERROR_PRODUCTION) {
-				std::string preStackContents = getStackContents();
-				parseStack.pop_back();
-				inverseRHSMultiplePush(p, derivationString);
-				addToDerivationList(preStackContents, p.toString(), derivationString);
+			
+			if (x.isSemantic()) {
+				SemanticSymbol semanticSymbol = static_cast<SemanticSymbol&>(x);
+				SemanticActions::performAction(semanticSymbol, semanticStack, globalTable, &currentSymbolTable, consumedToken, phase2, semanticErrors);
+				parseStack.pop_back();	
 			} else {
-				skipErrors();
-				error = true;
+				// This is not a terminal. So it is a non terminal
+				NonTerminal nx = static_cast<NonTerminal&>(x); // x is not a terminal so cast to non terminal
+				Terminal lookaheadTerminal = tokenToTerminal(lookAheadToken, nx);
+				const Production p = parseTable.at(nx).at(lookaheadTerminal);
+				if (p != Production::ERROR_PRODUCTION) {
+					std::string preStackContents = getStackContents();
+					parseStack.pop_back();
+					inverseRHSMultiplePush(p, derivationString);
+					addToDerivationList(preStackContents, p.toString(), derivationString);
+				} else {
+					skipErrors();
+					error = true;
+				}
 			}
 		}
 	}
@@ -56,7 +68,6 @@ bool Parser::parse() {
 }
 
 void Parser::nextToken() {
-	tokenIndex++;
 	consumedToken = lookAheadToken;
 	lookAheadToken = lexer->nextToken();
 }
@@ -77,8 +88,8 @@ void Parser::skipErrors() {
 					// Hack: Avoids infinite loops
 					// This "should" rarely happen 
 					if (loopCount == 1000) {
-						// Output which ever errors we alreay have						
-						outputAnalysis();
+						// Output which ever syntaxErrors we alreay have						
+						outputDerivationAndErrors();
 						// Throw expection so that main could catch and deallocate our memory
 						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;
 						throw std::exception("There was an unrecoverable error during parsing the file.");
@@ -96,29 +107,10 @@ void Parser::skipErrors() {
 	}
 	// Add the error we just found to the list
 	addError();
-
-
-
-
-	//NonTerminal top = static_cast<NonTerminal&>(parseStack.at(parseStack.size() - 1));
-	//Terminal consumedTerminal = tokenToTerminal(consumedToken, top);
-	//addError();
-
-	//if (consumedToken.type != TokenType::end_of_file_token || ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
-	//	parseStack.pop_back();
-	//} else {
-	//	while (!ParserGenerator::inFirst(consumedTerminal, top, firstSet)
-	//		|| ParserGenerator::inFirst(SpecialTerminal::EPSILON, top, firstSet) && !ParserGenerator::inFollow(consumedTerminal, top, followSet)) {
-	//		nextToken();
-	//		consumedTerminal = tokenToTerminal(consumedToken, top);
-	//	}
-	//}
-
-
 }
 
 void Parser::inverseRHSMultiplePush(const Production& production, std::string& derivation) {
-	std::vector<Symbol> rhs = production.getProduction();
+	std::vector<Symbol> rhs = production.getProductionSDT();
 	std::string replaceWith;
 	std::string nonTerminalString = production.getNonTerminal().getName();
 	size_t replaceIndex = derivation.find(nonTerminalString);
@@ -131,7 +123,11 @@ void Parser::inverseRHSMultiplePush(const Production& production, std::string& d
 			return;
 		}
 		parseStack.push_back(*it);
-		replaceWith = it->getName() + " " + replaceWith;
+		// Dont add semantic values to the derivtion
+		if (!it->isSemantic()) {
+			replaceWith = it->getName() + " " + replaceWith;
+		}
+		
 	}
 	
 	derivation.replace(replaceIndex, replaceLength, replaceWith);
@@ -156,6 +152,14 @@ Terminal Parser::tokenToTerminal(const Token& token, const NonTerminal& nt) {
 	}
 	Terminal t(Specification::REVERSE_TOKEN_MAP.at(token.type));	
 	return t;
+}
+
+const SymbolTable& Parser::buildSymbolTable() {
+	parse();
+	phase2 = true;
+	lexer->resetToStart();
+	parseStack.pop_back();
+	return globalTable;
 }
 
 void Parser::outputParserDataToFile() {
@@ -266,7 +270,7 @@ void Parser::outputParserDataToFile() {
 	parsingTableOutput.close(); // close file
 }
 
-void Parser::outputAnalysis() {
+void Parser::outputDerivationAndErrors() {
 
 	std::ofstream parserDerivation;
 	parserDerivation.open("derivation.html");
@@ -299,21 +303,40 @@ void Parser::outputAnalysis() {
 	std::ofstream parserErrors;
 	parserErrors.open("parserErrors.txt");
 
-	for (SyntaxError error : errors) {		
+	for (SyntaxError error : syntaxErrors) {		
 		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";
 		if (error.token.type != TokenType::non_token) {
 			parserErrors << " after \"" << error.token.lexeme << "\"";
 		}
 		parserErrors << std::endl;
 	}
-
 	parserErrors.close();
 }
+
+void Parser::outputSymbolTable() {
+	std::ofstream symbolTableOutput;
+	symbolTableOutput.open("symbolTables.txt");
+	symbolTableOutput << globalTable.toString();
+	symbolTableOutput.close();
+}
+
+void Parser::outputSemanticErrors() {
+	std::ofstream semanticErrorsOutput;
+	semanticErrorsOutput.open("semanticErrors.txt");
+	for (SemanticError& error : semanticErrors) {
+		semanticErrorsOutput << error.message << std::endl;
+	}
+	semanticErrorsOutput.close();
+}
+
 
 std::string Parser::getStackContents() {
 	std::string contents;
 	for (auto s : parseStack) {
-		contents.append(s.getName() + " ");
+		if (!s.isSemantic()) {
+			contents.append(s.getName() + " ");
+		}
+		
 	}
 	return contents;
 }
@@ -323,16 +346,16 @@ void Parser::addToDerivationList(const std::string& stackContents, const std::st
 }
 
 void Parser::addError() {
-	SyntaxError error = { tokenIndex , consumedToken, lookAheadToken };
+	SyntaxError error = { consumedToken.tokenLine , consumedToken, lookAheadToken };
 
 	bool isDuplicate;
 
-	// Logic to avoid outputing duplcate errors
-	if (errors.size() == 0) {
+	// Logic to avoid outputing duplcate syntaxErrors
+	if (syntaxErrors.size() == 0) {
 		isDuplicate = false;
 	} else {
 		// Compare the top error with the current error
-		SyntaxError topError = errors.at(errors.size() - 1);
+		SyntaxError topError = syntaxErrors.at(syntaxErrors.size() - 1);
 		isDuplicate = error.tokenPosition == topError.tokenPosition
 			&& error.token.tokenLine == topError.token.tokenLine
 			&& error.token.lexeme == topError.token.lexeme;
@@ -341,6 +364,7 @@ void Parser::addError() {
 	// If this is not a duplicate error, add it to the error list
 	if (!isDuplicate) {
 		// Add the error to the error list
-		errors.push_back(error);
+		syntaxErrors.push_back(error);
 	}
 }
+

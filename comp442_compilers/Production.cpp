@@ -4,7 +4,11 @@
 const NonTerminal Production::ERROR_PRODUCTION_NON_TERMINAL("ERROR_PRODUCTION");
 const Production Production::ERROR_PRODUCTION(ERROR_PRODUCTION_NON_TERMINAL, std::vector<Symbol>{});
 
-Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production) :mNonTerminal(nonTerminal), mProduction(production) {
+Production::Production(const NonTerminal& nonTerminal, const std::vector<Symbol>& production) 
+	:mNonTerminal(nonTerminal), 
+	mProduction(SemanticSymbol::filterOutSemanticSymbols(production)),
+	mProductionWithSDT(production) {
+	// Here we need to filter out 
 	// If you want an epsilon production, you must explicity add Symbol::EPSILON to the production vector
 	if (nonTerminal.getName().empty()) {
 		throw std::exception("Can't have empty non terminal");
@@ -21,6 +25,11 @@ NonTerminal Production::getNonTerminal() const {
 std::vector<Symbol> Production::getProduction() const {
 	return mProduction;
 }
+
+std::vector<Symbol> Production::getProductionSDT() const {
+	return mProductionWithSDT;
+}
+
 std::string Production::toString() const {
 	std::string productionStr;
 	for (std::vector<Symbol>::const_iterator it = mProduction.begin(); it != mProduction.end(); ++it) {

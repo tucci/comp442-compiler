@@ -43,6 +43,15 @@
     <Filter Include="Resource Files\grammar">
       <UniqueIdentifier>{1924318c-7490-413f-87b2-4161471bb94a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\parser\semantics">
+      <UniqueIdentifier>{eff028ff-8cce-4837-8f1a-f054889a8724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser\semantics">
+      <UniqueIdentifier>{c7d6a876-9c01-402e-9974-270b1af764cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\semanticOutput">
+      <UniqueIdentifier>{e2619e03-77d1-4a9d-970c-e216ce1fac98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lexerErrors.txt">
@@ -68,6 +77,15 @@
     </Text>
     <Text Include="sourceWithErrors.txt">
       <Filter>Resource Files\sourcecode</Filter>
+    </Text>
+    <Text Include="grammar_with_sdt.txt">
+      <Filter>Resource Files\grammar</Filter>
+    </Text>
+    <Text Include="semanticErrors.txt">
+      <Filter>Resource Files\semanticOutput</Filter>
+    </Text>
+    <Text Include="symbolTables.txt">
+      <Filter>Resource Files\semanticOutput</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +137,24 @@
     <ClInclude Include="ParserGenerator.h">
       <Filter>Header Files\parser</Filter>
     </ClInclude>
+    <ClInclude Include="SymbolTable.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticSymbol.h">
+      <Filter>Header Files\grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTableData.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="SemanticActions.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -162,6 +198,21 @@
     </ClCompile>
     <ClCompile Include="ParserGenerator.cpp">
       <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolTable.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticSymbol.cpp">
+      <Filter>Source Files\grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="SemanticActions.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

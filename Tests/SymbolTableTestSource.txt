@@ -1,0 +1,37 @@
+// DO NOT MODIFY THIS FILE
+class MyClass1 {
+
+	 int mc1v1[2][4];
+	 float mc1v2;
+	 MyClass2 mc1v3[3];
+
+	 int mc1f1(int p1, MyClass2 p2[3]) {
+		MyClass2 fv1[3];
+	};
+	 
+	 
+	 int f2(MyClass1 f2p1[3]) {
+		 int mc1v1;
+	 };
+};
+
+class MyClass2 {
+	 int mc1v1[2][4];
+	 float fp1;
+	 MyClass2 m2[3];
+	 
+};
+
+program {
+	 int m1;
+	 float m2[3][2];
+	 MyClass2 m3[2];	 
+};
+
+float f1(int fp1[2][2], float fp2) {
+	 MyClass1 fv1[3];
+	 int fv2;
+};
+int f2() {
+	
+};

@@ -4,7 +4,7 @@
 // A simple wrapper class that holds on the neccessary data and data structures to init our compiler
 class Compiler {
 public:
-	Compiler(std::string grammarFile="grammar.txt", std::string grammarStartSymbol="prog", bool outputToFile=true);
+	Compiler(std::string grammarFile="grammar_with_sdt.txt", std::string grammarStartSymbol="prog", bool outputToFile=true);
 	
 	~Compiler();
 	// Method used to turn the source code into the target code
@@ -13,9 +13,13 @@ public:
 	void compile();
 	// Sets the source file for our compiler to compiler
 	void setSourceFile(std::string sourceFile);
-	// Checks the syntax of the source fie
-	bool analyzeSyntax();
+	
+	// Gets the symbol table for this program
+	const SymbolTable& getSymbolTable();
+	// Whether the source file has been parsed successfully
+	bool parsedSuccessfully;
 private:
+	// Whether to write the outputs
 	bool writeOutputs;
 	// The specfication for the token
 	std::shared_ptr<Specification> spec;

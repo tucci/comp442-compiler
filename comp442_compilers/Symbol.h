@@ -12,17 +12,21 @@ public:
 	const std::string& getName() const;
 	// Get if this symbol is a terminal symbol
 	bool isTerminal() const;
+	// Get if this symbol is a semantic symbol
+	bool isSemantic() const;
 	// Overide << for easier print outs
 	friend std::ostream& operator<<(std::ostream& os, const Symbol& s);
 
 protected:
 	// Constructor as protected to allow subclasses to override this
 	// this is an abstract class
-	Symbol(std::string name, bool isTerminal);
+	Symbol(std::string name, bool isTerminal=false, bool isSemantic=false);
 	// The name of this symbol
 	std::string mName;
 	// Whether this symbol is a terminal symbol
 	bool mIsTerminalSymbol;
+	// Whether this symbol is a semantic symbol
+	bool mIsSemanticSymbol;
 };
 
 

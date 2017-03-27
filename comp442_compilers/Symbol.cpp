@@ -3,9 +3,10 @@
 
 
 
-Symbol::Symbol(std::string name, bool isTerminal) {
+Symbol::Symbol(std::string name, bool isTerminal, bool isSemantic) {
 	mName = name;
 	mIsTerminalSymbol = isTerminal;
+	mIsSemanticSymbol = isSemantic;
 }
 
 Symbol::~Symbol() {
@@ -17,6 +18,10 @@ const std::string& Symbol::getName() const {
 
 bool Symbol::isTerminal() const {
 	return mIsTerminalSymbol;
+}
+
+bool Symbol::isSemantic() const {
+	return mIsSemanticSymbol;
 }
 
 std::ostream& operator <<(std::ostream& os, const Symbol& s) {

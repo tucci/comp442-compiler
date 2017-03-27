@@ -21,22 +21,19 @@ Compiler::~Compiler() {
 
 // Compiles our source code the to the target code
 void Compiler::compile() {
-	// Method stub
-}
-
-// Sets the source file for our compile to compile
-void Compiler::setSourceFile(std::string sourceFile) {
-	lexer->setSource(sourceFile);
-}
-
-// Analyses the syntax of the source code
-bool Compiler::analyzeSyntax() {
 	std::cout << "Analyzing Syntax..." << std::endl;
-	bool parsedSuccessfully = parser->parse();
+	std::cout << "Building symbol table..." << std::endl;
+	parser->buildSymbolTable();
+	parsedSuccessfully = parser->parse(); // Phase 2 parse
+
+	// TODO: implement code generation 
+	std::cout << "Compiling ..." << std::endl;
 
 	if (writeOutputs) {
-		parser->outputAnalysis();
+		parser->outputDerivationAndErrors();
 		lexer->writeTokensToFile();
+		parser->outputSymbolTable();
+		parser->outputSemanticErrors();
 	}
 
 	if (parsedSuccessfully) {
@@ -50,7 +47,16 @@ bool Compiler::analyzeSyntax() {
 			std::cout << "See parserErrors.html for errors" << std::endl;
 		}
 	}
-	return parsedSuccessfully;
+}
+
+// Sets the source file for our compile to compile
+void Compiler::setSourceFile(std::string sourceFile) {
+	lexer->setSource(sourceFile);
+}
+
+
+const SymbolTable& Compiler::getSymbolTable() {
+	return parser->globalTable;
 }
 
 

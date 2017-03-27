@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <queue>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -26,18 +27,29 @@
 #include "lexer.h"
 
 
+
 // Grammar
 #include "Symbol.h"
 #include "Terminal.h"
+#include "SemanticSymbol.h"
 #include "NonTerminal.h"
 #include "Production.h"
+#include "Grammar.h"
+#include "Expression.h"
+#include "Statement.h"
+
+
+#include "SymbolTableData.h"
+#include "SymbolTable.h"
+#include "SemanticActions.h"
+
 // Typedef this huge monster when building the first/follow sets
 typedef std::unordered_set<Terminal, SymbolHasher, SymbolEqual> TerminalSet;
 typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> TerminalToProductionMap;
+
 // Util code
 #include "Utils.h"
 
-#include "Grammar.h"
 #include "Parser.h"
 #include "ParserGenerator.h"
 #include "Compiler.h"

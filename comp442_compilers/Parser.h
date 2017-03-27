@@ -17,16 +17,14 @@ struct SyntaxError {
 	Token lookaheadToken;
 };
 
+
 class Parser {
+	friend class Compiler;
 	friend class ParserGenerator;
 public:
 	~Parser();
 	// Parse method 
 	bool parse();
-	// Outputs the data about the fisrt/follow sets and parsing table
-	void outputParserDataToFile();
-	// Outputs the derivation and any errors
-	void outputAnalysis();
 private:
 	// Parser Generator will create this parser for us
 	Parser();
@@ -39,6 +37,12 @@ private:
 	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
+
+	// Global symbol table
+	SymbolTable globalTable;
+	// Current symbol table we are working in
+	SymbolTable* currentSymbolTable;
+	
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
@@ -46,29 +50,42 @@ private:
 	// Data structe to hold the parse table
 	std::unordered_map <NonTerminal, TerminalToProductionMap, SymbolHasher, SymbolEqual>  parseTable;
 	// Data structure to hold our parse stack
-	// Could use a std::stack, but they dont implement iterating, so we cant output stack contents
 	std::vector<Symbol> parseStack;
+	// stack that holds the semantic actions
+	std::vector<SymbolTableRecord> semanticStack;
 	// The list of derivations while parsing
 	std::vector<DerivationData> derivation;
-	// The index of the current token
-	int tokenIndex;
+	// Flag to indicate if we are in phase 2 of the semantic checking
+	bool phase2;
 	// The list of syntax errors during parsing
-	std::vector<SyntaxError> errors;
+	std::vector<SyntaxError> syntaxErrors;
+	// The list of semantic erroors during parsing
+	std::vector<SemanticError> semanticErrors;
+	// Builds the symbol table
+	const SymbolTable& buildSymbolTable();
+	// Outputs the data about the fisrt/follow sets and parsing table
+	void outputParserDataToFile();
+	// Outputs the derivation and any syntaxErrors
+	void outputDerivationAndErrors();
+	// Outputs the symbol table to a file
+	void outputSymbolTable();
+	// Outputs the semantic errors
+	void outputSemanticErrors();
 	// Internally calls the lexer
 	void nextToken();
-	// Handles the errors
+	// Handles the syntaxErrors
 	void skipErrors();
 	// Pushes the rhs of this production in inverse order
 	void inverseRHSMultiplePush(const Production& production, std::string& derivation);
 	// Matches the terminal to the token from our lexer
 	static bool matchTerminalToTokenType(const Terminal& terminal, const Token& token);
 	// Creates the tokens complementary terminal depending on the non terminal. Used to convert num to integer sometimes
-	Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);
+	static Terminal tokenToTerminal(const Token& token, const NonTerminal& nt);
 	// Gets the contents of the stack when called
 	std::string getStackContents();
 	// Adds a derivation to the current derivation list
 	void addToDerivationList(const std::string& stackContents, const std::string& production, const std::string& derivationString);
-	// Helper method to add errors to our error list
+	// Helper method to add syntaxErrors to our error list
 	void addError();
 };
 

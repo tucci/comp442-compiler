@@ -159,15 +159,22 @@
   <ItemGroup>
     <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
+    <ClCompile Include="..\comp442_compilers\Expression.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
+    <ClCompile Include="..\comp442_compilers\SemanticActions.cpp" />
+    <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
+    <ClCompile Include="..\comp442_compilers\Statement.cpp" />
     <ClCompile Include="..\comp442_compilers\Symbol.cpp" />
+    <ClCompile Include="..\comp442_compilers\SymbolTable.cpp" />
     <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
+    <ClCompile Include="..\comp442_compilers\token.cpp" />
+    <ClCompile Include="Expression_tests.cpp" />
     <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />
@@ -181,12 +188,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dfa_tests.cpp" />
+    <ClCompile Include="SymbolTableData_tests.cpp" />
+    <ClCompile Include="SymbolTable_tests.cpp" />
     <ClCompile Include="Symbol_tests.cpp" />
     <ClCompile Include="Utils_test.cpp" />
+    <ClCompile Include="Variable_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\comp442_compilers\ReadMe.txt" />
     <Text Include="grammar.txt" />
+    <Text Include="SymbolTableTestSource.txt" />
     <Text Include="TestGrammarFile.txt" />
     <Text Include="TestLexerSourceFile.txt" />
     <Text Include="TestSource1.txt" />
