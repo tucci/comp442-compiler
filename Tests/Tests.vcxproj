@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\comp442_compilers\SymbolTableData.h" />
     <ClInclude Include="..\comp442_compilers\token.h" />
     <ClInclude Include="..\comp442_compilers\Utils.h" />
     <ClInclude Include="stdafx.h" />

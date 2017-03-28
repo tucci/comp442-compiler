@@ -299,6 +299,18 @@ void SemanticActions::operatorExprFragment(SemanticActionContainer& container) {
 
 }
 
+void SemanticActions::addLeftParen(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.addParen("(");
+	}
+}
+
+void SemanticActions::addRightParen(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.expr.addParen(")");
+	}
+}
+
 void SemanticActions::checkExpr(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 
@@ -662,6 +674,9 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{"#addNumericExprFragment#", &SemanticActions::addNumericExprFragment},
 			{"#operatorExprFragment#", &SemanticActions::operatorExprFragment},
 			{"#addSignExprFragment#", &SemanticActions::addSignExprFragment},
+			{ "#addLeftParen#", &SemanticActions::addLeftParen },
+			{ "#addRightParen#", &SemanticActions::addRightParen },
+
 			{"#checkExpr#", &SemanticActions::checkExpr},
 			{"#pushExpr#", &SemanticActions::pushExpr},
 			{"#popExpr#", &SemanticActions::popExpr},

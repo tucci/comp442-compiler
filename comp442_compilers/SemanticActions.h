@@ -56,6 +56,9 @@ private:
 	static void addNumericExprFragment(SemanticActionContainer& container);
 	static void addSignExprFragment(SemanticActionContainer& container);
 	static void operatorExprFragment(SemanticActionContainer& container);
+	static void addLeftParen(SemanticActionContainer& container);
+	static void addRightParen(SemanticActionContainer& container);
+
 	static void checkExpr(SemanticActionContainer& container);
 	static void pushExpr(SemanticActionContainer& container);
 	static void popExpr(SemanticActionContainer& container);

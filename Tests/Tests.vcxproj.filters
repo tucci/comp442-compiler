@@ -27,6 +27,9 @@
     <ClInclude Include="..\comp442_compilers\Utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\comp442_compilers\SymbolTableData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
