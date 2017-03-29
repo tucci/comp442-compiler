@@ -8,6 +8,7 @@ static struct SemanticContext {
 	bool inPhase2 = false;
 	bool skipClass = false;
 	bool skipFunction = false;
+	bool returnedValued = false;
 } context;
 
 
@@ -129,7 +130,7 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	container.semanticStack.pop_back();
 }
 
-void SemanticActions::addParameter(SemanticActionContainer& container) {
+void SemanticActions::addFuncDefParameter(SemanticActionContainer& container) {
 	// Push a new param to the function data parameters
 	container.top.functionData.parameters.push_back(std::pair<TypeStruct, std::string>());
 	context.inParam = true;
@@ -274,6 +275,24 @@ void SemanticActions::storeArraySize(SemanticActionContainer& container) {
 		container.top.typeStructure.dimensions.push_back(std::stoi(container.token.lexeme));
 		// Set this type structure to an array since we know that it has some dimension
 		container.top.typeStructure.structure = SymbolStructure::struct_array;
+	}
+}
+
+void SemanticActions::checkIfReturns(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+
+		std::string functionName = (*container.currentTable)->name;
+		// Skip the program function. It doenst have to return a value
+		if (!context.returnedValued && functionName != "program") {
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Function " + functionName + " doesn't return a value on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+			
+		}
+		// Reset value
+		context.returnedValued = false;
+		
 	}
 }
 
@@ -452,9 +471,15 @@ void SemanticActions::addToVar(SemanticActionContainer& container) {
 	}
 }
 
-void SemanticActions::setFunc(SemanticActionContainer& container) {
+void SemanticActions::setFuncCall(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.var.isFunc = true;
+	}
+}
+
+void SemanticActions::addFuncCallParameter(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		std::cout << "add func all param";
 	}
 }
 
@@ -560,6 +585,7 @@ void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 			error.message = "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString() + " on line " + std::to_string(error.tokenLine);
 			container.semanticErrors.push_back(error);
 		}
+		context.returnedValued = true;
 	}
 }
 
@@ -609,7 +635,7 @@ bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& fir
 		}
 
 
-		for (auto d : possibleDependencies) {
+		for (std::vector<SymbolTable*>::value_type d : possibleDependencies) {
 			// if the table is locally dependent on itself then this is table is circular because the other table is dependent on itself
 			if (_isCircularDependent(global, firstTable, *possibleDependentTable, d->name)) {
 				return true;
@@ -765,7 +791,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{"#createProgramTable#", &SemanticActions::createProgramTable},
 			{"#endProgramTable#", &SemanticActions::endProgramTable},
 			{"#createVariableEntry#", &SemanticActions::createVariableEntry},
-			{"#addParameter#", &SemanticActions::addParameter},
+			{"#addFuncDefParameter#", &SemanticActions::addFuncDefParameter},
 			{"#createFuncEntryAndTable#", &SemanticActions::createFuncEntryAndTable},
 			{"#endFuncEntryAndTable#", &SemanticActions::endFuncEntryAndTable},
 			{"#startFuncDef#", &SemanticActions::startFuncDef},
@@ -774,6 +800,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#storeId#", &SemanticActions::storeId },
 			{ "#storeType#", &SemanticActions::storeType },
 			{ "#storeArraySize#", &SemanticActions::storeArraySize },
+			{ "#checkIfReturns#", &SemanticActions::checkIfReturns },
 			// Expression building
 			{"#addNumericExprFragment#", &SemanticActions::addNumericExprFragment},
 			{"#operatorExprFragment#", &SemanticActions::operatorExprFragment},
@@ -787,7 +814,8 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#pushVar#", &SemanticActions::pushVar},
 			{ "#popVar#", &SemanticActions::popVar},
 			{ "#addToVar#", &SemanticActions::addToVar},
-			{ "#setFunc#", &SemanticActions::setFunc },
+			{ "#setFuncCall#", &SemanticActions::setFuncCall },
+			{ "#addFuncCallParameter#", &SemanticActions::addFuncCallParameter },
 			// Statement building
 			{"#pushStatement#", &SemanticActions::pushStatement },
 			{"#popStatement#", &SemanticActions::popStatement},

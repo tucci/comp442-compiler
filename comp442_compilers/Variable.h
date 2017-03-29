@@ -17,6 +17,7 @@ public:
 	TypeStruct varType;
 	int location;
 	bool isFunc;
+	FunctionData functionData;
 };
 
 #endif

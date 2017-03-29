@@ -8,7 +8,7 @@ funcDef					-> type #storeType# id #storeId# funcDefRest
 funcDefRest				-> #startFuncDef# ( fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
 funcDefList				-> funcDef funcDefList 
 funcDefList				-> EPSILON 
-funcBody				-> { varStatementList } 
+funcBody				-> { varStatementList #checkIfReturns# } 
 
 varDecl					-> type #storeType# id #storeId# varDeclRest
 varDeclNoId				-> typeNoId #storeType# id #storeId# varDeclRest
@@ -67,7 +67,7 @@ factor					-> not factor
 factor					-> sign factor 
 factor					-> #pushVar# id #addToVar# factorRest #popVar#
 factorRest				-> dotidnest factorRest 
-factorRest				-> #setFunc# ( aParams )
+factorRest				-> #setFuncCall# ( aParams )
 factorRest				-> indice factorRestRest 
 factorRest				-> EPSILON 
 factorRestRest			-> indice factorRestRest 
@@ -104,15 +104,15 @@ typeNoId				-> int
 type					-> typeNoId 
 type					-> id #checkTypeGlobal#
 
-fParams					-> #addParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
+fParams					-> #addFuncDefParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
 fParams					-> EPSILON 
-fParamsTail				-> , #addParameter# type #storeType# id #storeId# arraySizeList 
+fParamsTail				-> , #addFuncDefParameter# type #storeType# id #storeId# arraySizeList 
 fParamsTailList			-> fParamsTail fParamsTailList 
 fParamsTailList			-> EPSILON 
 
-aParams					-> expr aParamsTailList 
+aParams					-> #addFuncCallParameter# expr aParamsTailList 
 aParams					-> EPSILON 
-aParamsTail				-> , expr 
+aParamsTail				-> , #addFuncCallParameter# expr 
 aParamsTailList			-> aParamsTail aParamsTailList 
 aParamsTailList			-> EPSILON 
 

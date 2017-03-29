@@ -42,7 +42,7 @@ private:
 	static void createProgramTable(SemanticActionContainer& container);
 	static void endProgramTable(SemanticActionContainer& container);
 	static void createVariableEntry(SemanticActionContainer& container);
-	static void addParameter(SemanticActionContainer& container);
+	static void addFuncDefParameter(SemanticActionContainer& container);
 	static void createFuncEntryAndTable(SemanticActionContainer& container);
 	static void endFuncEntryAndTable(SemanticActionContainer& container);
 	static void startFuncDef(SemanticActionContainer& container);
@@ -51,6 +51,7 @@ private:
 	static void storeId(SemanticActionContainer& container);
 	static void storeType(SemanticActionContainer& container);
 	static void storeArraySize(SemanticActionContainer& container);
+	static void checkIfReturns(SemanticActionContainer& container);
 
 	// Expression building actions
 	static void addNumericExprFragment(SemanticActionContainer& container);
@@ -65,7 +66,8 @@ private:
 	static void pushVar(SemanticActionContainer& container);
 	static void popVar(SemanticActionContainer& container);
 	static void addToVar(SemanticActionContainer& container);
-	static void setFunc(SemanticActionContainer& container);
+	static void setFuncCall(SemanticActionContainer& container);
+	static void addFuncCallParameter(SemanticActionContainer& container);
 
 
 	// Statemtent building actions
@@ -99,7 +101,7 @@ private:
 	static bool _isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency);
 	static void _unmarkAllTables(SymbolTable& global);
 	static void _checkVarError(SemanticActionContainer& container);
-	static SymbolType _getVarType(SemanticActionContainer& container, Variable& var);
+	// TODO: implement error reporting function
 
 	
 	
