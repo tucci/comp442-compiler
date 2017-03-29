@@ -27,7 +27,10 @@
     <ClInclude Include="..\comp442_compilers\Utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\comp442_compilers\SymbolTableData.h">
+    <ClInclude Include="..\comp442_compilers\SymbolTableRecord.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\comp442_compilers\TypeData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\comp442_compilers\token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Variable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

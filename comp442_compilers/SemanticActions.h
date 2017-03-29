@@ -3,7 +3,7 @@
 
 #include "SemanticSymbol.h"
 #include "SymbolTable.h"
-#include "SymbolTableData.h"
+#include "SymbolTableRecord.h"
 #include "Token.h"
 
 struct SemanticError {

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SemanticActions.h"
-#include "SymbolTableData.h"
+#include "SymbolTableRecord.h"
 
 // A simple data structure that keeps some context during the semantic actions
 static struct SemanticContext {
@@ -324,13 +324,13 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.expr.buildExpressionTree();
 
-		std::pair<bool, SymbolType> valueType = container.top.attr.expr.typeCheckExpression();
+		std::pair<bool, TypeStruct> valueType = container.top.attr.expr.typeCheckExpression();
 		if (!valueType.first) {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
 			error.message = "Expression " + container.top.attr.expr.toFullName() + " has different types on line " + std::to_string(error.tokenLine);
 			container.semanticErrors.push_back(error);
-			container.top.attr.expr.type = SymbolType::type_none;
+			container.top.attr.expr.type = {};
 		} else {
 			container.top.attr.expr.type = valueType.second;
 		}
@@ -406,7 +406,7 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 					currentScope = container.globalTable.find(className).first->scope.get();
 				}
 				
-				var.varType = varDefinition->typeStructure.type;
+				var.varType = varDefinition->typeStructure;
 			}
 
 
@@ -507,7 +507,7 @@ void SemanticActions::returnStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.statemenent.statType = StatementType::returnStat;
 		// Get current function return type
-		container.top.attr.statemenent.statData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType.type;
+		container.top.attr.statemenent.statData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType;
 		
 	}
 }
@@ -517,7 +517,7 @@ void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container)
 	
 		// Type check assignment statement
 		AssignStatement assignStatement = container.top.attr.statemenent.statData.assignStatement;
-		if (assignStatement.var.varType != assignStatement.expression.type) {
+		if (!(assignStatement.var.varType == assignStatement.expression.type)) {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
 			error.message = "Assignment Statement " + assignStatement.var.toFullName() + " = "  + assignStatement.expression.toFullName() + " has type mismatch on line " + std::to_string(error.tokenLine);
@@ -554,11 +554,11 @@ void SemanticActions::putStatementEnd(SemanticActionContainer& container) {
 void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		ReturnStatement returnStatement = container.top.attr.statemenent.statData.returnStatement;
-		if (returnStatement.functionReturnType != returnStatement.returnExpression.type) {
+		if (!(returnStatement.functionReturnType == returnStatement.returnExpression.type)) {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
 			// TODO: you need class name as well
-			error.message = "Return type " + typeToString(returnStatement.returnExpression.type) + " mismatches function return type " + typeToString(returnStatement.functionReturnType) + " on line " + std::to_string(error.tokenLine);
+			error.message = "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString() + " on line " + std::to_string(error.tokenLine);
 			container.semanticErrors.push_back(error);
 		}
 	}

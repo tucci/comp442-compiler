@@ -143,9 +143,6 @@
     <ClInclude Include="SemanticSymbol.h">
       <Filter>Header Files\grammar</Filter>
     </ClInclude>
-    <ClInclude Include="SymbolTableData.h">
-      <Filter>Header Files\parser\semantics</Filter>
-    </ClInclude>
     <ClInclude Include="SemanticActions.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
@@ -153,6 +150,18 @@
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
     <ClInclude Include="Statement.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="Attribute.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeData.h">
+      <Filter>Header Files\parser\semantics</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTableRecord.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -212,6 +221,9 @@
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
     <ClCompile Include="Statement.cpp">
+      <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
   </ItemGroup>

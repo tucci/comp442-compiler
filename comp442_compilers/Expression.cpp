@@ -108,9 +108,15 @@ void Expression::buildExpressionTree() {
 			if (fragment.type == fragment_numeric) {
 				// either int or float
 				if (isFloat(fragment.numericValue)) {
-					valueNode->valueType = SymbolType::type_float;
+					TypeStruct valueTypeStruct;
+					valueTypeStruct.type = SymbolType::type_float;
+					valueTypeStruct.structure = SymbolStructure::struct_simple;
+					valueNode->valueType = valueTypeStruct;
 				} else {
-					valueNode->valueType = SymbolType::type_int;
+					TypeStruct valueTypeStruct;
+					valueTypeStruct.type = SymbolType::type_int;
+					valueTypeStruct.structure = SymbolStructure::struct_simple;
+					valueNode->valueType = valueTypeStruct;
 				}
 			}
 			else if (fragment.type == fragment_var) {
@@ -178,7 +184,7 @@ int Expression::precedenceOf(std::string op) {
 
 }
 
-std::pair<bool, SymbolType> Expression::typeCheckExpression(std::shared_ptr<ExpressionElementNode> root) {
+std::pair<bool, TypeStruct> Expression::typeCheckExpression(std::shared_ptr<ExpressionElementNode> root) {
 	NodeType nt = root->nodeType;
 	if (nt == node_operator) {
 		std::shared_ptr<OperatorExpressionNode> operatorNode = std::static_pointer_cast<OperatorExpressionNode>(root);
@@ -190,7 +196,10 @@ std::pair<bool, SymbolType> Expression::typeCheckExpression(std::shared_ptr<Expr
 		if (leftPair.first && rightPair.first && leftPair.second == rightPair.second) {
 			return std::make_pair(true, leftPair.second);
 		} else {
-			return std::make_pair(false, SymbolType::type_none);
+			TypeStruct valueTypeStruct;
+			valueTypeStruct.type = SymbolType::type_none;
+			valueTypeStruct.structure = SymbolStructure::struct_simple;
+			return std::make_pair(false, valueTypeStruct);
 		}
 
 	} else if (nt == node_value) {
@@ -218,37 +227,6 @@ void Expression::toFullName(std::string& str, std::shared_ptr<ExpressionElementN
 		
 	}
 	
-}
-
-
-Variable::Variable() {
-	isFunc = false;
-	location = -1;
-}
-
-Variable::~Variable() {
-}
-
-std::string Variable::toFullName() {
-	std::string varName;
-	for (int i = 0; i < vars.size(); ++i) {
-		VariableFragment frag = vars[i];
-
-		if (i != 0) {
-			varName.append(".");
-		} 
-		varName.append(frag.identifier);
-		
-		for (Expression& indice : frag.indices) {
-			varName.append("[" + indice.toFullName() + "]");
-		}
-		
-	}
-	if (isFunc) {
-		varName.append("()");
-	}
-	
-	return varName;
 }
 
 

@@ -3,30 +3,9 @@
 
 
 
-
-
-class Expression;
-
-
-struct VariableFragment {
-	std::string identifier;
-	std::vector<Expression> indices;
-};
-
-class Variable {
-public:
-	Variable();
-	~Variable();
-	std::vector<VariableFragment> vars;
-	std::string toFullName();
-	TypeStruct varType;
-	int location;
-};
-	bool isFunc;
-
 enum ExpressionSign { sign_plus, sign_minus };
 enum ExpressionFragmentType { fragment_var, fragment_numeric, fragment_operator, fragment_left_paren, fragment_right_paren };
-enum NodeType {node_value, node_operator};
+
 
 struct ExpressionFragment {
 	ExpressionFragmentType type;
@@ -36,14 +15,14 @@ struct ExpressionFragment {
 	std::string operatorValue;
 };
 
+enum NodeType { node_value, node_operator };
+
 class ExpressionElementNode {
 public:
 	NodeType nodeType;
 	ExpressionElementNode(NodeType type) : nodeType(type){};
 	
 };
-
-
 
 
 class ValueExpressionNode : public ExpressionElementNode {

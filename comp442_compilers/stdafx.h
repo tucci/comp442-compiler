@@ -35,11 +35,14 @@
 #include "NonTerminal.h"
 #include "Production.h"
 #include "Grammar.h"
+
+#include "TypeData.h"
+#include "Variable.h"
 #include "Expression.h"
 #include "Statement.h"
+#include "Attribute.h"
 
-
-#include "SymbolTableData.h"
+#include "SymbolTableRecord.h"
 #include "SymbolTable.h"
 #include "SemanticActions.h"
 
