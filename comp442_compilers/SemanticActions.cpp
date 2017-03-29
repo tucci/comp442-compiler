@@ -557,19 +557,12 @@ void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 		if (!(returnStatement.functionReturnType == returnStatement.returnExpression.type)) {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
-			// TODO: you need class name as well
 			error.message = "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString() + " on line " + std::to_string(error.tokenLine);
 			container.semanticErrors.push_back(error);
 		}
 	}
 }
 
-// TODO: remove this?
-void SemanticActions::typeCheck(SemanticActionContainer& container) {
-	if (context.inPhase2) {
-		
-	}
-}
 
 
 // --------------------------------- INTERNAL HELPER METHODS ----------------------------------
@@ -812,7 +805,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#putStatementEnd#", &SemanticActions::putStatementEnd },
 			{ "#returnStatementEnd#", &SemanticActions::returnStatementEnd },
 
-			{ "#typeCheck#", &SemanticActions::typeCheck },
+		
 
 			
 			

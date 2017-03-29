@@ -85,7 +85,7 @@ private:
 	static void returnStatementEnd(SemanticActionContainer& container);
 
 
-	static void typeCheck(SemanticActionContainer& container);
+
 
 	
 
