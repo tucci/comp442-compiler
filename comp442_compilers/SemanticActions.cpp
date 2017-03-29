@@ -288,7 +288,7 @@ void SemanticActions::addNumericExprFragment(SemanticActionContainer& container)
 
 void SemanticActions::addSignExprFragment(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		
+		container.top.attr.expr.setSign(container.token.lexeme);
 	}
 }
 
@@ -311,11 +311,6 @@ void SemanticActions::addRightParen(SemanticActionContainer& container) {
 	}
 }
 
-void SemanticActions::checkExpr(SemanticActionContainer& container) {
-	if (context.inPhase2) {
-
-	}
-}
 
 void SemanticActions::pushExpr(SemanticActionContainer& container) {
 	if (context.inPhase2) {
@@ -327,18 +322,36 @@ void SemanticActions::pushExpr(SemanticActionContainer& container) {
 
 void SemanticActions::popExpr(SemanticActionContainer& container) {
 	if (context.inPhase2) {
+		container.top.attr.expr.buildExpressionTree();
+
+		std::pair<bool, SymbolType> valueType = container.top.attr.expr.typeCheckExpression();
+		if (!valueType.first) {
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Expression " + container.top.attr.expr.toFullName() + " has different types on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+			container.top.attr.expr.type = SymbolType::type_none;
+		} else {
+			container.top.attr.expr.type = valueType.second;
+		}
+		
+
 		SymbolTableRecord popped = container.top;
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
 		switch (top.attr.type) {
 
+			// Migrate attribute
 		case attr_expr: {
 			top.attr.expr = popped.attr.expr;
 			break;
 		} 
 		case attr_statement: {
-			if (top.attr.statmenent.statType == StatmentType::assignStat) {
-				top.attr.statmenent.statData.assignStatement.expression = popped.attr.expr;
+			if (top.attr.statemenent.statType == StatementType::assignStat) {
+				top.attr.statemenent.statData.assignStatement.expression = popped.attr.expr;
+			}
+			if (top.attr.statemenent.statType == StatementType::returnStat) {
+				top.attr.statemenent.statData.returnStatement.returnExpression = popped.attr.expr;
 			}
 			break;
 		}
@@ -365,6 +378,41 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		_checkVarError(container);
 
+		Variable& var = container.top.attr.var;
+
+		// Get the var type
+		VariableFragment varFragment;
+		SymbolTable* currentScope = (*container.currentTable);
+		std::string currentIdentifier;
+
+		for (int i = 0; i < var.vars.size(); ++i) {
+			varFragment = var.vars[i];
+			currentIdentifier = varFragment.identifier;
+			// Finds in current scope, or parent scope
+			std::pair<SymbolTableRecord*, bool> found;
+			if (i == 0) {
+				found = currentScope->findInParents(currentIdentifier);
+			} else {
+				found = currentScope->find(currentIdentifier);
+			}
+
+			if (found.second) {
+				SymbolTableRecord* varDefinition = found.first;
+				// This is a object
+				if (varDefinition->typeStructure.type == SymbolType::type_class) {
+					// We need to nest down the object structure
+					// Get the symbol table for this class type
+					std::string className = varDefinition->typeStructure.className;
+					currentScope = container.globalTable.find(className).first->scope.get();
+				}
+				
+				var.varType = varDefinition->typeStructure.type;
+			}
+
+
+		}
+
+
 		SymbolTableRecord popped = container.top;
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
@@ -374,11 +422,11 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 			break;
 		}
 		case attr_statement: {
-			switch (top.attr.statmenent.statType) {
-			case assignStat: top.attr.statmenent.statData.assignStatement.var = popped.attr.var; break;
+			switch (top.attr.statemenent.statType) {
+			case assignStat: top.attr.statemenent.statData.assignStatement.var = popped.attr.var; break;
 			case forStat: break;
 			case ifelseStat: break;
-			case getStat: top.attr.statmenent.statData.getStatement.var = popped.attr.var; break;
+			case getStat: top.attr.statemenent.statData.getStatement.var = popped.attr.var; break;
 			case putStat: break;
 			case returnStat: break;
 			default:;
@@ -421,44 +469,105 @@ void SemanticActions::pushStatement(SemanticActionContainer& container) {
 
 void SemanticActions::popStatement(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statData.assignStatement.expression.toFullName();
 		container.semanticStack.pop_back();
 	}
 }
 
-void SemanticActions::assignmentStatement(SemanticActionContainer& container) {
+void SemanticActions::assignmentStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::assignStat;
+		container.top.attr.statemenent.statType = StatementType::assignStat;
 	}
 }
 
-void SemanticActions::forStatement(SemanticActionContainer& container) {
+void SemanticActions::forStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::forStat;
+		container.top.attr.statemenent.statType = StatementType::forStat;
 	}
 }
 
-void SemanticActions::ifelseStatement(SemanticActionContainer& container) {
+void SemanticActions::ifelseStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::ifelseStat;
+		container.top.attr.statemenent.statType = StatementType::ifelseStat;
 	}
 }
 
-void SemanticActions::getStatement(SemanticActionContainer& container) {
+void SemanticActions::getStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::getStat;
+		container.top.attr.statemenent.statType = StatementType::getStat;
 	}
 }
 
-void SemanticActions::putStatment(SemanticActionContainer& container) {
+void SemanticActions::putStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::putStat;
+		container.top.attr.statemenent.statType = StatementType::putStat;
 	}
 }
 
-void SemanticActions::returnStatment(SemanticActionContainer& container) {
+void SemanticActions::returnStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statmenent.statType = StatmentType::returnStat;
+		container.top.attr.statemenent.statType = StatementType::returnStat;
+		// Get current function return type
+		container.top.attr.statemenent.statData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType.type;
+		
+	}
+}
+
+void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+	
+		// Type check assignment statement
+		AssignStatement assignStatement = container.top.attr.statemenent.statData.assignStatement;
+		if (assignStatement.var.varType != assignStatement.expression.type) {
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			error.message = "Assignment Statement " + assignStatement.var.toFullName() + " = "  + assignStatement.expression.toFullName() + " has type mismatch on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+		}
+		
+	}
+}
+
+void SemanticActions::forStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+
+	}
+}
+
+void SemanticActions::ifelseStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+
+	}
+}
+
+void SemanticActions::getStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+
+	}
+}
+
+void SemanticActions::putStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+
+	}
+}
+
+void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		ReturnStatement returnStatement = container.top.attr.statemenent.statData.returnStatement;
+		if (returnStatement.functionReturnType != returnStatement.returnExpression.type) {
+			SemanticError error;
+			error.tokenLine = container.token.tokenLine;
+			// TODO: you need class name as well
+			error.message = "Return type " + typeToString(returnStatement.returnExpression.type) + " mismatches function return type " + typeToString(returnStatement.functionReturnType) + " on line " + std::to_string(error.tokenLine);
+			container.semanticErrors.push_back(error);
+		}
+	}
+}
+
+// TODO: remove this?
+void SemanticActions::typeCheck(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		
 	}
 }
 
@@ -544,8 +653,8 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 	for (int i = 0; i < var.vars.size(); ++i) {
 		varFragment = var.vars[i];
 		currentIdentifier = varFragment.identifier;
-		// Finds in current scope, or parent scopes
-		std::pair<SymbolTableRecord*, bool> found;// = currentScope->findInParents(currentIdentifier);
+		// Finds in current scope, or parent scope
+		std::pair<SymbolTableRecord*, bool> found;
 		if (i == 0) {
 			found = currentScope->findInParents(currentIdentifier);
 		} else {
@@ -651,6 +760,8 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 }
 
 
+
+
 // Map from semantic action name to function pointer that handles that action
 std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActions::ACTION_MAP = {
 			// Symbol Table building
@@ -677,7 +788,6 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#addLeftParen#", &SemanticActions::addLeftParen },
 			{ "#addRightParen#", &SemanticActions::addRightParen },
 
-			{"#checkExpr#", &SemanticActions::checkExpr},
 			{"#pushExpr#", &SemanticActions::pushExpr},
 			{"#popExpr#", &SemanticActions::popExpr},
 			// Var building
@@ -688,12 +798,21 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			// Statement building
 			{"#pushStatement#", &SemanticActions::pushStatement },
 			{"#popStatement#", &SemanticActions::popStatement},
-			{"#assignmentStatement#", &SemanticActions::assignmentStatement},
-			{"#forStatement#", &SemanticActions::forStatement},
-			{"#ifelseStatement#", &SemanticActions::ifelseStatement},
-			{"#getStatement#", &SemanticActions::getStatement},
-			{"#putStatment#", &SemanticActions::putStatment},
-			{"#returnStatment#", &SemanticActions::returnStatment},
+			{"#assignmentStatementStart#", &SemanticActions::assignmentStatementStart},
+			{"#forStatementStart#", &SemanticActions::forStatementStart},
+			{"#ifelseStatementStart#", &SemanticActions::ifelseStatementStart},
+			{"#getStatementStart#", &SemanticActions::getStatementStart},
+			{"#putStatementStart#", &SemanticActions::putStatementStart},
+			{"#returnStatementStart#", &SemanticActions::returnStatementStart},
+
+			{ "#assignmentStatementEnd#", &SemanticActions::assignmentStatementEnd },
+			{ "#forStatementEnd#", &SemanticActions::forStatementEnd },
+			{ "#ifelseStatementEnd#", &SemanticActions::ifelseStatementEnd },
+			{ "#getStatementEnd#", &SemanticActions::getStatementEnd },
+			{ "#putStatementEnd#", &SemanticActions::putStatementEnd },
+			{ "#returnStatementEnd#", &SemanticActions::returnStatementEnd },
+
+			{ "#typeCheck#", &SemanticActions::typeCheck },
 
 			
 			

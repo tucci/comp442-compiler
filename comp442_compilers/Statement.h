@@ -1,7 +1,9 @@
 #ifndef STATEMENT_H
 #define STATEMENT_H
 
-enum StatmentType {
+struct TypeStruct;
+
+enum StatementType {
 	assignStat,
 	forStat,
 	ifelseStat,
@@ -10,7 +12,7 @@ enum StatmentType {
 	returnStat,
 };
 
-struct AssignStatment {
+struct AssignStatement {
 	Variable var;
 	Expression expression;
 };
@@ -21,17 +23,20 @@ struct IfElseStatement {};
 struct GetStatement {
 	Variable var;
 };
-struct PutStatment{};
-struct ReturnStatment{};
+struct PutStatement{};
+struct ReturnStatement {
+	TypeStruct functionReturnType;
+	Expression returnExpression;
+};
 
 
 struct StatementData {
-	AssignStatment assignStatement;
+	AssignStatement assignStatement;
 	ForStatement forStatement;
 	IfElseStatement ifElseStatement;
 	GetStatement getStatement;
-	PutStatment putStatement;
-	ReturnStatment returnStatement;
+	PutStatement putStatement;
+	ReturnStatement returnStatement;
 };
 
 
@@ -39,7 +44,7 @@ class Statement {
 public:
 	Statement();
 	~Statement();
-	StatmentType statType;
+	StatementType statType;
 	StatementData statData;
 };
 

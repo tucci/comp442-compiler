@@ -150,7 +150,7 @@ enum AttributeType {
 struct Attributes {
 	AttributeType type;
 	Expression expr;
-	Statement statmenent;
+	Statement statemenent;
 	Variable var;
 };
 
@@ -182,7 +182,7 @@ public:
 
 
 	// The attributes of this semantic record
-	// Used to build up expressions/statments and other values while parsing
+	// Used to build up expressions/statements and other values while parsing
 	Attributes attr;
 
 	std::string toString() {

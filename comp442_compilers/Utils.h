@@ -95,4 +95,12 @@ static bool isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }
 
+static bool isFloat(std::string str) {
+	if (str.find('.') != std::string::npos) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 #endif // !UTILS_H

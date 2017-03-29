@@ -58,8 +58,6 @@ private:
 	static void operatorExprFragment(SemanticActionContainer& container);
 	static void addLeftParen(SemanticActionContainer& container);
 	static void addRightParen(SemanticActionContainer& container);
-
-	static void checkExpr(SemanticActionContainer& container);
 	static void pushExpr(SemanticActionContainer& container);
 	static void popExpr(SemanticActionContainer& container);
 
@@ -73,12 +71,21 @@ private:
 	// Statemtent building actions
 	static void pushStatement(SemanticActionContainer& container);
 	static void popStatement(SemanticActionContainer& container);
-	static void assignmentStatement(SemanticActionContainer& container);
-	static void forStatement(SemanticActionContainer& container);
-	static void ifelseStatement(SemanticActionContainer& container);
-	static void getStatement(SemanticActionContainer& container);
-	static void putStatment(SemanticActionContainer& container);
-	static void returnStatment(SemanticActionContainer& container);
+	static void assignmentStatementStart(SemanticActionContainer& container);
+	static void forStatementStart(SemanticActionContainer& container);
+	static void ifelseStatementStart(SemanticActionContainer& container);
+	static void getStatementStart(SemanticActionContainer& container);
+	static void putStatementStart(SemanticActionContainer& container);
+	static void returnStatementStart(SemanticActionContainer& container);
+	static void assignmentStatementEnd(SemanticActionContainer& container);
+	static void forStatementEnd(SemanticActionContainer& container);
+	static void ifelseStatementEnd(SemanticActionContainer& container);
+	static void getStatementEnd(SemanticActionContainer& container);
+	static void putStatementEnd(SemanticActionContainer& container);
+	static void returnStatementEnd(SemanticActionContainer& container);
+
+
+	static void typeCheck(SemanticActionContainer& container);
 
 	
 
@@ -92,6 +99,8 @@ private:
 	static bool _isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency);
 	static void _unmarkAllTables(SymbolTable& global);
 	static void _checkVarError(SemanticActionContainer& container);
+	static SymbolType _getVarType(SemanticActionContainer& container, Variable& var);
+
 	
 	
 };

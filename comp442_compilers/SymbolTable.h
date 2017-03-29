@@ -4,7 +4,6 @@
 
 // TODO: figure out how to handle recursion
 // TODO: type check return statement
-// TODO: type check assignment statement
 // TODO: type check function calls params have right amount and types
 class SymbolTable {
 public:
