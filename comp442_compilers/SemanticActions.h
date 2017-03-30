@@ -100,9 +100,7 @@ private:
 	static bool _isCircularDependent(SymbolTable& global, SymbolTable& dependentTable, const std::string& dependency);
 	static void _unmarkAllTables(SymbolTable& global);
 	static void _checkVarError(SemanticActionContainer& container);
-	// TODO: implement error reporting function
-
-	
+	static void _reportError(SemanticActionContainer& container, std::string message);
 	
 };
 

@@ -64,10 +64,7 @@ void SemanticActions::createClassEntryAndTable(SemanticActionContainer& containe
 		if (_isRedefined(*found.first, container.top)) {
 			context.skipClass = true;
 			if (context.inPhase2) {
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Class " + container.top.name + " redeclared on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Class " + container.top.name + " redeclared");
 			}
 
 		}
@@ -119,10 +116,7 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	else {
 		if (_isRedefined(*found.first, container.top)) {
 			if (context.inPhase2) {
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Variable " + container.top.name + " redeclared on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Variable " + container.top.name + " redeclared");
 			}
 		}
 	}
@@ -177,10 +171,7 @@ void SemanticActions::startFuncDef(SemanticActionContainer& container) {
 	if (found.second && _isRedefined(*found.first, container.top)) {
 		context.skipFunction = true;
 		if (context.inPhase2) {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Function " + container.top.name + " redeclared on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Function " + container.top.name + " redeclared");
 		}
 	}
 
@@ -193,10 +184,7 @@ void SemanticActions::checkTypeGlobal(SemanticActionContainer& container) {
 		std::pair<SymbolTableRecord*, bool> found = container.globalTable.find(typeName);
 		if (!found.second) {
 			// We have a type being used that is not found in the global table
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Type " + typeName + " not defined on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Type " + typeName + " not defined");
 		}
 	}
 }
@@ -209,10 +197,7 @@ void SemanticActions::checkCircular(SemanticActionContainer& container) {
 		std::string className = container.token.lexeme; // ClassB
 
 		if (_isCircularDependent(container.globalTable, **container.currentTable, className)) {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Circular dependency of " + className + " on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Circular dependency of " + className);
 		}
 		_unmarkAllTables(container.globalTable);
 
@@ -228,10 +213,7 @@ void SemanticActions::storeId(SemanticActionContainer& container) {
 				if (context.inPhase2) {
 					isRedefinition = true;
 					// We have a redefinnition
-					SemanticError error;
-					error.tokenLine = container.token.tokenLine;
-					error.message = "Parameter " + container.token.lexeme + " redeclared on line " + std::to_string(error.tokenLine);
-					container.semanticErrors.push_back(error);
+					_reportError(container, "Parameter " + container.token.lexeme + " redeclared");
 				}
 			}
 		}
@@ -283,10 +265,7 @@ void SemanticActions::checkIfReturns(SemanticActionContainer& container) {
 		std::string functionName = (*container.currentTable)->name;
 		// Skip the program function. It doenst return a value
 		if (!context.returnedValued && functionName != "program") {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Function " + functionName + " doesn't return a value on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Function " + functionName + " doesn't return a value");
 			
 		}
 		// Reset value
@@ -344,10 +323,7 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 
 		std::pair<bool, TypeStruct> valueType = container.top.attr.expr.typeCheckExpression();
 		if (valueType.second.type == type_none || !valueType.first) {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Expression " + container.top.attr.expr.toFullName() + " has different types on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Expression " + container.top.attr.expr.toFullName() + " has different types");
 			container.top.attr.expr.type = {};
 		} else {
 			container.top.attr.expr.type = valueType.second;
@@ -374,10 +350,11 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 			break;
 		}
 		case attr_var: {
-			// TODO: come up with a better way to handle this instead of hardcoding this migration
 			if (top.attr.var.isFunc) {
+				// Set this expression to the last arugment for this function
 				top.attr.var.arguments.push_back(popped.attr.expr.type);
 			} else {
+				// Add this expression to the last indice for this var
 				top.attr.var.vars.back().indices.push_back(popped.attr.expr);
 			}
 
@@ -467,10 +444,7 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 			
 
 			if (error) {
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Function call " + popped.attr.var.toFullName() + " has mismatich in arugment length or types on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Function call " + popped.attr.var.toFullName() + " has mismatich in arugment length or types");
 			}
 			
 		}
@@ -582,10 +556,7 @@ void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container)
 		// Type check assignment statement
 		AssignStatement assignStatement = container.top.attr.statemenent.statData.assignStatement;
 		if (!(assignStatement.var.varType == assignStatement.expression.type)) {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Assignment Statement " + assignStatement.var.toFullName() + " = "  + assignStatement.expression.toFullName() + " has type mismatch on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Assignment Statement " + assignStatement.var.toFullName() + " = " + assignStatement.expression.toFullName() + " has type mismatch");
 		}
 		
 	}
@@ -619,10 +590,7 @@ void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		ReturnStatement returnStatement = container.top.attr.statemenent.statData.returnStatement;
 		if (!(returnStatement.functionReturnType == returnStatement.returnExpression.type)) {
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString() + " on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString());
 		}
 		context.returnedValued = true;
 	}
@@ -722,34 +690,21 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 
 		if (!found.second) {
 			// Not found, this variable is undefined
-			SemanticError error;
-			error.tokenLine = container.token.tokenLine;
-			error.message = "Identifier " + var.toFullName() + " is undefined on line " + std::to_string(error.tokenLine);
-			container.semanticErrors.push_back(error);
+			_reportError(container, "Identifier " + var.toFullName() + " is undefined");
 		} else {
 
 
 			if (varDefinition->kind == SymbolKind::kind_function && !var.isFunc) {
-				// The definition is a function, but it is not being used as a function
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Identifier " + var.toFullName() + " is not a function on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Identifier " + var.toFullName() + " is not a function");
 			} else if (varDefinition->kind != SymbolKind::kind_function && var.isFunc) {
 				// The definition is not a function, but it is being used as a function
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Identifier " + var.toFullName() + " is not a function on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Identifier " + var.toFullName() + " is not a function");
 			}
 
 			// If the var is being used before it has been declared
 			// If it is a function, then we can ignore it's location
 			if (varDefinition->kind != SymbolKind::kind_function && i == 0 && varDefinition->definedLocation > var.location) {
-				SemanticError error;
-				error.tokenLine = container.token.tokenLine;
-				error.message = "Identifier " + var.toFullName() + " is used before it is defined on line " + std::to_string(error.tokenLine);
-				container.semanticErrors.push_back(error);
+				_reportError(container, "Identifier " + var.toFullName() + " is used before it is defined");
 			}
 
 
@@ -757,28 +712,19 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 			case struct_simple: {
 				// trying to index a variable, but the variable is not an array
 				if (varFragment.indices.size() != 0) {
-					SemanticError error;
-					error.tokenLine = container.token.tokenLine;
-					error.message = "Identifier " + var.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
-					container.semanticErrors.push_back(error);
+					_reportError(container, "Identifier " + var.toFullName() + " is not an array");
 				}
 				break;
 			}
 			case struct_array: {
 				//  Trying to use a array without indexing into it
 				if (varFragment.indices.size() == 0) {
-					SemanticError error;
-					error.tokenLine = container.token.tokenLine;
-					error.message = "Identifier " + var.toFullName() + " is not an array on line " + std::to_string(error.tokenLine);
-					container.semanticErrors.push_back(error);
+					_reportError(container, "Identifier " + var.toFullName() + " is not an array");
 				} else {
 					// Compare dimension length 
 					// The dimensions are different
 					if (varDefinition->typeStructure.dimensions.size() != varFragment.indices.size()) {
-						SemanticError error;
-						error.tokenLine = container.token.tokenLine;
-						error.message = "Array " + var.toFullName() + " has wrong dimensions on line " + std::to_string(error.tokenLine);
-						container.semanticErrors.push_back(error);
+						_reportError(container, "Array " + var.toFullName() + " has wrong dimensions");
 					} else {
 						// Compare each size in the dimension
 						// TODO: We cant compare sizes at compile time as we dont know what the values of the expressions are
@@ -804,10 +750,7 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 				// this is an int/float
 				if (var.vars.size() - i > 1) {
 					// However it is being used as it was an object
-					SemanticError error;
-					error.tokenLine = container.token.tokenLine;
-					error.message = "Identifier " + var.toFullName() + " is not an object on line " + std::to_string(error.tokenLine);
-					container.semanticErrors.push_back(error);
+					_reportError(container, "Identifier " + var.toFullName() + " is not an object");
 					return; // Early return
 				}
 			}
@@ -817,7 +760,13 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 
 }
 
+void SemanticActions::_reportError(SemanticActionContainer& container, std::string message) {
+	SemanticError error;
+	error.tokenLine = container.token.tokenLine;
+	error.message = message + " on line " + std::to_string(error.tokenLine);
+	container.semanticErrors.push_back(error);
 
+}
 
 
 // Map from semantic action name to function pointer that handles that action
