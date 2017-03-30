@@ -45,7 +45,7 @@ public:
 	// The symbol's type and structure. int,float,class -> simple/array and any array data
 	TypeStruct typeStructure;
 	// used when this type is a function type
-	FunctionData functionData;
+	FunctionDeclarationData functionData;
 	// The link to the child symbol table
 	std::shared_ptr<SymbolTable> scope;
 	// On what line/location of the source code is this identifer defined

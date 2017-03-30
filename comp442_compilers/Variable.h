@@ -8,16 +8,18 @@ struct VariableFragment {
 	std::vector<Expression> indices;
 };
 
+
+
 class Variable {
 public:
 	Variable();
 	~Variable();
 	std::vector<VariableFragment> vars;
 	std::string toFullName();
-	TypeStruct varType;
+	TypeStruct varType; // If this var turns into a function, then this value is the return type of this function
 	int location;
 	bool isFunc;
-	FunctionData functionData;
+	std::vector<TypeStruct> arguments;
 };
 
 #endif

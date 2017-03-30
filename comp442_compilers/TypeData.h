@@ -92,7 +92,7 @@ struct TypeStruct {
 };
 
 // Holds all the data for a function declaration
-struct FunctionData {
+struct FunctionDeclarationData {
 	// The return values type and struct
 	// This is allowing for returning of arrays
 	TypeStruct returnType;
@@ -115,7 +115,7 @@ struct FunctionData {
 		return s;
 	};
 
-	friend bool operator==(const FunctionData& lhs, const FunctionData& rhs) {
+	friend bool operator==(const FunctionDeclarationData& lhs, const FunctionDeclarationData& rhs) {
 		if (!(lhs.returnType == rhs.returnType)) return false;
 		if (lhs.parameters != rhs.parameters) return false;
 		return true;

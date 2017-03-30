@@ -67,7 +67,7 @@ factor					-> not factor
 factor					-> sign factor 
 factor					-> #pushVar# id #addToVar# factorRest #popVar#
 factorRest				-> dotidnest factorRest 
-factorRest				-> #setFuncCall# ( aParams )
+factorRest				-> #startFuncCall# ( aParams )
 factorRest				-> indice factorRestRest 
 factorRest				-> EPSILON 
 factorRestRest			-> indice factorRestRest 
@@ -110,9 +110,9 @@ fParamsTail				-> , #addFuncDefParameter# type #storeType# id #storeId# arraySiz
 fParamsTailList			-> fParamsTail fParamsTailList 
 fParamsTailList			-> EPSILON 
 
-aParams					-> #addFuncCallParameter# expr aParamsTailList 
+aParams					-> expr aParamsTailList 
 aParams					-> EPSILON 
-aParamsTail				-> , #addFuncCallParameter# expr 
+aParamsTail				-> , expr 
 aParamsTailList			-> aParamsTail aParamsTailList 
 aParamsTailList			-> EPSILON 
 

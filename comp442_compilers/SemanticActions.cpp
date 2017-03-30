@@ -280,9 +280,8 @@ void SemanticActions::storeArraySize(SemanticActionContainer& container) {
 
 void SemanticActions::checkIfReturns(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-
 		std::string functionName = (*container.currentTable)->name;
-		// Skip the program function. It doenst have to return a value
+		// Skip the program function. It doenst return a value
 		if (!context.returnedValued && functionName != "program") {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
@@ -344,7 +343,7 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 		container.top.attr.expr.buildExpressionTree();
 
 		std::pair<bool, TypeStruct> valueType = container.top.attr.expr.typeCheckExpression();
-		if (!valueType.first) {
+		if (valueType.second.type == type_none || !valueType.first) {
 			SemanticError error;
 			error.tokenLine = container.token.tokenLine;
 			error.message = "Expression " + container.top.attr.expr.toFullName() + " has different types on line " + std::to_string(error.tokenLine);
@@ -375,7 +374,14 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 			break;
 		}
 		case attr_var: {
-			top.attr.var.vars.back().indices.push_back(popped.attr.expr);
+			// TODO: come up with a better way to handle this instead of hardcoding this migration
+			if (top.attr.var.isFunc) {
+				top.attr.var.arguments.push_back(popped.attr.expr.type);
+			} else {
+				top.attr.var.vars.back().indices.push_back(popped.attr.expr);
+			}
+
+			
 			break;
 		}
 		default: ;
@@ -402,6 +408,7 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 		// Get the var type
 		VariableFragment varFragment;
 		SymbolTable* currentScope = (*container.currentTable);
+		SymbolTableRecord* record = NULL;
 		std::string currentIdentifier;
 
 		for (int i = 0; i < var.vars.size(); ++i) {
@@ -416,23 +423,59 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 			}
 
 			if (found.second) {
-				SymbolTableRecord* varDefinition = found.first;
+				record = found.first;
 				// This is a object
-				if (varDefinition->typeStructure.type == SymbolType::type_class) {
+				if (record->typeStructure.type == SymbolType::type_class) {
 					// We need to nest down the object structure
 					// Get the symbol table for this class type
-					std::string className = varDefinition->typeStructure.className;
+					std::string className = record->typeStructure.className;
 					currentScope = container.globalTable.find(className).first->scope.get();
 				}
+				if (var.isFunc) {
+					var.varType = record->functionData.returnType;
+				} else {
+					var.varType = record->typeStructure;
+				}
 				
-				var.varType = varDefinition->typeStructure;
+				
 			}
 
 
 		}
 
-
 		SymbolTableRecord popped = container.top;
+		
+		if (popped.attr.var.isFunc) {
+			bool error = false;
+			if (record == NULL) {
+				error = true;
+			} else {
+				// Check to see if this is a function call. If it is, we need to check the argument types and values
+				if (popped.attr.var.arguments.size() == record->functionData.parameters.size()) {
+					// Compare each function type
+					for (int i = 0; i < popped.attr.var.arguments.size(); ++i) {
+						if (!(popped.attr.var.arguments[i] == record->functionData.parameters[i].first)) {
+							// There was a type mismatch for the type at param/arg index i
+							error = true;
+						}
+					}
+
+				} else {
+					error = true; // Arugment length is not the same as function definition
+				}
+			}
+			
+
+			if (error) {
+				SemanticError error;
+				error.tokenLine = container.token.tokenLine;
+				error.message = "Function call " + popped.attr.var.toFullName() + " has mismatich in arugment length or types on line " + std::to_string(error.tokenLine);
+				container.semanticErrors.push_back(error);
+			}
+			
+		}
+
+		
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
 		switch (top.attr.type) {
@@ -453,6 +496,7 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 			break;
 		};
 		case attr_var: {
+			
 			break;
 		}
 		default:;
@@ -471,17 +515,12 @@ void SemanticActions::addToVar(SemanticActionContainer& container) {
 	}
 }
 
-void SemanticActions::setFuncCall(SemanticActionContainer& container) {
+void SemanticActions::startFuncCall(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.var.isFunc = true;
 	}
 }
 
-void SemanticActions::addFuncCallParameter(SemanticActionContainer& container) {
-	if (context.inPhase2) {
-		std::cout << "add func all param";
-	}
-}
 
 
 void SemanticActions::pushStatement(SemanticActionContainer& container) {
@@ -814,8 +853,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#pushVar#", &SemanticActions::pushVar},
 			{ "#popVar#", &SemanticActions::popVar},
 			{ "#addToVar#", &SemanticActions::addToVar},
-			{ "#setFuncCall#", &SemanticActions::setFuncCall },
-			{ "#addFuncCallParameter#", &SemanticActions::addFuncCallParameter },
+			{ "#startFuncCall#", &SemanticActions::startFuncCall },
 			// Statement building
 			{"#pushStatement#", &SemanticActions::pushStatement },
 			{"#popStatement#", &SemanticActions::popStatement},

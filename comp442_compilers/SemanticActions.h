@@ -66,8 +66,7 @@ private:
 	static void pushVar(SemanticActionContainer& container);
 	static void popVar(SemanticActionContainer& container);
 	static void addToVar(SemanticActionContainer& container);
-	static void setFuncCall(SemanticActionContainer& container);
-	static void addFuncCallParameter(SemanticActionContainer& container);
+	static void startFuncCall(SemanticActionContainer& container);
 
 
 	// Statemtent building actions
