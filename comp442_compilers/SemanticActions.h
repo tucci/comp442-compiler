@@ -20,6 +20,7 @@ struct SemanticActionContainer {
 	SymbolTable** currentTable;
 	const Token& token;
 	std::vector<SemanticError>& semanticErrors;
+	bool* parserError;
 };
 
 class SemanticActions {
@@ -32,7 +33,8 @@ public:
 		SymbolTable** currentTable,
 		const Token& token,
 		bool phase2,
-		std::vector<SemanticError>& semanticErrors);
+		std::vector<SemanticError>& semanticErrors,
+		bool* parserError);
 private:
 	// All of our semantic actions in the grammar
 	static void createGlobalTable(SemanticActionContainer& container);

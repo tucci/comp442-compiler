@@ -19,6 +19,7 @@ public:
 	// Whether the source file has been parsed successfully
 	bool parsedSuccessfully;
 private:
+	std::string sourceFile;
 	// Whether to write the outputs
 	bool writeOutputs;
 	// The specfication for the token
@@ -29,6 +30,7 @@ private:
 	std::shared_ptr<Lexer> lexer;
 	//  The parser that does the syntax checking
 	std::shared_ptr<Parser> parser;
+	void generateCode();
 };
 
 #endif // ! COMPILER_H

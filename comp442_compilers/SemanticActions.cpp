@@ -17,7 +17,9 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
                                     SymbolTable& globalTable,
                                     SymbolTable** currentTable,
                                     const Token& token,
-                                    bool phase2, std::vector<SemanticError>& semanticErrors) {
+                                    bool phase2,
+									std::vector<SemanticError>& semanticErrors,
+									bool* parserError) {
 
 	context.inPhase2 = phase2;
 	if (!_shouldSkip(symbol)) {
@@ -25,7 +27,7 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
 			semanticStack.push_back(SymbolTableRecord());
 		}
 		SymbolTableRecord& top = semanticStack.back();
-		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors};
+		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors, parserError};
 
 		// TODO: remove try/catch
 		try {
@@ -761,6 +763,9 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 }
 
 void SemanticActions::_reportError(SemanticActionContainer& container, std::string message) {
+	// If an error was reported than there is a parser error
+	// This will get changed in the parser and will tell the compiler to not generate any code due to errors
+	*container.parserError = true;
 	SemanticError error;
 	error.tokenLine = container.token.tokenLine;
 	error.message = message + " on line " + std::to_string(error.tokenLine);

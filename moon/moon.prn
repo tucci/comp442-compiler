@@ -1,0 +1,37 @@
+MOON listing of sample.m.
+
+    1     0          org   103
+    2   103  message db    "Hello, world!", 13, 10, 0
+    3   119          org   217
+    4   217          align
+    5   220          entry                  % Start here
+    6   220          add   r2,r0,r0
+    7   224  pri     lb    r3,message(r2)   % Get next char
+    8   228          ceqi  r4,r3,0
+    9   232          bnz    r4,pr2          % Finished if zero
+   10   236          putc   r3
+   11   240          addi   r2,r2,1
+   12   244          j      pri             % Go for next char
+   13   248  pr2     addi   r2,r0,name      % Go and get reply
+   14   252          jl     r15,getname
+   15   256          hlt                    % All done!
+   16   260 
+   17   260  % Subroutine to read a string
+   18   260  name    res    59              % Name buffer
+   19   319          align
+   20   320  getname getc   r3              % Read from keyboard
+   21   324          ceqi   r4,r3,10
+   22   328          bnz    r4,endget       % Finished if CR
+   23   332          sb     0(r2),r3        % Store char in buffer
+   24   336          addi   r2,r2,1
+   25   340          j      getname
+   26   344  endget  sb     0(r2),r0        % Store terminator
+   27   348          jr     r15             % Return
+   28   352 
+   29   352  data    dw     1000, -35
+   30   360 
+   31   360 
+   32   360 
+   33   360 
+   34   360 
+
