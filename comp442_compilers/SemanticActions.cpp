@@ -59,7 +59,7 @@ void SemanticActions::createClassEntryAndTable(SemanticActionContainer& containe
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
 	if (!found.second && !context.inPhase2) {
 		// add this record to our current table
-		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
+		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, true);
 		_goToScope(container, &container.top);
 	}
 	else {
@@ -94,7 +94,7 @@ void SemanticActions::createProgramTable(SemanticActionContainer& container) {
 
 	if (!context.inPhase2) {
 		// add this record to our current table
-		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
+		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, true);
 		_goToScope(container, &container.top);
 	}
 	else {
@@ -113,7 +113,7 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
 
 	if (!found.second && !context.inPhase2) {
-		(*container.currentTable)->addRecord(container.top.name, container.top);
+		(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, false);
 	}
 	else {
 		if (_isRedefined(*found.first, container.top)) {
@@ -136,7 +136,7 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 	context.inParam = false;
 	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
 	if (!found.second && !context.inPhase2) {
-		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable);
+		container.top = *(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, true);
 		// Pop this record of the semantic stack and it to our table entry
 		_goToScope(container, &container.top);
 		// We added the record to the symbol table, but now we have to create the child table/scope and add all the parameter entries to it
@@ -145,7 +145,7 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 			paramRecord.kind = SymbolKind::kind_parameter;
 			paramRecord.name = param.second;
 			paramRecord.typeStructure = param.first;
-			(*container.currentTable)->addRecord(paramRecord.name, paramRecord);
+			(*container.currentTable)->addRecord(paramRecord.name, paramRecord, *container.currentTable, false);
 		}
 	}
 	else {

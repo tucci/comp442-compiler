@@ -39,6 +39,8 @@ public:
 	bool properlyDeclared;
 	// The name of this symbol
 	std::string name;
+	// the label of this object to be used during code generation
+	std::string label;
 	// The kind of symbol this is. var/param/function/class
 	SymbolKind kind;
 	// The symbol's type and structure. int,float,class -> simple/array and any array data
@@ -49,6 +51,7 @@ public:
 	std::shared_ptr<SymbolTable> scope;
 	// On what line/location of the source code is this identifer defined
 	int definedLocation;
+	// TODO: figure out if we need this, maybe for call stacks
 	// The address of the element in memory
 	int address;
 
@@ -59,7 +62,7 @@ public:
 
 	std::string toString() {
 
-		std::string s = "Name=" + name + " -> Kind=" + kindToString(kind);
+		std::string s = "Name=" + name + " Label=" + label + " -> Kind=" + kindToString(kind);
 		if (kind == SymbolKind::kind_variable || kind == SymbolKind::kind_parameter) {
 			s += ": {Type: " + typeStructure.toString() + "}";
 		}

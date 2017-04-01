@@ -34,7 +34,7 @@ std::pair<SymbolTableRecord*, bool> SymbolTable::findInParents(const std::string
 	return std::make_pair<SymbolTableRecord*, bool>(&found->second, true);
 }
 
-SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent) {
+SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent, bool needsLink) {
 	// Newly added duplicate names are dropped right away
 	if (find(identifier).second) {
 		// If this record is already added, drop
@@ -43,10 +43,16 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
-		addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
-		addedRecord->scope->parent = parent;
-		addedRecord->scope->resolvedName = parent->resolvedName + "." + identifier;
-		addedRecord->scope->name = identifier;
+		std::string label = parent->resolvedName + "." + identifier;;
+		addedRecord->label = label;
+		if (needsLink) {
+			addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
+			addedRecord->scope->parent = parent;
+			addedRecord->scope->resolvedName = label;
+			addedRecord->scope->name = identifier;
+		}
+	} else {
+		addedRecord->label = identifier;
 	}
 	// Return a pointer to this table
 	return addedRecord;

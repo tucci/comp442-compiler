@@ -23,7 +23,7 @@
 #include <stack>
 #include <memory>
 
-// Our classes
+// Lexer
 #include "token.h"
 #include "dfa.h"
 #include "specification.h"
@@ -39,12 +39,14 @@
 #include "Production.h"
 #include "Grammar.h"
 
+// Semantic data
+
+
 #include "TypeData.h"
 #include "Variable.h"
 #include "Expression.h"
 #include "Statement.h"
 #include "Attribute.h"
-
 #include "SymbolTableRecord.h"
 #include "SymbolTable.h"
 #include "SemanticActions.h"
@@ -55,6 +57,10 @@ typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> Ter
 
 // Util code
 #include "Utils.h"
+
+// Code generation
+#include "Instruction.h"
+#include "MoonGenerator.h"
 
 #include "Parser.h"
 #include "ParserGenerator.h"

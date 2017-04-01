@@ -16,7 +16,7 @@ public:
 	// returns a pair, where the second value is if the value is found, and the first value is a pointer to the record
 	std::pair<SymbolTableRecord*, bool> findInParents(const std::string& identifier);
 	// Adds the given record with the identifer to the symbol table
-	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent=NULL);
+	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent, bool needsLink);
 	friend bool operator==(const SymbolTable& lhs, const SymbolTable& rhs);
 
 	// Outputs the contents of the symbol table and any child symbol table
