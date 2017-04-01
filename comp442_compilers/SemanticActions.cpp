@@ -418,9 +418,9 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 				
 				
 			}
-
-
 		}
+		// link the var to it's record;
+		var.record = record;
 
 		SymbolTableRecord popped = container.top;
 		
