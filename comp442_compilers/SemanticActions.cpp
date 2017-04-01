@@ -343,11 +343,17 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 			break;
 		} 
 		case attr_statement: {
-			if (top.attr.statemenent.statType == StatementType::assignStat) {
-				top.attr.statemenent.statData.assignStatement.expression = popped.attr.expr;
+			if (top.attr.statementData.statType == StatementType::assignStat) {
+				top.attr.statementData.assignStatement.rhs = popped.attr.expr;
 			}
-			if (top.attr.statemenent.statType == StatementType::returnStat) {
-				top.attr.statemenent.statData.returnStatement.returnExpression = popped.attr.expr;
+			if (top.attr.statementData.statType == StatementType::putStat) {
+				top.attr.statementData.putStatement.expression = popped.attr.expr;
+			}
+			if (top.attr.statementData.statType == StatementType::returnStat) {
+				top.attr.statementData.returnStatement.returnExpression = popped.attr.expr;
+			}
+			if (top.attr.statementData.statType == StatementType::ifelseStat) {
+				top.attr.statementData.ifelseStatement.condition = popped.attr.expr;
 			}
 			break;
 		}
@@ -460,11 +466,11 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 			break;
 		}
 		case attr_statement: {
-			switch (top.attr.statemenent.statType) {
-			case assignStat: top.attr.statemenent.statData.assignStatement.var = popped.attr.var; break;
+			switch (top.attr.statementData.statType) {
+			case assignStat: top.attr.statementData.assignStatement.var = popped.attr.var; break;
 			case forStat: break;
 			case ifelseStat: break;
-			case getStat: top.attr.statemenent.statData.getStatement.var = popped.attr.var; break;
+			case getStat: top.attr.statementData.getStatement.var = popped.attr.var; break;
 			case putStat: break;
 			case returnStat: break;
 			default:;
@@ -509,45 +515,68 @@ void SemanticActions::pushStatement(SemanticActionContainer& container) {
 
 void SemanticActions::popStatement(SemanticActionContainer& container) {
 	if (context.inPhase2) {
+		SymbolTableRecord popped = container.top;
 		container.semanticStack.pop_back();
+		SymbolTableRecord& top = container.semanticStack.back();
+		if (top.attr.statementData.statType == StatementType::forStat) {
+			// Add this statement to the statement block for this for loop
+			top.attr.statementData.forStatement.statements.statements.push_back(popped.attr.statementData);
+		}
+		if (top.attr.statementData.statType == StatementType::ifelseStat) {
+			// Add this statement to the statement block for this if condition
+			if (!top.attr.statementData.ifelseStatement.inElseBlock) {
+				top.attr.statementData.ifelseStatement.ifStatements.statements.push_back(popped.attr.statementData);
+			} else {
+				top.attr.statementData.ifelseStatement.elseStatements.statements.push_back(popped.attr.statementData);
+			}
+			
+		}
+		
+	
 	}
 }
 
 void SemanticActions::assignmentStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::assignStat;
+		container.top.attr.statementData.statType = StatementType::assignStat;
 	}
 }
 
 void SemanticActions::forStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::forStat;
+		container.top.attr.statementData.statType = StatementType::forStat;
 	}
 }
 
 void SemanticActions::ifelseStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::ifelseStat;
+		container.top.attr.statementData.statType = StatementType::ifelseStat;
+	}
+}
+
+void SemanticActions::setInElseBlock(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		container.top.attr.statementData.ifelseStatement.inElseBlock = true;
 	}
 }
 
 void SemanticActions::getStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::getStat;
+		container.top.attr.statementData.statType = StatementType::getStat;
 	}
 }
 
 void SemanticActions::putStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::putStat;
+		container.top.attr.statementData.statType = StatementType::putStat;
 	}
 }
 
 void SemanticActions::returnStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		container.top.attr.statemenent.statType = StatementType::returnStat;
+		container.top.attr.statementData.statType = StatementType::returnStat;
 		// Get current function return type
-		container.top.attr.statemenent.statData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType;
+		container.top.attr.statementData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType;
 		
 	}
 }
@@ -556,9 +585,9 @@ void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container)
 	if (context.inPhase2) {
 	
 		// Type check assignment statement
-		AssignStatement assignStatement = container.top.attr.statemenent.statData.assignStatement;
-		if (!(assignStatement.var.varType == assignStatement.expression.type)) {
-			_reportError(container, "Assignment Statement " + assignStatement.var.toFullName() + " = " + assignStatement.expression.toFullName() + " has type mismatch");
+		AssignStatement assignStatement = container.top.attr.statementData.assignStatement;
+		if (!(assignStatement.var.varType == assignStatement.rhs.type)) {
+			_reportError(container, "Assignment Statement " + assignStatement.var.toFullName() + " = " + assignStatement.rhs.toFullName() + " has type mismatch");
 		}
 		
 	}
@@ -590,7 +619,7 @@ void SemanticActions::putStatementEnd(SemanticActionContainer& container) {
 
 void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-		ReturnStatement returnStatement = container.top.attr.statemenent.statData.returnStatement;
+		ReturnStatement returnStatement = container.top.attr.statementData.returnStatement;
 		if (!(returnStatement.functionReturnType == returnStatement.returnExpression.type)) {
 			_reportError(container, "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString());
 		}
@@ -821,6 +850,7 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#assignmentStatementEnd#", &SemanticActions::assignmentStatementEnd },
 			{ "#forStatementEnd#", &SemanticActions::forStatementEnd },
 			{ "#ifelseStatementEnd#", &SemanticActions::ifelseStatementEnd },
+			{ "#setInElseBlock#", &SemanticActions::setInElseBlock },
 			{ "#getStatementEnd#", &SemanticActions::getStatementEnd },
 			{ "#putStatementEnd#", &SemanticActions::putStatementEnd },
 			{ "#returnStatementEnd#", &SemanticActions::returnStatementEnd },

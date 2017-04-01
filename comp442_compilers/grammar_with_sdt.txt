@@ -31,7 +31,7 @@ statement				-> #pushStatement# assignStat ; #popStatement#
 statementList			-> statement statementList 
 statementList			-> EPSILON 
 noIdStartStatement      -> #pushStatement# #forStatementStart# for ( type #storeType# id #storeId# #createVariableEntry# assignOp expr ; relExpr ; assignStat ) statBlock ; #forStatementEnd# #popStatement#
-noIdStartStatement      -> #pushStatement# #ifelseStatementStart# if ( expr ) then statBlock elseBlock ; #ifelseStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #ifelseStatementStart# if ( expr ) then statBlock #setInElseBlock# elseBlock ; #ifelseStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #getStatementStart# get ( #pushVar# variable #popVar# ) ; #getStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #putStatementStart# put ( expr ) ; #putStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #returnStatementStart# return ( expr ) ; #returnStatementEnd# #popStatement#

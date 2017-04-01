@@ -58,6 +58,12 @@
     <Filter Include="Source Files\codegen">
       <UniqueIdentifier>{b49243e3-f76e-4d4b-a085-a8e467ad07f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\parser\semantics\statements">
+      <UniqueIdentifier>{5b036dfa-a377-4c4a-9a61-061cdc522d76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser\semantics\statements">
+      <UniqueIdentifier>{e7cce023-7364-48e6-820b-913437e6f5bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lexerErrors.txt">
@@ -155,9 +161,6 @@
     <ClInclude Include="Expression.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
-    <ClInclude Include="Statement.h">
-      <Filter>Header Files\parser\semantics</Filter>
-    </ClInclude>
     <ClInclude Include="Attribute.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
@@ -178,6 +181,30 @@
     </ClInclude>
     <ClInclude Include="Register.h">
       <Filter>Header Files\codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="AssignStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="ForStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="IfElseStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="PutStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="ReturnStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="GetStatement.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="StatementBlock.h">
+      <Filter>Header Files\parser\semantics\statements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +262,6 @@
     <ClCompile Include="Expression.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
-    <ClCompile Include="Statement.cpp">
-      <Filter>Source Files\parser\semantics</Filter>
-    </ClCompile>
     <ClCompile Include="Variable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
@@ -246,6 +270,27 @@
     </ClCompile>
     <ClCompile Include="MoonGenerator.cpp">
       <Filter>Source Files\codegen</Filter>
+    </ClCompile>
+    <ClCompile Include="AssignStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="ForStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="IfElseStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="PutStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="ReturnStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="GetStatement.cpp">
+      <Filter>Source Files\parser\semantics\statements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

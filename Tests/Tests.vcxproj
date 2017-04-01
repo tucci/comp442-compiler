@@ -159,16 +159,23 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\comp442_compilers\AssignStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
     <ClCompile Include="..\comp442_compilers\Expression.cpp" />
+    <ClCompile Include="..\comp442_compilers\ForStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\GetStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
+    <ClCompile Include="..\comp442_compilers\IfElseStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\Instruction.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
     <ClCompile Include="..\comp442_compilers\MoonGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
+    <ClCompile Include="..\comp442_compilers\PutStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\ReturnStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticActions.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />

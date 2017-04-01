@@ -77,6 +77,7 @@ private:
 	static void assignmentStatementStart(SemanticActionContainer& container);
 	static void forStatementStart(SemanticActionContainer& container);
 	static void ifelseStatementStart(SemanticActionContainer& container);
+	static void setInElseBlock(SemanticActionContainer& container);
 	static void getStatementStart(SemanticActionContainer& container);
 	static void putStatementStart(SemanticActionContainer& container);
 	static void returnStatementStart(SemanticActionContainer& container);

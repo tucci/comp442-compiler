@@ -158,11 +158,15 @@
     <Text Include="testgrammar.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssignStatement.h" />
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="dfa.h" />
     <ClInclude Include="Expression.h" />
+    <ClInclude Include="ForStatement.h" />
+    <ClInclude Include="GetStatement.h" />
     <ClInclude Include="Grammar.h" />
+    <ClInclude Include="IfElseStatement.h" />
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="MoonGenerator.h" />
@@ -170,11 +174,14 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ParserGenerator.h" />
     <ClInclude Include="Production.h" />
+    <ClInclude Include="PutStatement.h" />
     <ClInclude Include="Register.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ReturnStatement.h" />
     <ClInclude Include="SemanticActions.h" />
     <ClInclude Include="SemanticSymbol.h" />
     <ClInclude Include="specification.h" />
+    <ClInclude Include="StatementBlock.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SymbolTable.h" />
@@ -188,10 +195,14 @@
     <ClInclude Include="Variable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssignStatement.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="dfa.cpp" />
     <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="ForStatement.cpp" />
+    <ClCompile Include="GetStatement.cpp" />
     <ClCompile Include="Grammar.cpp" />
+    <ClCompile Include="IfElseStatement.cpp" />
     <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -200,6 +211,8 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ParserGenerator.cpp" />
     <ClCompile Include="Production.cpp" />
+    <ClCompile Include="PutStatement.cpp" />
+    <ClCompile Include="ReturnStatement.cpp" />
     <ClCompile Include="SemanticActions.cpp" />
     <ClCompile Include="SemanticSymbol.cpp" />
     <ClCompile Include="specification.cpp" />

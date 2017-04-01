@@ -46,7 +46,7 @@ void Compiler::compile() {
 		generartor->generateCode();
 		std::cout << "Done" << std::endl;
 		std::cout << "Executing Code" << std::endl;
-		executeMoonSimulator(generartor->getMoonFile());
+		//executeMoonSimulator(generartor->getMoonFile());
 	} else {
 		std::cout << "There was an error during parsing" << std::endl;
 	}

@@ -3,6 +3,26 @@
 
 
 
+enum StatementType {
+	assignStat,
+	forStat,
+	ifelseStat,
+	getStat,
+	putStat,
+	returnStat,
+};
+
+struct StatementData {
+	StatementType statType;
+	AssignStatement assignStatement;
+	ForStatement forStatement;
+	IfElseStatement ifelseStatement;
+	GetStatement getStatement;
+	PutStatement putStatement;
+	ReturnStatement returnStatement;
+};
+
+
 enum AttributeType {
 	attr_expr,
 	attr_statement,
@@ -12,7 +32,7 @@ enum AttributeType {
 struct Attributes {
 	AttributeType type;
 	Expression expr;
-	Statement statemenent;
+	StatementData statementData;
 	Variable var;
 };
 #endif
