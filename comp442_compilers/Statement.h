@@ -1,7 +1,6 @@
 #ifndef STATEMENT_H
 #define STATEMENT_H
 
-struct TypeStruct;
 
 enum StatementType {
 	assignStat,

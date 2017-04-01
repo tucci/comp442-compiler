@@ -11,6 +11,8 @@ Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar
 	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
+
+	generartor = std::shared_ptr<MoonGenerator>(new MoonGenerator());
 	if (writeOutputs) {
 		parser->outputParserDataToFile();
 	}
@@ -21,62 +23,52 @@ Compiler::~Compiler() {
 
 // Compiles our source code the to the target code
 void Compiler::compile() {
-	generateCode();
-	//std::cout << "Compiling... " << std::endl;
-	//std::cout << "Analyzing Syntax and Building symbol table..." << std::endl;
-	//parser->buildSymbolTable();
-	//parsedSuccessfully = parser->parse(); // Phase 2 parse
-	//std::cout << "Done" << std::endl;
+	std::cout << "Compiling " << sourceFile << std::endl;
+	std::cout << "Analyzing Syntax and Building symbol table...";
+	parser->buildSymbolTable();
+	parsedSuccessfully = parser->parse(); // Phase 2 parse
+	std::cout << "Done" << std::endl;
 
-	//
+	
 
-	//// TODO: output all errors in one file/stream
-	//if (writeOutputs) {
-	//	parser->outputDerivationAndErrors();
-	//	lexer->writeTokensToFile();
-	//	parser->outputSymbolTable();
-	//	parser->outputSemanticErrors();
-	//}
+	// TODO: output all errors in one file/stream
+	if (writeOutputs) {
+		parser->outputDerivationAndErrors();
+		lexer->writeTokensToFile();
+		parser->outputSymbolTable();
+		parser->outputSemanticErrors();
+	}
 
-	//if (parsedSuccessfully) {
-	//	std::cout << "Parsed Successfully" << std::endl;
-	//	if (writeOutputs) {
-	//		std::cout << "See derivation.html for derivation" << std::endl;
-	//	}
-	//	// TODO: implement code generation 
-	//	std::cout << "Generating Code ..." << std::endl;
-	//	
-	//	
-	//	generateCode();
-	//} else {
-	//	std::cout << "There was an error during parsing" << std::endl;
-	//	if (writeOutputs) {
-	//		std::cout << "See parserErrors.html for errors" << std::endl;
-	//	}
-	//}
+	if (parsedSuccessfully) {
+		std::cout << "Parsed Successfully" << std::endl;
+		// TODO: implement code generation 
+		std::cout << "Generating Code...";
+		generartor->generateCode();
+		std::cout << "Done" << std::endl;
+		std::cout << "Executing Code" << std::endl;
+		executeMoonSimulator(generartor->getMoonFile());
+	} else {
+		std::cout << "There was an error during parsing" << std::endl;
+	}
 }
 
 // Sets the source file for our compile to compile
 void Compiler::setSourceFile(std::string sourceFile) {
 	this->sourceFile = sourceFile;
 	lexer->setSource(sourceFile);
+	generartor->setOutputFileName(sourceFile.substr(0, sourceFile.find_first_of(".")) + ".m");
+	
 }
-
 
 const SymbolTable& Compiler::getSymbolTable() {
 	return parser->globalTable;
 }
 
-void Compiler::generateCode() {
-
-	
-	// Output to filename.m
-
-	std::string moonFile = "sample.m";
+void Compiler::executeMoonSimulator(std::string moonfile) {
 	// Run the process
 	char   psBuffer[128];
 	FILE   *pPipe;
-	std::string moonExe = "moon.exe -p -s -t +x " + moonFile;
+	std::string moonExe = "moon.exe -p -s -t +x " + moonfile;
 	if ((pPipe = _popen(moonExe.c_str(), "rt")) == NULL)
 		exit(1);
 

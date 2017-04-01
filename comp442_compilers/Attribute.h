@@ -1,8 +1,7 @@
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
 
-#include "Expression.h"
-#include "Statement.h"
+
 
 enum AttributeType {
 	attr_expr,

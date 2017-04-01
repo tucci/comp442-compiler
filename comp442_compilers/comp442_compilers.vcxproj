@@ -163,11 +163,14 @@
     <ClInclude Include="dfa.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Grammar.h" />
+    <ClInclude Include="Instruction.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="MoonGenerator.h" />
     <ClInclude Include="NonTerminal.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ParserGenerator.h" />
     <ClInclude Include="Production.h" />
+    <ClInclude Include="Register.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SemanticActions.h" />
     <ClInclude Include="SemanticSymbol.h" />
@@ -189,8 +192,10 @@
     <ClCompile Include="dfa.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="Grammar.cpp" />
+    <ClCompile Include="Instruction.cpp" />
     <ClCompile Include="lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoonGenerator.cpp" />
     <ClCompile Include="NonTerminal.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ParserGenerator.cpp" />

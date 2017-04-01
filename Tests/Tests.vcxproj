@@ -164,6 +164,7 @@
     <ClCompile Include="..\comp442_compilers\Expression.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
+    <ClCompile Include="..\comp442_compilers\MoonGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />

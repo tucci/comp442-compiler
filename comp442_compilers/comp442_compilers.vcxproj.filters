@@ -52,6 +52,12 @@
     <Filter Include="Resource Files\semanticOutput">
       <UniqueIdentifier>{e2619e03-77d1-4a9d-970c-e216ce1fac98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\codegen">
+      <UniqueIdentifier>{9f41d666-0d30-4d08-b4aa-59bf90d3ef29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\codegen">
+      <UniqueIdentifier>{b49243e3-f76e-4d4b-a085-a8e467ad07f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lexerErrors.txt">
@@ -164,6 +170,15 @@
     <ClInclude Include="SymbolTableRecord.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
+    <ClInclude Include="Instruction.h">
+      <Filter>Header Files\codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="MoonGenerator.h">
+      <Filter>Header Files\codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="Register.h">
+      <Filter>Header Files\codegen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -225,6 +240,12 @@
     </ClCompile>
     <ClCompile Include="Variable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
+    </ClCompile>
+    <ClCompile Include="Instruction.cpp">
+      <Filter>Source Files\codegen</Filter>
+    </ClCompile>
+    <ClCompile Include="MoonGenerator.cpp">
+      <Filter>Source Files\codegen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

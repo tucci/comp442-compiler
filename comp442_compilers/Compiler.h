@@ -1,5 +1,6 @@
 #ifndef  COMPILER_H
 #define COMPILER_H
+#include "MoonGenerator.h"
 
 // A simple wrapper class that holds on the neccessary data and data structures to init our compiler
 class Compiler {
@@ -30,7 +31,11 @@ private:
 	std::shared_ptr<Lexer> lexer;
 	//  The parser that does the syntax checking
 	std::shared_ptr<Parser> parser;
-	void generateCode();
+	// The code generator for the moon simulator
+	// Translates our high level language to moon instructions
+	std::shared_ptr<MoonGenerator> generartor;
+
+	void executeMoonSimulator(std::string moonfile);
 };
 
 #endif // ! COMPILER_H

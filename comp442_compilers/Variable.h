@@ -1,7 +1,9 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
+
 class Expression;
+class SymbolTableRecord;
 
 struct VariableFragment {
 	std::string identifier;
@@ -17,6 +19,7 @@ public:
 	std::vector<VariableFragment> vars;
 	std::string toFullName();
 	TypeStruct varType; // If this var turns into a function, then this value is the return type of this function
+	SymbolTableRecord* record;
 	int location;
 	bool isFunc;
 	std::vector<TypeStruct> arguments;

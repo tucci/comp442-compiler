@@ -1,9 +1,8 @@
 #ifndef SYMBOL_TABLE_DATA_H
 #define SYMBOL_TABLE_DATA_H
-#include "Statement.h"
-#include "TypeData.h"
 #include <memory>
-#include "Attribute.h"
+
+struct Attributes;
 
 
 // List of symbols kinds
