@@ -76,6 +76,13 @@ private:
 	static void popStatement(SemanticActionContainer& container);
 	static void assignmentStatementStart(SemanticActionContainer& container);
 	static void forStatementStart(SemanticActionContainer& container);
+	static void forInitStatementStart(SemanticActionContainer& container);
+	static void forInitStatementEnd(SemanticActionContainer& container);
+	static void forIncrementStatementStart(SemanticActionContainer& container);
+	static void forIncrementStatementEnd(SemanticActionContainer& container);
+	static void forRelExpr(SemanticActionContainer& container);
+	static void forAddVar(SemanticActionContainer& container);
+	
 	static void ifelseStatementStart(SemanticActionContainer& container);
 	static void setInElseBlock(SemanticActionContainer& container);
 	static void getStatementStart(SemanticActionContainer& container);

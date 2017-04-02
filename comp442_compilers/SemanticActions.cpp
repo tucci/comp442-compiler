@@ -9,6 +9,9 @@ static struct SemanticContext {
 	bool skipClass = false;
 	bool skipFunction = false;
 	bool returnedValued = false;
+	bool inForInitAssignStat = false;
+	bool inForIncrementAssignStat = false;
+	bool inForRelExpression = false;
 } context;
 
 
@@ -109,21 +112,22 @@ void SemanticActions::endProgramTable(SemanticActionContainer& container) {
 }
 
 void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
-	container.top.kind = SymbolKind::kind_variable;
-	std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
+	if (!context.inPhase2) {
+		container.top.kind = SymbolKind::kind_variable;
+		std::pair<SymbolTableRecord*, bool> found = (*container.currentTable)->find(container.top.name);
 
-	if (!found.second && !context.inPhase2) {
-		(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, false);
-	}
-	else {
-		if (_isRedefined(*found.first, container.top)) {
-			if (context.inPhase2) {
-				_reportError(container, "Variable " + container.top.name + " redeclared");
+		if (!found.second && !context.inPhase2) {
+			(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, false);
+		} else {
+			if (_isRedefined(*found.first, container.top)) {
+				if (context.inPhase2) {
+					_reportError(container, "Variable " + container.top.name + " redeclared");
+				}
 			}
 		}
-	}
 
-	container.semanticStack.pop_back();
+		container.semanticStack.pop_back();
+	}
 }
 
 void SemanticActions::addFuncDefParameter(SemanticActionContainer& container) {
@@ -352,6 +356,17 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 			if (top.attr.statementData.statType == StatementType::returnStat) {
 				top.attr.statementData.returnStatement.returnExpression = popped.attr.expr;
 			}
+			if (top.attr.statementData.statType == StatementType::forStat) {
+				if (context.inForInitAssignStat) {
+					top.attr.statementData.forStatement.initializer.rhs = popped.attr.expr;
+				}
+				if (context.inForRelExpression) {
+					top.attr.statementData.forStatement.condition = popped.attr.expr;
+					context.inForRelExpression = false;
+				}
+
+				
+			}
 			if (top.attr.statementData.statType == StatementType::ifelseStat) {
 				top.attr.statementData.ifelseStatement.condition = popped.attr.expr;
 			}
@@ -519,8 +534,13 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
 		if (top.attr.statementData.statType == StatementType::forStat) {
-			// Add this statement to the statement block for this for loop
-			top.attr.statementData.forStatement.statements.statements.push_back(popped.attr.statementData);
+			if (context.inForIncrementAssignStat) {
+				top.attr.statementData.forStatement.incrementer = popped.attr.statementData.assignStatement;
+			} else {
+				// Add this statement to the statement block for this for loop
+				top.attr.statementData.forStatement.statements.statements.push_back(popped.attr.statementData);
+			}
+			
 		}
 		if (top.attr.statementData.statType == StatementType::ifelseStat) {
 			// Add this statement to the statement block for this if condition
@@ -545,6 +565,51 @@ void SemanticActions::assignmentStatementStart(SemanticActionContainer& containe
 void SemanticActions::forStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.statementData.statType = StatementType::forStat;
+	}
+}
+
+void SemanticActions::forInitStatementStart(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		context.inForInitAssignStat = true;
+	}
+}
+
+void SemanticActions::forAddVar(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		std::string varname = container.token.lexeme;
+		Variable var;
+		VariableFragment fragment;
+		fragment.identifier = varname;
+		var.vars.push_back(fragment);
+		var.location = container.token.tokenIndex;
+		// link the record of this var from the symbol table to the var
+		var.record = (*container.currentTable)->find(varname).first;
+		container.top.attr.statementData.forStatement.initializer.var = var;
+		
+	}
+}
+
+void SemanticActions::forInitStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		context.inForInitAssignStat = false;
+	}
+}
+
+void SemanticActions::forIncrementStatementStart(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		context.inForIncrementAssignStat= true;
+	}
+}
+
+void SemanticActions::forIncrementStatementEnd(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		context.inForIncrementAssignStat = false;
+	}
+}
+
+void SemanticActions::forRelExpr(SemanticActionContainer& container) {
+	if (context.inPhase2) {
+		context.inForRelExpression = true;
 	}
 }
 
@@ -838,14 +903,22 @@ std::unordered_map<std::string, void(*)(SemanticActionContainer&)> SemanticActio
 			{ "#addToVar#", &SemanticActions::addToVar},
 			{ "#startFuncCall#", &SemanticActions::startFuncCall },
 			// Statement building
-			{"#pushStatement#", &SemanticActions::pushStatement },
-			{"#popStatement#", &SemanticActions::popStatement},
-			{"#assignmentStatementStart#", &SemanticActions::assignmentStatementStart},
-			{"#forStatementStart#", &SemanticActions::forStatementStart},
-			{"#ifelseStatementStart#", &SemanticActions::ifelseStatementStart},
-			{"#getStatementStart#", &SemanticActions::getStatementStart},
-			{"#putStatementStart#", &SemanticActions::putStatementStart},
-			{"#returnStatementStart#", &SemanticActions::returnStatementStart},
+			{ "#pushStatement#", &SemanticActions::pushStatement },
+			{ "#popStatement#", &SemanticActions::popStatement},
+			{ "#assignmentStatementStart#", &SemanticActions::assignmentStatementStart},
+			{ "#forStatementStart#", &SemanticActions::forStatementStart},
+			{ "#forAddVar#", &SemanticActions::forAddVar },
+			{ "#forInitStatementStart#", &SemanticActions::forInitStatementStart },
+			{ "#forInitStatementEnd#", &SemanticActions::forInitStatementEnd },
+			{ "#forIncrementStatementStart#", &SemanticActions::forIncrementStatementStart },
+			{ "#forIncrementStatementEnd#", &SemanticActions::forIncrementStatementEnd },
+			{ "#forRelExpr#", &SemanticActions::forRelExpr },
+			
+
+			{ "#ifelseStatementStart#", &SemanticActions::ifelseStatementStart},
+			{ "#getStatementStart#", &SemanticActions::getStatementStart},
+			{ "#putStatementStart#", &SemanticActions::putStatementStart},
+			{ "#returnStatementStart#", &SemanticActions::returnStatementStart},
 
 			{ "#assignmentStatementEnd#", &SemanticActions::assignmentStatementEnd },
 			{ "#forStatementEnd#", &SemanticActions::forStatementEnd },

@@ -6,6 +6,10 @@ public:
 	ForStatement();
 	~ForStatement();
 
+	AssignStatement initializer;
+	Expression condition;
+	AssignStatement incrementer;
+
 	StatementBlock statements;
 	std::string _toMoonCode() override;
 };

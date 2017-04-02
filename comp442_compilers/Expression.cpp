@@ -169,16 +169,19 @@ std::string Expression::toFullName() {
 int Expression::precedenceOf(std::string op) {
 	TokenType opType = Specification::TOKEN_MAP.at(op);
 	switch (opType) {
-	case multop: return 2; 
-	case divop: return 2;
-	case addop: return 1;
-	case subtractop: return 1;
-	/*case gt: break;
-	case greateq: break;
-	case lt: break;
-	case lesseq: break;
-	case comparison: break;
-	case noteq: break;*/
+	case multop: return 6; 
+	case divop: return 6;
+	case addop: return 5;
+	case subtractop: return 5;
+	case or : return 5;
+	case and: return 5;
+
+	case gt: return 4;
+	case greateq: return 4;
+	case lt: return 4;
+	case lesseq: return 4;
+	case comparison: return 3;
+	case noteq: return 3;
 	}
 
 

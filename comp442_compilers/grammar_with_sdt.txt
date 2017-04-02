@@ -30,7 +30,7 @@ statement				-> noIdStartStatement
 statement				-> #pushStatement# assignStat ; #popStatement#
 statementList			-> statement statementList 
 statementList			-> EPSILON 
-noIdStartStatement      -> #pushStatement# #forStatementStart# for ( type #storeType# id #storeId# #createVariableEntry# assignOp expr ; relExpr ; assignStat ) statBlock ; #forStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #forStatementStart# for ( #forInitStatementStart# type #storeType# id #storeId# #createVariableEntry# #forAddVar# assignOp expr #forInitStatementEnd# ; #forRelExpr# #pushExpr# relExpr #popExpr# ; #forIncrementStatementStart# #pushStatement# assignStat #popStatement# #forIncrementStatementEnd# ) statBlock ; #forStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #ifelseStatementStart# if ( expr ) then statBlock #setInElseBlock# elseBlock ; #ifelseStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #getStatementStart# get ( #pushVar# variable #popVar# ) ; #getStatementEnd# #popStatement#
 noIdStartStatement      -> #pushStatement# #putStatementStart# put ( expr ) ; #putStatementEnd# #popStatement#
@@ -47,9 +47,9 @@ statBlock				-> statement
 statBlock				-> EPSILON 
 
 expr					-> #pushExpr# arithExpr exprRest #popExpr#
-exprRest 				-> relOp arithExpr 
+exprRest 				-> relOp #operatorExprFragment# arithExpr 
 exprRest 				-> EPSILON
-relExpr					-> arithExpr relOp arithExpr
+relExpr					-> arithExpr relOp #operatorExprFragment# arithExpr
 
 
 sign					-> + #addSignExprFragment#
