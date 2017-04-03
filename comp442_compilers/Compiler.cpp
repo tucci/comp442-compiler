@@ -11,8 +11,8 @@ Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
 	// Create the parser given from our lexer and grammar
 	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
-
-	generartor = std::shared_ptr<MoonGenerator>(new MoonGenerator());
+	// Create the generator
+	generartor = std::shared_ptr<MoonGenerator>(new MoonGenerator(&parser->globalTable));
 	if (writeOutputs) {
 		parser->outputParserDataToFile();
 	}
@@ -41,7 +41,6 @@ void Compiler::compile() {
 
 	if (parsedSuccessfully) {
 		std::cout << "Parsed Successfully" << std::endl;
-		// TODO: implement code generation 
 		std::cout << "Generating Code...";
 		generartor->generateCode();
 		std::cout << "Done" << std::endl;

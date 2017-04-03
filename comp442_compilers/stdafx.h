@@ -40,15 +40,16 @@
 #include "Grammar.h"
 
 // Semantic data
-
+// TODO: move this next to the code gen includes
 #include "Instruction.h"
+#include "Directive.h"
+
 #include "TypeData.h"
 #include "Variable.h"
 #include "Expression.h"
 #include "Statement.h"
 
 #include "StatementBlock.h"
-
 #include "AssignStatement.h"
 #include "ForStatement.h"
 #include "GetStatement.h"

@@ -6,6 +6,7 @@
 class SymbolTable {
 public:
 	friend class SemanticActions;
+	friend class MoonGenerator;
 	// Create a symbol table with no parent
 	SymbolTable();
 	~SymbolTable();
@@ -30,10 +31,14 @@ public:
 	std::string resolvedName;
 	// The base name for this table
 	std::string name;
+	// Returns the size of this type int bytes
+	static int _sizeOf(SymbolTable* globalTable, TypeStruct idType);
 private:
 	std::unordered_map<std::string, SymbolTableRecord> table;
 	// Used during circular table
 	bool marked;
+	// Returns the size of this table in bytes
+	int sizeOfTable(SymbolTable* globalTable);
 
 	
 };

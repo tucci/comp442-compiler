@@ -43,7 +43,7 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
-		std::string label = parent->resolvedName + "." + identifier;;
+		std::string label = parent->resolvedName + "_" + identifier;;
 		addedRecord->label = label;
 		if (needsLink) {
 			addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
@@ -81,6 +81,46 @@ std::string SymbolTable::toString() {
 	}
 	return output;
 }
+
+int SymbolTable::_sizeOf(SymbolTable* globalTable, TypeStruct idType) {
+	int typeSize = 0;
+	if (idType.type == SymbolType::type_int || idType.type == SymbolType::type_float) {
+		// Integers and floats are stored as 32bits/4 bytes
+		typeSize = WORD_SIZE_IN_BYTES;
+	} else if (idType.type == SymbolType::type_class) {
+		SymbolTable* classTable = globalTable->find(idType.className).first->scope.get();
+		// the class needs to be computed
+		typeSize = classTable->sizeOfTable(globalTable);
+	}
+
+	if (idType.structure == SymbolStructure::struct_simple) {
+		return typeSize;
+	}
+
+	else if (idType.structure == SymbolStructure::struct_array) {
+		int flattenedDimSize = 1;
+		for (int dimSize : idType.dimensions) {
+			flattenedDimSize *= dimSize;
+		}
+		return  flattenedDimSize * typeSize;
+	} else {
+		throw std::exception("The type could not be determined. The type is not a simple type or array");
+	}
+};
+
+
+int SymbolTable::sizeOfTable(SymbolTable* globalTable) {
+	int size = 0;
+	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type record : table) {
+		TypeStruct type = record.second.typeStructure;
+		if (record.second.kind == SymbolKind::kind_variable) {
+			size += _sizeOf(globalTable, type);
+		}
+	
+	}
+	return size;
+}
+
 
 
 bool operator==(const SymbolTable& lhs, const SymbolTable& rhs) {

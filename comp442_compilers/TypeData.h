@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#define WORD_SIZE_IN_BYTES 4
+
 // List of symbol types that can be in the lanaguage
 enum SymbolType {
 	type_none,

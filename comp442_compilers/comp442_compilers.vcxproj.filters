@@ -64,6 +64,18 @@
     <Filter Include="Source Files\parser\semantics\statements">
       <UniqueIdentifier>{e7cce023-7364-48e6-820b-913437e6f5bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\codegen\Instructions">
+      <UniqueIdentifier>{0d71567a-5b0a-444d-a897-4bcfed8362a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\codegen\Directives">
+      <UniqueIdentifier>{8acf7e0a-43e4-476f-a116-e7e27bc6439e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\codegen\Instructions">
+      <UniqueIdentifier>{962ded2d-5f2a-4178-b97b-a1f18e3b6d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\codegen\Directives">
+      <UniqueIdentifier>{c999fc5c-e371-4c0a-a4bd-7f892a5dc8b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="lexerErrors.txt">
@@ -173,9 +185,6 @@
     <ClInclude Include="SymbolTableRecord.h">
       <Filter>Header Files\parser\semantics</Filter>
     </ClInclude>
-    <ClInclude Include="Instruction.h">
-      <Filter>Header Files\codegen</Filter>
-    </ClInclude>
     <ClInclude Include="MoonGenerator.h">
       <Filter>Header Files\codegen</Filter>
     </ClInclude>
@@ -205,6 +214,18 @@
     </ClInclude>
     <ClInclude Include="StatementBlock.h">
       <Filter>Header Files\parser\semantics\statements</Filter>
+    </ClInclude>
+    <ClInclude Include="Instruction.h">
+      <Filter>Header Files\codegen\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="Directive.h">
+      <Filter>Header Files\codegen\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="Directives.h">
+      <Filter>Header Files\codegen\Directives</Filter>
+    </ClInclude>
+    <ClInclude Include="Instructions.h">
+      <Filter>Header Files\codegen\Instructions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,9 +286,6 @@
     <ClCompile Include="Variable.cpp">
       <Filter>Source Files\parser\semantics</Filter>
     </ClCompile>
-    <ClCompile Include="Instruction.cpp">
-      <Filter>Source Files\codegen</Filter>
-    </ClCompile>
     <ClCompile Include="MoonGenerator.cpp">
       <Filter>Source Files\codegen</Filter>
     </ClCompile>
@@ -291,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="GetStatement.cpp">
       <Filter>Source Files\parser\semantics\statements</Filter>
+    </ClCompile>
+    <ClCompile Include="Instruction.cpp">
+      <Filter>Source Files\codegen\Instructions</Filter>
+    </ClCompile>
+    <ClCompile Include="Directive.cpp">
+      <Filter>Source Files\codegen\Directives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,6 @@
 
 
 
-
 class Statement : public Instruction {
 public:
 	Statement();

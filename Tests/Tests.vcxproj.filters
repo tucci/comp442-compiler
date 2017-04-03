@@ -33,6 +33,12 @@
     <ClInclude Include="..\comp442_compilers\TypeData.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\comp442_compilers\Directives.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\comp442_compilers\Instructions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -153,6 +159,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\comp442_compilers\Instruction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Directive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
