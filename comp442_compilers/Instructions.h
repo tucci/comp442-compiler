@@ -25,6 +25,37 @@ public:
 	};
 };
 
+class LoadWordInstruction : public Instruction {
+public:
+	Register ri;
+	Register rj;
+	std::string offset;
+	LoadWordInstruction(Register ri, Register rj, std::string offset) {
+		this->ri = ri;
+		this->rj = rj;
+		this->offset = offset;
+	};
+	std::string _toMoonCode() override {
+		return "lw\t" + ToRegisterValue(ri) + "," + offset + "(" + ToRegisterValue(rj) + ")";
+	};
+};
+
+class StoreWordInstruction : public Instruction {
+public:
+	Register rj;
+	Register ri;
+	std::string offset;
+	StoreWordInstruction(Register rj, Register ri, std::string offset) {
+		this->rj = rj;
+		this->ri = ri;
+		this->offset = offset;
+	};
+	std::string _toMoonCode() override {
+		return "sw\t" + offset + "(" + ToRegisterValue(rj) + ")," + ToRegisterValue(ri);
+	};
+};
+
+
 // A math instruction is used for operations such as add,sub,mul,div, ==, !=, etc
 class ArithmeticInstruction : public Instruction {
 public:
