@@ -10,8 +10,10 @@ std::string IfElseStatement::_toMoonCode() {
 
 	std::string instrBlock;
 
-	std::string elseLabel = "else_" + uniqueLabel();
-	std::string endifLabel = "endif_" + uniqueLabel();
+	std::string unqLabel = uniqueLabel();
+
+	std::string elseLabel = "else_" + unqLabel;
+	std::string endifLabel = "endif_" + unqLabel;
 
 	Register r = generator->getUnusedRegister();
 	// Creates all the sub expressions and outputs a temp memory

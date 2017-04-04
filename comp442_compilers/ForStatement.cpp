@@ -11,9 +11,10 @@ ForStatement::~ForStatement() {
 
 std::string ForStatement::_toMoonCode() {
 	std::string instrBlock;
+	std::string unqLabel = uniqueLabel();
 	// A for loop internally gets turned into a while loop
-	std::string goWhile = "gowhile_" + uniqueLabel();
-	std::string endWhile = "endwhile_" + uniqueLabel();
+	std::string goWhile = "gowhile_" + unqLabel;
+	std::string endWhile = "endwhile_" + unqLabel;
 
 	Register r = generator->getUnusedRegister();
 
