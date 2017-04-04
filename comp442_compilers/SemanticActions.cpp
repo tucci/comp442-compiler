@@ -552,6 +552,8 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 		if (top.attr.statementData.statType == StatementType::forStat || top.attr.statementData.statType == StatementType::ifelseStat) {
 			if (top.attr.statementData.statType == StatementType::forStat) {
 				if (context.inForIncrementAssignStat) {
+					// Attach the code generator for this sub statement
+					popped.attr.statementData.assignStatement.setCodeGenerator(container.generator);
 					top.attr.statementData.forStatement.incrementer = popped.attr.statementData.assignStatement;
 				} else {
 					// Add this statement to the statement block for this for loop

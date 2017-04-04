@@ -35,7 +35,6 @@ void MoonGenerator::generateCode() {
 	SymbolTable* programTable = globalTable->find("program").first->scope.get();
 	createEntriesForTable(*programTable);
 	
-
 	moonOutputStream << CommentInstruction("Start of user program")._toMoonCode();
 	moonOutputStream << AlignDirective()._toMoonCode();
 	moonOutputStream << EntryDirective()._toMoonCode();

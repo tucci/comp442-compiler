@@ -38,8 +38,11 @@ std::string AssignStatement::_toMoonCode() {
 			}
 		}
 	} else {
-		// This is a full expression that needs to be evaluated
-		// TODO: implement expression evals
+		// This is a full expression that needs to be evaluated	
+		ExpressionEvalulationInstruction exprInstr(generator, rhs);
+		instrs.append(exprInstr._toMoonCode());
+		instrs.append(LoadWordInstruction(ir, r0, exprInstr.outputTemp.label).setComment("load " + exprInstr.outputTemp.label + " into register")._toMoonCode());
+		generator->freeTempMemory(exprInstr.outputTemp);
 
 	}
 
@@ -49,6 +52,7 @@ std::string AssignStatement::_toMoonCode() {
 	instrs.append(StoreWordInstruction(r0, ir, var.record->label).setComment(var.record->name + " assignment operation")._toMoonCode());
 	instrs.append(ClearRegisterInstruction(ir)._toMoonCode());
 	generator->freeRegister(ir);
+	
 	// Clear the r1 register
 	return instrs;
 

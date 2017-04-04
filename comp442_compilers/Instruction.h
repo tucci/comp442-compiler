@@ -20,9 +20,9 @@ protected:
 	// Wraps the instruction string with the comments,labels, and newline
 	std::string _toMoonCode(std::string instr);
 	MoonGenerator* generator;
-private:
 	std::string label;
 	std::string comment;
+	
 
 
 };

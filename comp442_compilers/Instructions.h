@@ -421,13 +421,21 @@ public:
 };
 
 class ExpressionEvalulationInstruction : public Instruction {
-	Expression& expr;
-
+	
 public:
-	ExpressionEvalulationInstruction(Expression& expr): expr(expr) {}
+	Expression& expr;
+	// This is the output temp memory that other instructions can use
+	TempMemory outputTemp;
+	ExpressionEvalulationInstruction(MoonGenerator* gen, Expression& expr): expr(expr) {
+		generator = gen;
+	}
 
 	std::string _toMoonCode() override {
-		// TODO: implement
+		outputTemp = generator->getTempMemory();
+		// TODO: implement this. also needs to handle relational operators
+		// if true it should evaluate to a non zero value
+		// if false, it should evaluatio to zero
+		return CommentInstruction("% Expression evals to " + outputTemp.label)._toMoonCode();
 
 	}
 };
