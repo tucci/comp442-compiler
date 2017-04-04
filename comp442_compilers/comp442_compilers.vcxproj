@@ -162,8 +162,6 @@
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="dfa.h" />
-    <ClInclude Include="Directive.h" />
-    <ClInclude Include="Directives.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="ForStatement.h" />
     <ClInclude Include="GetStatement.h" />
@@ -201,7 +199,6 @@
     <ClCompile Include="AssignStatement.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="dfa.cpp" />
-    <ClCompile Include="Directive.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="ForStatement.cpp" />
     <ClCompile Include="GetStatement.cpp" />

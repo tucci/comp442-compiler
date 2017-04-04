@@ -29,8 +29,8 @@ void MoonGenerator::generateCode() {
 	SymbolTable* programTable = globalTable->find("program").first->scope.get();
 	createEntriesForTable(*programTable);
 	
-	moonOutputStream << AlignInstruction()._toMoonCode();
-	moonOutputStream << EntryInstruction()._toMoonCode();
+	moonOutputStream << AlignDirective()._toMoonCode();
+	moonOutputStream << EntryDirective()._toMoonCode();
 	// Then generate all the instructions
 	for (std::shared_ptr<Instruction> instr : instructions) {
 		moonOutputStream << instr->_toMoonCode();
@@ -92,7 +92,7 @@ void MoonGenerator::createEntriesForTable(SymbolTable& symbolTable) {
 	for (std::unordered_map<std::string, SymbolTableRecord>::value_type entry : symbolTable.table) {
 		// Create declrations in the moon code for variables or parameters
 		if (entry.second.kind == SymbolKind::kind_variable || entry.second.kind == SymbolKind::kind_parameter) {
-			DW_Directive dwDirective(globalTable, &entry.second);
+			DefineWordDirective dwDirective(globalTable, &entry.second);
 			moonOutputStream << dwDirective._toMoonCode() << std::endl;
 		}
 		// TODO: figure out how to handle function declrations

@@ -1,6 +1,5 @@
 #ifndef MOON_GENERATOR_H
 #define MOON_GENERATOR_H
-#include "Directives.h"
 
 
 class MoonGenerator {

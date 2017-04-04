@@ -5,26 +5,9 @@
 #include "Register.h"
 
 
-class AlignInstruction : public Instruction {
-public:
-		std::string _toMoonCode() override {
-			return Instruction::_toMoonCode("align");
-		};
-};
 
-class EntryInstruction : public Instruction {
-public:
-	std::string _toMoonCode() override {
-		return Instruction::_toMoonCode("entry");
-	};
-};
 
-class HaltInstruction : public Instruction {
-public:
-	std::string _toMoonCode() override {
-		return Instruction::_toMoonCode("hlt");
-	};
-};
+/* -------------------------- Data access instructions  ------------------------------- */
 
 class LoadWordInstruction : public Instruction {
 public:
@@ -56,29 +39,6 @@ public:
 	};
 };
 
-class GetCInstruction : public Instruction {
-public:
-	Register ri;
-	GetCInstruction(Register ri) {
-		this->ri = ri;
-		this->setComment("Outputs the ascii value from " + registerToString(ri));
-	};
-	std::string _toMoonCode() override {
-		return Instruction::_toMoonCode("getc\t" + registerToString(ri));
-	};
-};
-
-class PutCInstruction : public Instruction {
-public:
-	Register ri;
-	PutCInstruction(Register ri) {
-		this->ri = ri;
-		this->setComment("Read the ascii value from input and assigns it to " + registerToString(ri));
-	};
-	std::string _toMoonCode() override {
-		return Instruction::_toMoonCode("putc\t" + registerToString(ri));
-	}
-};
 
 
 enum MathOpCode {
@@ -122,7 +82,7 @@ static std::string opcodeToString(MathOpCode opcode) {
 
 
 
-// A math instruction is used for operations such as add,sub,mul,div, ==, !=, etc
+/* -------------------------- Arithmetic Instruction instructions  ------------------------------- */
 class ArithmeticInstruction : public Instruction {
 public:
 	Register dest;
@@ -196,7 +156,7 @@ public:
 };
 
 
-/* --------------------- Immediate Instructions ------------------------------ */
+/* --------------------- Arithmetic Immediate Instructions ------------------------------ */
 
 class ArithmeticImmediateInstruction : public Instruction {
 public:
@@ -270,6 +230,151 @@ public:
 	GreatherThanEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_cgei) {}
 };
 
+
+/* -------------------------- Input and output instructions  ------------------------------- */
+
+class GetCInstruction : public Instruction {
+public:
+	Register ri;
+	GetCInstruction(Register ri) {
+		this->ri = ri;
+		this->setComment("Outputs the ascii value from " + registerToString(ri));
+	};
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("getc\t" + registerToString(ri));
+	};
+};
+
+class PutCInstruction : public Instruction {
+public:
+	Register ri;
+	PutCInstruction(Register ri) {
+		this->ri = ri;
+		this->setComment("Read the ascii value from input and assigns it to " + registerToString(ri));
+	};
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("putc\t" + registerToString(ri));
+	}
+};
+
+/* --------------------------  Contrrol Instructions ------------------------------- */
+class BranchIfZeroInstruction : public Instruction {
+public:
+
+	Register ri;
+	std::string k;
+	BranchIfZeroInstruction(Register ri, const std::string& cs): ri(ri),k(cs) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("bz\t" + registerToString(ri) + "," + k);
+	};
+};
+
+class BranchIfNonZeroInstruction : public Instruction {
+public:
+	Register ri;
+	std::string k;
+	BranchIfNonZeroInstruction(Register ri, const std::string& cs) : ri(ri), k(cs) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("bnz\t" + registerToString(ri) + "," + k);
+	};
+};
+
+class JumpInstruction : public Instruction {
+public:
+	std::string k;
+	JumpInstruction(const std::string& cs): k(cs) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("j\t" + k);
+	};
+};
+
+class JumpRegisterInstruction : public Instruction {
+public:
+	Register ri;
+	JumpRegisterInstruction(Register ri): ri(ri) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("jr\t" + registerToString(ri));
+	};
+};
+
+class JumpAndLinkInstruction : public Instruction {
+public:
+	Register ri;
+	std::string k;
+	JumpAndLinkInstruction(Register ri, const std::string& cs): ri(ri),k(cs) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("jl\t" + registerToString(ri) + "," + k);
+	};
+};
+
+class JumpAndLinkRegisterInstruction : public Instruction {
+public:
+	Register ri;
+	Register rj;
+	JumpAndLinkRegisterInstruction(Register ri, Register rj): ri(ri),rj(rj) {}
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("jlr\t" + registerToString(ri) + "," + registerToString(rj));
+	};
+};
+
+class NoopInstruction : public Instruction {
+public:
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("nop");
+	};
+};
+
+class HaltInstruction : public Instruction {
+public:
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("hlt");
+	};
+};
+
+/* --------------------------  Directives ------------------------------- */
+
+class AlignDirective : public Instruction {
+public:
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("align");
+	};
+};
+
+class EntryDirective : public Instruction {
+public:
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("entry");
+	};
+};
+
+class DefineWordDirective : public Instruction {
+	SymbolTable* globalTable;
+	SymbolTableRecord* record;
+
+public:
+
+
+	DefineWordDirective(SymbolTable* global_table, SymbolTableRecord* record)
+		: globalTable(global_table),
+		  record(record) {
+	}
+
+	std::string _toMoonCode() override {
+		// Create the entry in the moon code
+		if (record->typeStructure.structure == SymbolStructure::struct_array || record->typeStructure.type == SymbolType::type_class) {
+			int allocationSize = SymbolTable::_sizeOf(globalTable, record->typeStructure);
+			return record->label + "\t" + "res" + "\t" + std::to_string(allocationSize);
+
+		} else {
+			// Used for simple primative types ex simple int/ simple float
+			// Ex	x	dw	0
+			return record->label + "\t" + "dw" + "\t" + "0";
+		}
+	}
+};
+
+
+
 // Helper Instructions
 
 class ClearRegisterInstruction : public Instruction {
@@ -293,10 +398,8 @@ public:
 	ExpressionEvalulationInstruction(Expression& expr): expr(expr) {}
 
 	std::string _toMoonCode() override {
-		// Load all the variables we need
-		for (std::vector<Variable>::value_type var : expr.usesVars) {
-			
-		}
+		// TODO: implement
+
 	}
 };
 

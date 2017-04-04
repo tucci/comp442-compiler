@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\comp442_compilers\Directives.h" />
     <ClInclude Include="..\comp442_compilers\Instructions.h" />
     <ClInclude Include="..\comp442_compilers\SymbolTableRecord.h" />
     <ClInclude Include="..\comp442_compilers\token.h" />
@@ -164,7 +163,6 @@
     <ClCompile Include="..\comp442_compilers\AssignStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
-    <ClCompile Include="..\comp442_compilers\Directive.cpp" />
     <ClCompile Include="..\comp442_compilers\Expression.cpp" />
     <ClCompile Include="..\comp442_compilers\ForStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\GetStatement.cpp" />
