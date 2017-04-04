@@ -534,40 +534,50 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 		SymbolTableRecord popped = container.top;
 		container.semanticStack.pop_back();
 		SymbolTableRecord& top = container.semanticStack.back();
-		if (top.attr.statementData.statType == StatementType::forStat) {
-			if (context.inForIncrementAssignStat) {
-				top.attr.statementData.forStatement.incrementer = popped.attr.statementData.assignStatement;
-			} else {
-				// Add this statement to the statement block for this for loop
-				top.attr.statementData.forStatement.statements.statements.push_back(popped.attr.statementData);
-			}
-			
+
+		std::shared_ptr<Statement> statement;
+		// Convert the statement we just popped into it's actual statement type
+		switch (popped.attr.statementData.statType) {
+		case assignStat:	statement = std::shared_ptr<AssignStatement>(new AssignStatement(popped.attr.statementData.assignStatement)); break;
+		case forStat:		statement = std::shared_ptr<ForStatement>(new ForStatement(popped.attr.statementData.forStatement)); break;
+		case ifelseStat:	statement = std::shared_ptr<IfElseStatement>(new IfElseStatement(popped.attr.statementData.ifelseStatement)); break;
+		case getStat:		statement = std::shared_ptr<GetStatement>(new GetStatement(popped.attr.statementData.getStatement)); break;
+		case putStat:		statement = std::shared_ptr<PutStatement>(new PutStatement(popped.attr.statementData.putStatement)); break;
+		case returnStat:	statement = std::shared_ptr<ReturnStatement>(new ReturnStatement(popped.attr.statementData.returnStatement)); break;
+		default:;
 		}
-		if (top.attr.statementData.statType == StatementType::ifelseStat) {
-			// Add this statement to the statement block for this if condition
-			if (!top.attr.statementData.ifelseStatement.inElseBlock) {
-				top.attr.statementData.ifelseStatement.ifStatements.statements.push_back(popped.attr.statementData);
-			} else {
-				top.attr.statementData.ifelseStatement.elseStatements.statements.push_back(popped.attr.statementData);
+		statement->setCodeGenerator(container.generator);
+
+
+		if (top.attr.statementData.statType == StatementType::forStat || top.attr.statementData.statType == StatementType::ifelseStat) {
+			if (top.attr.statementData.statType == StatementType::forStat) {
+				if (context.inForIncrementAssignStat) {
+					top.attr.statementData.forStatement.incrementer = popped.attr.statementData.assignStatement;
+				} else {
+					// Add this statement to the statement block for this for loop
+					top.attr.statementData.forStatement.statements.statements.push_back(statement);
+				}
+
 			}
-			
+			if (top.attr.statementData.statType == StatementType::ifelseStat) {
+				// Add this statement to the statement block for this if condition
+				if (!top.attr.statementData.ifelseStatement.inElseBlock) {
+					top.attr.statementData.ifelseStatement.ifStatements.statements.push_back(statement);
+				} else {
+					top.attr.statementData.ifelseStatement.elseStatements.statements.push_back(statement);
+				}
+			}
+		} else {
+			// Add that statement to the instruction list
+			container.generator->addInstruction(statement);
 		}
+
+		
 		
 
 		
-		std::shared_ptr<Instruction> instr;
-		// Convert the statement we just popped into it's actual statement type
-		switch (popped.attr.statementData.statType) {
-		case assignStat:	instr = std::shared_ptr<AssignStatement>(new AssignStatement(popped.attr.statementData.assignStatement)); break;
-		case forStat:		instr = std::shared_ptr<ForStatement>(new ForStatement(popped.attr.statementData.forStatement)); break;
-		case ifelseStat:	instr = std::shared_ptr<IfElseStatement>(new IfElseStatement(popped.attr.statementData.ifelseStatement)); break;
-		case getStat:		instr = std::shared_ptr<GetStatement>(new GetStatement(popped.attr.statementData.getStatement)); break;
-		case putStat:		instr = std::shared_ptr<PutStatement>(new PutStatement(popped.attr.statementData.putStatement)); break;
-		case returnStat:	instr = std::shared_ptr<ReturnStatement>(new ReturnStatement(popped.attr.statementData.returnStatement)); break;
-		default:;
-		}
-		// Add that statement to the instruction list
-		container.generator->addInstruction(instr);
+		
+	
 	}
 }
 

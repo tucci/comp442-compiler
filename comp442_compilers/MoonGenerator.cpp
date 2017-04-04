@@ -6,9 +6,10 @@
 MoonGenerator::MoonGenerator() {
 }
 
-MoonGenerator::MoonGenerator(SymbolTable* symbolTable) {
+MoonGenerator::MoonGenerator(SymbolTable* symbolTable, int tempMemorySize) {
 	this->globalTable = symbolTable;
 	initRegisterAllocation();
+	initTempMemoryAllocation(tempMemorySize);
 	
 }
 
@@ -18,7 +19,6 @@ MoonGenerator::~MoonGenerator() {
 }
 
 void MoonGenerator::addInstruction(std::shared_ptr<Instruction> instruction) {
-	instruction->setCodeGenerator(this);
 	instructions.push_back(instruction);
 }
 
@@ -26,9 +26,17 @@ void MoonGenerator::addInstruction(std::shared_ptr<Instruction> instruction) {
 void MoonGenerator::generateCode() {
 	moonOutputStream.open(outputMoonFile);
 
+	moonOutputStream << CommentInstruction("Allocate temp memory")._toMoonCode();
+	// Create the temp memory
+	for (std::unordered_map<std::string, bool>::value_type temp : tempMemory) {
+		moonOutputStream << DefineWordDirective(temp.first)._toMoonCode();
+	}
+	moonOutputStream << CommentInstruction("Allocate user data")._toMoonCode();
 	SymbolTable* programTable = globalTable->find("program").first->scope.get();
 	createEntriesForTable(*programTable);
 	
+
+	moonOutputStream << CommentInstruction("Start of user program")._toMoonCode();
 	moonOutputStream << AlignDirective()._toMoonCode();
 	moonOutputStream << EntryDirective()._toMoonCode();
 	// Then generate all the instructions
@@ -37,6 +45,7 @@ void MoonGenerator::generateCode() {
 	}
 
 	moonOutputStream << HaltInstruction()._toMoonCode();
+	moonOutputStream << CommentInstruction("end of program")._toMoonCode();
 	moonOutputStream.close();
 }
 
@@ -47,7 +56,6 @@ std::string MoonGenerator::getMoonFile() {
 
 void MoonGenerator::setOutputFileName(std::string outputfile) {	
 	outputMoonFile = outputfile;
-	
 }
 
  Register MoonGenerator::getUnusedRegister() {
@@ -67,6 +75,31 @@ void MoonGenerator::freeRegister(Register r) {
 	reg->second = true;
 }
 
+TempMemory MoonGenerator::getTempMemory() {
+	for (std::unordered_map<std::basic_string<char>, bool>::value_type ti : tempMemory) {
+		if (ti.second) {// if the register is free, give it
+			ti.second = false;// claim the register and set it used
+			TempMemory tn;
+			tn.label = ti.first;
+			return tn;
+		}
+	}
+	// We don't have any more temp memory to use
+	throw std::exception("Moon error: Out of temp memory to use");
+}
+
+void MoonGenerator::freeTempMemory(TempMemory tn) {
+	std::unordered_map<std::basic_string<char>, bool>::iterator tni = tempMemory.find(tn.label);
+	tni->second = true;
+}
+
+
+void MoonGenerator::initTempMemoryAllocation(int size) {
+	for (int i = 0; i < size; ++i) {
+		std::string tn = "t" + std::to_string(i);
+		tempMemory.emplace(tn, true);
+	}
+}
 
 void MoonGenerator::initRegisterAllocation() {
 	// Set all registers to free
@@ -93,7 +126,7 @@ void MoonGenerator::createEntriesForTable(SymbolTable& symbolTable) {
 		// Create declrations in the moon code for variables or parameters
 		if (entry.second.kind == SymbolKind::kind_variable || entry.second.kind == SymbolKind::kind_parameter) {
 			DefineWordDirective dwDirective(globalTable, &entry.second);
-			moonOutputStream << dwDirective._toMoonCode() << std::endl;
+			moonOutputStream << dwDirective._toMoonCode();
 		}
 		// TODO: figure out how to handle function declrations
 		

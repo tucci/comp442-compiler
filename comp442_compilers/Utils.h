@@ -103,4 +103,16 @@ static bool isFloat(std::string str) {
 	}
 }
 
+
+static std::string uniqueLabel() {
+	int length = 8;
+	std::string str;
+	std::string charset ="0123456789abcdefghijklmnopqrstuvwxyz";
+	for (int i = 0; i < length; ++i) {
+		int randIndex = rand() % (charset.length() - 1);
+		str.append(charset.substr(randIndex, 1));
+	}
+	return str;
+};
+
 #endif // !UTILS_H

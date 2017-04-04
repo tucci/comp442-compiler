@@ -2,7 +2,6 @@
 #define IFELSE_STATEMENT_H
 
 
-
 class IfElseStatement : public Statement {
 public:
 	IfElseStatement();

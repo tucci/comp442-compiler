@@ -6,7 +6,6 @@
 
 
 
-
 /* -------------------------- Data access instructions  ------------------------------- */
 
 class LoadWordInstruction : public Instruction {
@@ -350,6 +349,9 @@ public:
 class DefineWordDirective : public Instruction {
 	SymbolTable* globalTable;
 	SymbolTableRecord* record;
+	std::string label;
+	bool isTempMemory;
+
 
 public:
 
@@ -359,16 +361,29 @@ public:
 		  record(record) {
 	}
 
+	DefineWordDirective(std::string label) {
+		isTempMemory = true;
+		this->label = label;
+	};
+		
+	
+
 	std::string _toMoonCode() override {
+		// Since this is temp memory, we dont care about size calculaution
+		if (isTempMemory) {
+			// ex tn	dw	0
+			return Instruction::_toMoonCode(label + "\t" + "dw" + "\t" + "0");
+		}
+		
 		// Create the entry in the moon code
 		if (record->typeStructure.structure == SymbolStructure::struct_array || record->typeStructure.type == SymbolType::type_class) {
 			int allocationSize = SymbolTable::_sizeOf(globalTable, record->typeStructure);
-			return record->label + "\t" + "res" + "\t" + std::to_string(allocationSize);
+			return Instruction::_toMoonCode(record->label + "\t" + "res" + "\t" + std::to_string(allocationSize));
 
 		} else {
 			// Used for simple primative types ex simple int/ simple float
 			// Ex	x	dw	0
-			return record->label + "\t" + "dw" + "\t" + "0";
+			return Instruction::_toMoonCode(record->label + "\t" + "dw" + "\t" + "0");
 		}
 	}
 };
@@ -389,6 +404,20 @@ public:
 	std::string _toMoonCode() override {
 		return SubtractInstruction(r, r, r).setComment("Clear register")._toMoonCode();
 	};
+};
+
+class CommentInstruction : public Instruction {
+
+public:
+	std::string comment;
+
+	explicit CommentInstruction(const std::string& comment)
+		: comment(comment) {
+	}
+
+	std::string _toMoonCode() override { 
+		return "% ----------------" + comment + " ----------------\n";
+	}
 };
 
 class ExpressionEvalulationInstruction : public Instruction {
