@@ -35,4 +35,5 @@ struct Attributes {
 	StatementData statementData;
 	Variable var;
 };
+
 #endif

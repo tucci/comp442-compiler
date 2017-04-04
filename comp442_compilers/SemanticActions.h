@@ -21,7 +21,9 @@ struct SemanticActionContainer {
 	const Token& token;
 	std::vector<SemanticError>& semanticErrors;
 	bool* parserError;
+	MoonGenerator* generator;
 };
+
 
 class SemanticActions {
 public:
@@ -34,7 +36,8 @@ public:
 		const Token& token,
 		bool phase2,
 		std::vector<SemanticError>& semanticErrors,
-		bool* parserError);
+		bool* parserError,
+		MoonGenerator* generator);
 private:
 	// All of our semantic actions in the grammar
 	static void createGlobalTable(SemanticActionContainer& container);

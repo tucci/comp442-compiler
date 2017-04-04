@@ -13,6 +13,8 @@ Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool
 	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
 	// Create the generator
 	generartor = std::shared_ptr<MoonGenerator>(new MoonGenerator(&parser->globalTable));
+	// Attach the generator to the parser
+	parser->generator = generartor.get();
 	if (writeOutputs) {
 		parser->outputParserDataToFile();
 	}

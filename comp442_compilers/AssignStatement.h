@@ -3,6 +3,7 @@
 
 class AssignStatement : public Statement {
 public:
+
 	AssignStatement();
 	~AssignStatement();
 	Variable var;

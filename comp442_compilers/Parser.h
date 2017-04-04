@@ -37,12 +37,12 @@ private:
 	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
-
+	// The generator for the parser to use
+	MoonGenerator* generator;
 	// Global symbol table
 	SymbolTable globalTable;
 	// Current symbol table we are working in
 	SymbolTable* currentSymbolTable;
-	
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set

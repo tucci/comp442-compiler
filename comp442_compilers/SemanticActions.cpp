@@ -22,7 +22,8 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
                                     const Token& token,
                                     bool phase2,
 									std::vector<SemanticError>& semanticErrors,
-									bool* parserError) {
+									bool* parserError,
+									MoonGenerator* generator) {
 
 	context.inPhase2 = phase2;
 	if (!_shouldSkip(symbol)) {
@@ -30,7 +31,7 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
 			semanticStack.push_back(SymbolTableRecord());
 		}
 		SymbolTableRecord& top = semanticStack.back();
-		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors, parserError};
+		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors, parserError, generator};
 
 		// TODO: remove try/catch
 		try {
@@ -552,7 +553,21 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 			
 		}
 		
-	
+
+		
+		std::shared_ptr<Instruction> instr;
+		// Convert the statement we just popped into it's actual statement type
+		switch (popped.attr.statementData.statType) {
+		case assignStat:	instr = std::shared_ptr<AssignStatement>(new AssignStatement(popped.attr.statementData.assignStatement)); break;
+		case forStat:		instr = std::shared_ptr<ForStatement>(new ForStatement(popped.attr.statementData.forStatement)); break;
+		case ifelseStat:	instr = std::shared_ptr<IfElseStatement>(new IfElseStatement(popped.attr.statementData.ifelseStatement)); break;
+		case getStat:		instr = std::shared_ptr<GetStatement>(new GetStatement(popped.attr.statementData.getStatement)); break;
+		case putStat:		instr = std::shared_ptr<PutStatement>(new PutStatement(popped.attr.statementData.putStatement)); break;
+		case returnStat:	instr = std::shared_ptr<ReturnStatement>(new ReturnStatement(popped.attr.statementData.returnStatement)); break;
+		default:;
+		}
+		// Add that statement to the instruction list
+		container.generator->addInstruction(instr);
 	}
 }
 

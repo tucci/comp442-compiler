@@ -4,24 +4,25 @@
 #include <string>
 #include "Register.h"
 
+
 class AlignInstruction : public Instruction {
 public:
 		std::string _toMoonCode() override {
-			return "align";
+			return Instruction::_toMoonCode("align");
 		};
 };
 
 class EntryInstruction : public Instruction {
 public:
 	std::string _toMoonCode() override {
-		return "entry";
+		return Instruction::_toMoonCode("entry");
 	};
 };
 
 class HaltInstruction : public Instruction {
 public:
 	std::string _toMoonCode() override {
-		return "hlt";
+		return Instruction::_toMoonCode("hlt");
 	};
 };
 
@@ -36,7 +37,7 @@ public:
 		this->offset = offset;
 	};
 	std::string _toMoonCode() override {
-		return "lw\t" + ToRegisterValue(ri) + "," + offset + "(" + ToRegisterValue(rj) + ")";
+		return Instruction::_toMoonCode("lw\t" + registerToString(ri) + "," + offset + "(" + registerToString(rj) + ")");
 	};
 };
 
@@ -51,9 +52,74 @@ public:
 		this->offset = offset;
 	};
 	std::string _toMoonCode() override {
-		return "sw\t" + offset + "(" + ToRegisterValue(rj) + ")," + ToRegisterValue(ri);
+		return Instruction::_toMoonCode("sw\t" + offset + "(" + registerToString(rj) + ")," + registerToString(ri));	
 	};
 };
+
+class GetCInstruction : public Instruction {
+public:
+	Register ri;
+	GetCInstruction(Register ri) {
+		this->ri = ri;
+		this->setComment("Outputs the ascii value from " + registerToString(ri));
+	};
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("getc\t" + registerToString(ri));
+	};
+};
+
+class PutCInstruction : public Instruction {
+public:
+	Register ri;
+	PutCInstruction(Register ri) {
+		this->ri = ri;
+		this->setComment("Read the ascii value from input and assigns it to " + registerToString(ri));
+	};
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode("putc\t" + registerToString(ri));
+	}
+};
+
+
+enum MathOpCode {
+	op_add, op_addi,
+	op_sub, op_subi,
+	op_mul, op_muli,
+	op_div, op_divi,
+	op_ceq, op_ceqi,
+	op_cne, op_cnei,
+	op_clt, op_clti,
+	op_cle, op_clei,
+	op_cgt, op_cgti,
+	op_cge, op_cgei
+};
+
+static std::string opcodeToString(MathOpCode opcode) {
+	switch (opcode) {
+		case op_add:  return "add";
+		case op_addi: return "addi";
+		case op_sub:  return "sub";
+		case op_subi: return "subi";
+		case op_mul:  return "mul";
+		case op_muli: return "muli";
+		case op_div:  return "div";
+		case op_divi: return "divi";
+		case op_ceq:  return "ceq";
+		case op_ceqi: return "ceqi";
+		case op_cne:  return "cne";
+		case op_cnei: return "cnei";
+		case op_clt:  return "clt";
+		case op_clti: return "clti";
+		case op_cle:  return "cle";
+		case op_clei: return "clei";
+		case op_cgt:  return "cgt";
+		case op_cgti: return "cgti";
+		case op_cge:  return "cge";
+		case op_cgei: return "cgei";
+		default: ;
+	}
+}
+
 
 
 // A math instruction is used for operations such as add,sub,mul,div, ==, !=, etc
@@ -62,112 +128,71 @@ public:
 	Register dest;
 	Register rj;
 	Register rk;
+	MathOpCode opcode;
 	
-	ArithmeticInstruction(Register dest, Register rj, Register rk) {
+	ArithmeticInstruction(Register dest, Register rj, Register rk, MathOpCode opcode) {
 		this->dest = dest;
 		this->rj = rj;
 		this->rk = rk;
+		this->opcode = opcode;
 	};
+
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode(opcodeToString(opcode) + "\t" + registerToString(dest) + "," + registerToString(rj) + "," + registerToString(rk));
+		
+	}
 };
-
-
 
 class AddInstruction : public ArithmeticInstruction {
 public:
-	AddInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "add\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	}
+	AddInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_add) {}
 };
 
 
 class SubtractInstruction : public ArithmeticInstruction {
 public:
-	SubtractInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "sub\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	}
+	SubtractInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_sub) {}
 };
 
 class MultiplyInstruction : public ArithmeticInstruction {
 public:
-	MultiplyInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "mul\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	}
+	MultiplyInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_mul) {}
 };
 
 class DivisionInstruction : public ArithmeticInstruction {
 public:
-	DivisionInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "div\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	}
+	DivisionInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_div) {}
 };
-// TODO: implement these operators, Moons are bitwise, we dont want bitwise, we want logical
-//
-//class AndInstruction : public ArithmeticInstruction {
-//
-//public:
-//	std::string _toMoonCode() override {
-//		return "and\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-//	}
-//};
-//
-//class OrInstruction : public ArithmeticInstruction {
-//
-//public:
-//	std::string _toMoonCode() override {
-//		return "and\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-//	}
-//};
+// TODO: implement logical operators, Moons are bitwise, we dont want bitwise, we want logical
 
 class EqualInstruction : public	ArithmeticInstruction {
 public:
-	EqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "ceq\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	EqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_ceq) {}
 };
 
 class NotEqualInstruction : public	ArithmeticInstruction {
 public:
-	NotEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "cne\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	NotEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_cne) {}
 };
 
 class LessThanInstruction : public	ArithmeticInstruction {
 public:
-	LessThanInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "clt\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	LessThanInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_clt) {}
 };
 
 class LessThanEqualInstruction : public	ArithmeticInstruction {
 public:
-	LessThanEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "cle\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	LessThanEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_cle) {}
 };
 
 class GreaterThanInstruction : public ArithmeticInstruction {
 public:
-	GreaterThanInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "cgt\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	GreaterThanInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_cgt) {}
 };
 
 class GreatherThanEqualInstruction : public	ArithmeticInstruction {
 public:
-	GreatherThanEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk) {}
-	std::string _toMoonCode() override {
-		return "cge\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(rk);
-	};
+	GreatherThanEqualInstruction(Register dest, Register rj, Register rk): ArithmeticInstruction(dest, rj, rk, op_cge) {}
 };
 
 
@@ -178,111 +203,101 @@ public:
 	Register dest;
 	Register rj;
 	std::string k;
+	MathOpCode opcode;
 
-	ArithmeticImmediateInstruction(Register dest, Register rj, std::string k) {
+	ArithmeticImmediateInstruction(Register dest, Register rj, std::string k, MathOpCode opcode) {
 		this->dest = dest;
 		this->rj = rj;
 		this->k = k;
+		this->opcode = opcode;
 	};
+
+	std::string _toMoonCode() override {
+		return Instruction::_toMoonCode(opcodeToString(opcode) + "\t" + registerToString(dest) + "," + registerToString(rj) + "," + k);
+	}
 };
 
 class AddImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	AddImmediateInstruction(Register dest, Register rj, std::string r): ArithmeticImmediateInstruction(dest, rj, r) {}
-	std::string _toMoonCode() override {
-		AddInstruction a(Register::r1, Register::r4, Register::r10);
-
-		return "addi\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
+	AddImmediateInstruction(Register dest, Register rj, std::string r): ArithmeticImmediateInstruction(dest, rj, r, op_addi) {
+		this->setComment(registerToString(dest) + ":= " + registerToString(rj) + " + " + r);
 	}
 };
 
 class SubtractImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	SubtractImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "subi\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	}
+	SubtractImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_subi) {}
 };
 
 class MultiplyImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	MultiplyImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "muli\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	}
+	MultiplyImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_muli) {}
 };
 
 class DivisionImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	DivisionImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "divi\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	}
+	DivisionImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_divi) {}
 };
-// TODO: implement these immediate operators, Moons are bitwise, we dont want bitwise, we want logical
-//
-//class AndImmediateInstruction : public ArithmeticImmediateInstruction {
-//
-//public:
-//	std::string _toMoonCode() override {
-//		return "and\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(k);
-//	}
-//};
-//
-//class OrImmediateInstruction : public ArithmeticImmediateInstruction {
-//
-//public:
-//	std::string _toMoonCode() override {
-//		return "and\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + ToRegisterValue(k);
-//	}
-//};
+// TODO: implement logical immediate operators, Moons are bitwise, we dont want bitwise, we want logical
 
 class EqualImmediateInstruction : public	ArithmeticImmediateInstruction {
 public:
-	EqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "ceqi\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	};
+	EqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_ceqi) {}
 };
 
 class NotEqualImmediateInstruction : public	ArithmeticImmediateInstruction {
 public:
-	NotEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "cnei\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	};
+	NotEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_cnei) {}
 };
 
 class LessThanImmediateInstruction : public	ArithmeticImmediateInstruction {
 public:
-	LessThanImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "clti\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	};
+	LessThanImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_clti) {}
 };
 
-class LessThanEqualImmediateInstruction : public	ArithmeticImmediateInstruction {
+class LessThanEqualImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	LessThanEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
-	std::string _toMoonCode() override {
-		return "clei\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	};
+	LessThanEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_clei) {}
 };
 
 class GreaterThanImmediateInstruction : public ArithmeticImmediateInstruction {
 public:
-	GreaterThanImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
+	GreaterThanImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_cgti) {}
+};
+
+class GreatherThanEqualImmediateInstruction : public ArithmeticImmediateInstruction {
+public:
+	GreatherThanEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k, op_cgei) {}
+};
+
+// Helper Instructions
+
+class ClearRegisterInstruction : public Instruction {
+
+public:
+	Register r;
+
+	ClearRegisterInstruction(Register r) {
+		this->r = r;
+	}
+
 	std::string _toMoonCode() override {
-		return "cgti\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
+		return SubtractInstruction(r, r, r).setComment("Clear register")._toMoonCode();
 	};
 };
 
-class GreatherThanEqualImmediateInstruction : public	ArithmeticImmediateInstruction {
+class ExpressionEvalulationInstruction : public Instruction {
+	Expression& expr;
+
 public:
-	GreatherThanEqualImmediateInstruction(Register dest, Register rj, std::string k) : ArithmeticImmediateInstruction(dest, rj, k) {}
+	ExpressionEvalulationInstruction(Expression& expr): expr(expr) {}
+
 	std::string _toMoonCode() override {
-		return "cgei\t" + ToRegisterValue(dest) + "," + ToRegisterValue(rj) + "," + k;
-	};
+		// Load all the variables we need
+		for (std::vector<Variable>::value_type var : expr.usesVars) {
+			
+		}
+	}
 };
 
 #endif

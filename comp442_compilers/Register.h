@@ -18,9 +18,10 @@ enum Register {
 	r13,
 	r14,
 	r15,
+	r_error // used for when there is no more registers
 };
 
-static std::string ToRegisterValue(Register r) {
+static std::string registerToString(Register r) {
 	switch (r) {
 		case r0: return "r0";
 		case r1: return "r1";
@@ -40,6 +41,26 @@ static std::string ToRegisterValue(Register r) {
 		case r15: return "r15";
 		default: ;
 	}
+}
+
+static Register stringToRegister(std::string r) {
+	if (r == "r0") return r0;
+	else if (r == "r1") return r1;
+	else if (r == "r2") return r2;
+	else if (r == "r3") return r3;
+	else if (r == "r4") return r4;
+	else if (r == "r5") return r5;
+	else if (r == "r6") return r6;
+	else if (r == "r7") return r7;
+	else if (r == "r8") return r8;
+	else if (r == "r9") return r9;
+	else if (r == "r10") return r10;
+	else if (r == "r11") return r11;
+	else if (r == "r12") return r12;
+	else if (r == "r13") return r13;
+	else if (r == "r14") return r14;
+	else if (r == "r15") return r15;
+	
 }
 #endif
 
