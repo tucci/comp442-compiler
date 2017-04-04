@@ -59,7 +59,7 @@ void MoonGenerator::setOutputFileName(std::string outputfile) {
 }
 
  Register MoonGenerator::getUnusedRegister() {
-	for (std::unordered_map<std::basic_string<char>, bool>::value_type regi : registers) {
+	for (std::unordered_map<std::basic_string<char>, bool>::value_type& regi : registers) {
 		if (regi.second) {// if the register is free, give it
 			regi.second = false;// claim the register and set it used
 			return stringToRegister(regi.first);	
@@ -71,12 +71,12 @@ void MoonGenerator::setOutputFileName(std::string outputfile) {
 }
 
 void MoonGenerator::freeRegister(Register r) {
-	std::unordered_map<std::basic_string<char>, bool>::iterator reg = registers.find(registerToString(r));
+	std::unordered_map<std::basic_string<char>, bool>::iterator& reg = registers.find(registerToString(r));
 	reg->second = true;
 }
 
 TempMemory MoonGenerator::getTempMemory() {
-	for (std::unordered_map<std::basic_string<char>, bool>::value_type ti : tempMemory) {
+	for (std::unordered_map<std::basic_string<char>, bool>::value_type& ti : tempMemory) {
 		if (ti.second) {// if the register is free, give it
 			ti.second = false;// claim the register and set it used
 			TempMemory tn;
@@ -89,7 +89,7 @@ TempMemory MoonGenerator::getTempMemory() {
 }
 
 void MoonGenerator::freeTempMemory(TempMemory tn) {
-	std::unordered_map<std::basic_string<char>, bool>::iterator tni = tempMemory.find(tn.label);
+	std::unordered_map<std::basic_string<char>, bool>::iterator& tni = tempMemory.find(tn.label);
 	tni->second = true;
 }
 
