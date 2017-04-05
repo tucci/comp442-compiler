@@ -72,6 +72,7 @@ void MoonGenerator::setOutputFileName(std::string outputfile) {
 void MoonGenerator::freeRegister(Register r) {
 	std::unordered_map<std::basic_string<char>, bool>::iterator& reg = registers.find(registerToString(r));
 	reg->second = true;
+
 }
 
 TempMemory MoonGenerator::getTempMemory() {
@@ -91,6 +92,8 @@ void MoonGenerator::freeTempMemory(TempMemory tn) {
 	std::unordered_map<std::basic_string<char>, bool>::iterator& tni = tempMemory.find(tn.label);
 	tni->second = true;
 }
+
+
 
 
 void MoonGenerator::initTempMemoryAllocation(int size) {

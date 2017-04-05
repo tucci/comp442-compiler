@@ -20,6 +20,7 @@ enum NodeType { node_value, node_operator };
 class ExpressionElementNode {
 public:
 	NodeType nodeType;
+	int registerCount;
 	ExpressionElementNode(NodeType type) : nodeType(type){};
 	
 };

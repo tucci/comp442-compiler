@@ -80,6 +80,30 @@ static std::string opcodeToString(MathOpCode opcode) {
 }
 
 
+static MathOpCode operatorStringToMathOpCode(std::string opStr) {
+	// TODO: implement
+	TokenType opToken = Specification::TOKEN_MAP.at(opStr);
+	switch (opToken) {
+		// TODO: implement and or
+	/*case and: return;
+		case or: break;*/
+		//case not: break;
+		case lt:		return op_clt;
+		case lesseq:	return op_cle;
+		case noteq:		return op_cne;
+		case gt:		return op_cgt;
+		case greateq:	return op_cge;
+		case comparison:return op_ceq;
+		case addop:		return op_add;
+		case subtractop:return op_sub;
+		case multop:	return op_mul;
+		case divop:		return op_div;
+		default: ;
+	}
+
+}
+
+
 
 /* -------------------------- Arithmetic Instruction instructions  ------------------------------- */
 class ArithmeticInstruction : public Instruction {
@@ -101,6 +125,8 @@ public:
 		
 	}
 };
+
+
 
 class AddInstruction : public ArithmeticInstruction {
 public:
@@ -425,18 +451,114 @@ class ExpressionEvalulationInstruction : public Instruction {
 public:
 	Expression& expr;
 	// This is the output temp memory that other instructions can use
-	TempMemory outputTemp;
+	Register outputRegister;
 	ExpressionEvalulationInstruction(MoonGenerator* gen, Expression& expr): expr(expr) {
 		generator = gen;
 	}
 
+	std::string operationToInstruction(OperatorExpressionNode* opNode, Register ra, Register rb, Register rc) {
+		MathOpCode opcode = operatorStringToMathOpCode(opNode->operatorValue.operatorValue);
+		return ArithmeticInstruction(ra, rb, rc, opcode)._toMoonCode();
+	}
+
 	std::string _toMoonCode() override {
-		outputTemp = generator->getTempMemory();
+		std::string instrBlock;
+		// Label the register counts for this tree
+		registerFill(expr.root.get());
+		int registerNeedsCount = expr.root.get()->registerCount;
+
+		std::vector<Register> reglist;
+		for (int i = 0; i < registerNeedsCount; ++i) {
+			reglist.push_back(generator->getUnusedRegister());
+		}
+
+		outputRegister = reglist[0];
 		// TODO: implement this. also needs to handle relational operators
 		// if true it should evaluate to a non zero value
 		// if false, it should evaluatio to zero
-		return CommentInstruction("% Expression evals to " + outputTemp.label)._toMoonCode();
+		treeRegister(expr.root.get(), instrBlock, reglist);
 
+		// Free the non ouput registers
+		for (int i = 1; i < reglist.size(); ++i) {
+			generator->freeRegister(reglist[i]);
+		}
+		return instrBlock;
+
+	}
+
+	void registerFill(ExpressionElementNode* root) {
+		if (root->nodeType == node_value) {
+			root->registerCount = 1;
+		} else {
+			OperatorExpressionNode* opNode = static_cast<OperatorExpressionNode*>(root);
+			registerFill(opNode->left.get());
+			registerFill(opNode->right.get());
+			if (opNode->left->registerCount == opNode->right->registerCount) {
+				root->registerCount = opNode->right->registerCount + 1;
+			} else {
+				root->registerCount = std::max(opNode->left->registerCount, opNode->right->registerCount);
+			}
+		}
+	}
+	void treeRegister(ExpressionElementNode* root, std::string& instrBlock, std::vector<Register> reglist) {
+		
+		Register ra = reglist.front();
+		Register rb;
+		if (reglist.size() == 1) {
+			rb = ra;
+		} else {
+			rb = sublist(reglist, 1, reglist.size()).front();
+		}
+		
+		
+
+		if (root->nodeType == node_value) {
+			ValueExpressionNode* valueNode = static_cast<ValueExpressionNode*>(root);
+			if (valueNode->value.type == fragment_var) {
+				// load a variable
+				instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+			} else if (valueNode->value.type == fragment_numeric) {
+				// load a literal
+				instrBlock.append(ClearRegisterInstruction(ra)._toMoonCode());
+				instrBlock.append(AddImmediateInstruction(ra, ra, valueNode->value.numericValue).setComment("load " + valueNode->value.numericValue + " into register")._toMoonCode());
+			}
+		} else {
+			// This is a binary operator
+			OperatorExpressionNode* opNode = static_cast<OperatorExpressionNode*>(root);
+			ExpressionElementNode* left = opNode->left.get();
+			ExpressionElementNode* right = opNode->right.get();
+			if (left->registerCount >= reglist.size() && right->registerCount >= reglist.size()) {
+				// Spill into memory
+				treeRegister(left, instrBlock, reglist);
+				TempMemory temp = generator->getTempMemory();
+				// Generate sw
+				instrBlock.append(StoreWordInstruction(r0, ra, temp.label)._toMoonCode());
+				treeRegister(right, instrBlock, reglist);
+				// Generate lw
+				instrBlock.append(LoadWordInstruction(ra, r0, temp.label)._toMoonCode());
+				generator->freeTempMemory(temp);
+				instrBlock.append(operationToInstruction(opNode, ra,rb,ra));
+			} else {
+				// There is enough registers
+				if (left->registerCount >= right->registerCount) {
+					treeRegister(left, instrBlock, reglist);
+					treeRegister(right, instrBlock, sublist(reglist, 1, reglist.size()));
+					// Generate the operation
+					instrBlock.append(operationToInstruction(opNode, ra,ra,rb));
+				} else {
+					treeRegister(right, instrBlock, reglist);
+					treeRegister(left, instrBlock, sublist(reglist, 1, reglist.size()));
+					// Generate the operation
+					instrBlock.append(operationToInstruction(opNode, ra,rb,ra));
+				}
+				
+
+			}
+
+
+			
+		}
+		
 	}
 };
 
