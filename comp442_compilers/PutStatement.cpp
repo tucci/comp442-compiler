@@ -12,15 +12,10 @@ PutStatement::~PutStatement() {
 
 std::string PutStatement::_toMoonCode() {
 	std::string instrBlock;
-	Register r = generator->getUnusedRegister();
-
-	// TODO: evaluate the expression and put it in a register
-	std::string expressionValue = "66";
 	
-	instrBlock.append(ClearRegisterInstruction(r)._toMoonCode());
-	instrBlock.append(AddImmediateInstruction(r, r, expressionValue)._toMoonCode());
-	instrBlock.append(PutCInstruction(r)._toMoonCode());
-	instrBlock.append(ClearRegisterInstruction(r)._toMoonCode());
-	generator->freeRegister(r);
+	ExpressionEvalulationInstruction exprInstr(generator, expression);
+	instrBlock.append(exprInstr._toMoonCode());
+	instrBlock.append(PutCInstruction(exprInstr.outputRegister)._toMoonCode());
+	generator->freeRegister(exprInstr.outputRegister);
 	return instrBlock;
 }
