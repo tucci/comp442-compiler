@@ -31,13 +31,15 @@ void MoonGenerator::generateCode() {
 	for (std::unordered_map<std::string, bool>::value_type temp : tempMemory) {
 		moonOutputStream << DefineWordDirective(temp.first)._toMoonCode();
 	}
-	moonOutputStream << CommentInstruction("Allocate user data")._toMoonCode();
+	moonOutputStream << CommentInstruction("Allocate function var/param temp data")._toMoonCode();
 	// generate all the memoery from the tables
 	for (std::_Simple_types<std::pair<const std::basic_string<char>, SymbolTableRecord>>::value_type table : globalTable->getTable()) {
 		if (table.second.kind == kind_class || table.second.kind == kind_function) {
 			createEntriesForRecord(table.second);
 		}
 	}
+
+	moonOutputStream << CommentInstruction("Create function definitions")._toMoonCode();
 	// Create function definitions/statements
 	for (std::vector<FunctionDeclStatementList>::value_type funcDef : functionDefinitions) {
 		// Create the function declrations
@@ -158,7 +160,8 @@ void MoonGenerator::createEntriesForRecord(SymbolTableRecord& record) {
 		}
 		if (record.name != "program") {
 			// Add the return value memory
-			moonOutputStream << record.label + "_return\n";
+			DefineWordDirective dwDirective(record.label + "_return");
+			moonOutputStream << dwDirective._toMoonCode();
 		}
 		
 	}
