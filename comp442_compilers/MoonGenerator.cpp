@@ -32,8 +32,18 @@ void MoonGenerator::generateCode() {
 		moonOutputStream << DefineWordDirective(temp.first)._toMoonCode();
 	}
 	moonOutputStream << CommentInstruction("Allocate user data")._toMoonCode();
-	SymbolTable* programTable = globalTable->find("program").first->scope.get();
-	createEntriesForTable(*programTable);
+	// generate all the memoery from the tables
+	for (std::_Simple_types<std::pair<const std::basic_string<char>, SymbolTableRecord>>::value_type table : globalTable->getTable()) {
+		if (table.second.kind == kind_class || table.second.kind == kind_function) {
+			createEntriesForRecord(table.second);
+		}
+	}
+	// Create function definitions/statements
+	for (std::vector<FunctionDeclStatementList>::value_type funcDef : functionDefinitions) {
+		// Create the function declrations
+		generateCodeForFunction(funcDef);
+	}
+
 	
 	moonOutputStream << CommentInstruction("Start of user program")._toMoonCode();
 	moonOutputStream << AlignDirective()._toMoonCode();
@@ -93,7 +103,9 @@ void MoonGenerator::freeTempMemory(TempMemory tn) {
 	tni->second = true;
 }
 
-
+void MoonGenerator::addFuncDeclStatmentList(FunctionDeclStatementList funcDec) {
+	functionDefinitions.push_back(funcDec);
+}
 
 
 void MoonGenerator::initTempMemoryAllocation(int size) {
@@ -103,20 +115,6 @@ void MoonGenerator::initTempMemoryAllocation(int size) {
 	}
 }
 
-void MoonGenerator::generateFunctionDefinition(SymbolTableRecord* functionRecord) {
-	// This will add all the necessary temp memory needed for the function
-	
-	// Add the function name return value in the temp memory
-	tempMemory.emplace(functionRecord->label + "_return", true);
-	// Create the temp memory for the params
-	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type param : functionRecord->scope.get()->table) {
-		if (param.second.kind == kind_parameter || param.second.kind == kind_variable) {
-			tempMemory.emplace(param.second.label, true);
-		}
-	}
-	// Add the function header instruction using a noop instruction
-	addInstruction(std::shared_ptr<NoopInstruction>(new NoopInstruction(functionRecord->label, "")));
-}
 
 void MoonGenerator::initRegisterAllocation() {
 	// Set all registers to free
@@ -138,15 +136,44 @@ void MoonGenerator::initRegisterAllocation() {
 	// r15 is not a usable register, it is used for function linking
 }
 
-void MoonGenerator::createEntriesForTable(SymbolTable& symbolTable) {
-	for (std::unordered_map<std::string, SymbolTableRecord>::value_type entry : symbolTable.table) {
-		// Create declrations in the moon code for variables or parameters
-		if (entry.second.kind == SymbolKind::kind_variable || entry.second.kind == SymbolKind::kind_parameter) {
-			DefineWordDirective dwDirective(globalTable, &entry.second);
-			moonOutputStream << dwDirective._toMoonCode();
+void MoonGenerator::createEntriesForRecord(SymbolTableRecord& record) {
+
+	if (record.kind == kind_class) {
+		// only create the functions
+		for (std::_Simple_types<std::pair<const std::basic_string<char>, SymbolTableRecord>>::value_type entry : record.scope->getTable()) {
+			if (entry.second.kind ==  kind_function) {
+				// Create the inner function entries
+				createEntriesForRecord(entry.second);
+			}
 		}
-		// TODO: figure out how to handle function declrations
+	}
+	else if (record.kind == kind_function) {
+		// create the variables
+		for (std::_Simple_types<std::pair<const std::basic_string<char>, SymbolTableRecord>>::value_type entry : record.scope->getTable()) {
+			// Create dws in the moon code for variables or parameters
+			if (entry.second.kind == SymbolKind::kind_variable || entry.second.kind == SymbolKind::kind_parameter) {
+				DefineWordDirective dwDirective(globalTable, &entry.second);
+				moonOutputStream << dwDirective._toMoonCode();
+			}
+		}
+		if (record.name != "program") {
+			// Add the return value memory
+			moonOutputStream << record.label + "_return\n";
+		}
 		
-		
+	}
+}
+
+void MoonGenerator::generateCodeForFunction(FunctionDeclStatementList funcStatements) {
+	
+	SymbolTableRecord* functionRecord = funcStatements.functionRecord;
+	SymbolTable* functionTable = functionRecord->scope.get();
+	// Add the function header instruction using a noop instruction
+	moonOutputStream << NoopInstruction(functionRecord->label, "")._toMoonCode();
+	// Load in all the parameters by value
+	
+	// generate all the inner statements
+	for (std::vector<std::shared_ptr<Statement>>::value_type statement : funcStatements.statements) {
+		moonOutputStream << statement->_toMoonCode();
 	}
 }

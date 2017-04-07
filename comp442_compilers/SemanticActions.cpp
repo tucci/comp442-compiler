@@ -152,23 +152,32 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 			paramRecord.name = param.second;
 			paramRecord.typeStructure = param.first;
 			(*container.currentTable)->addRecord(paramRecord.name, paramRecord, *container.currentTable, false);
-		}
-		
-	}
-	else {
-		// Create the temp memory for this function such as the parameters and return value
-		container.generator->generateFunctionDefinition(found.first);
-		// since we are in a function, all following instructions will be inside the function def
+		}	
+		container.semanticStack.pop_back();
+	} else if (context.inPhase2) {
+		SymbolTableRecord record;
+		record.attr.type = AttributeType::attr_funcDef;
+		// link the function record
+		record.attr.funcDef.functionRecord = found.first;
+		container.semanticStack.push_back(record);
 		_goToScope(container, found.first);
+	} else {
+		container.semanticStack.pop_back();
 	}
+	
 
 
-	container.semanticStack.pop_back();
+	
 }
 
 void SemanticActions::endFuncEntryAndTable(SemanticActionContainer& container) {
 	if (!context.skipFunction) {
 		_goToParentScope(container);
+	}
+	if (context.inPhase2) {
+		// migrate this func def to the code generator
+		container.generator->addFuncDeclStatmentList(container.top.attr.funcDef);
+		container.semanticStack.pop_back();
 	}
 	context.skipFunction = false;
 }
@@ -555,8 +564,10 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 		}
 		statement->setCodeGenerator(container.generator);
 
-
-		if (top.attr.statementData.statType == StatementType::forStat || top.attr.statementData.statType == StatementType::ifelseStat) {
+		// add this statement to the function definition
+		if (top.attr.type == attr_funcDef) {
+			top.attr.funcDef.statements.push_back(statement);
+		} else if (top.attr.type == attr_statement) {
 			if (top.attr.statementData.statType == StatementType::forStat) {
 				if (context.inForIncrementAssignStat) {
 					// Attach the code generator for this sub statement
@@ -566,9 +577,7 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 					// Add this statement to the statement block for this for loop
 					top.attr.statementData.forStatement.statements.statements.push_back(statement);
 				}
-
-			}
-			if (top.attr.statementData.statType == StatementType::ifelseStat) {
+			} else if (top.attr.statementData.statType == StatementType::ifelseStat) {
 				// Add this statement to the statement block for this if condition
 				if (!top.attr.statementData.ifelseStatement.inElseBlock) {
 					top.attr.statementData.ifelseStatement.ifStatements.statements.push_back(statement);
@@ -580,13 +589,7 @@ void SemanticActions::popStatement(SemanticActionContainer& container) {
 			// Add that statement to the instruction list
 			container.generator->addInstruction(statement);
 		}
-
-		
-		
-
-		
-		
-	
+				
 	}
 }
 

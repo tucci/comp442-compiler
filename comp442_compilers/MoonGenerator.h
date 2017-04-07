@@ -1,5 +1,6 @@
 #ifndef MOON_GENERATOR_H
 #define MOON_GENERATOR_H
+#include "Attribute.h"
 
 struct TempMemory {
 	std::string label;
@@ -21,10 +22,11 @@ public:
 	// Claim/free temo memory
 	TempMemory getTempMemory();
 	void freeTempMemory(TempMemory tn);
-	void generateFunctionDefinition(SymbolTableRecord* functionRecord);
+	void addFuncDeclStatmentList(FunctionDeclStatementList funcDec);
 private:
 	std::ofstream moonOutputStream;
 	SymbolTable* globalTable;
+	std::vector<FunctionDeclStatementList> functionDefinitions;
 	std::vector<std::shared_ptr<Instruction>> instructions;
 	std::string outputMoonFile;
 	// map of registers being used or free
@@ -43,7 +45,9 @@ private:
 	// Inits the temp memory allocation. sets all temp to free
 	// Used when the program needs temp memory
 	void initTempMemoryAllocation(int size);
-	void createEntriesForTable(SymbolTable& symbolTable);
+	void createEntriesForRecord(SymbolTableRecord& record);
+
+	void generateCodeForFunction(FunctionDeclStatementList funcStatements);
 
 };
 

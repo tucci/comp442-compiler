@@ -29,7 +29,15 @@ struct StatementData {
 enum AttributeType {
 	attr_expr,
 	attr_statement,
-	attr_var
+	attr_var,
+	attr_funcDef
+};
+
+// Holds all the data about a functions declrations
+// and its inner statements
+struct FunctionDeclStatementList {
+	SymbolTableRecord* functionRecord;
+	std::vector<std::shared_ptr<Statement>> statements;
 };
 
 struct Attributes {
@@ -37,6 +45,8 @@ struct Attributes {
 	Expression expr;
 	StatementData statementData;
 	Variable var;
+	FunctionDeclStatementList funcDef;
+
 };
 
 #endif
