@@ -344,6 +344,14 @@ public:
 
 class NoopInstruction : public Instruction {
 public:
+
+	NoopInstruction() {
+	}
+
+	NoopInstruction(const std::string& label, const std::string& comment)
+		: Instruction(label, comment) {
+	}
+
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("nop");
 	};
@@ -515,10 +523,51 @@ public:
 		if (root->nodeType == node_value) {
 			ValueExpressionNode* valueNode = static_cast<ValueExpressionNode*>(root);
 			if (valueNode->value.type == fragment_var) {
-				// load a variable
-				instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+				Variable var = valueNode->value.var;
+				// TODO: we also need to handle negative values
+				// We need to handle functions and arrays
+				if (var.isFunc) {
+					// this is a function call
+					// get the param labels
+					std::vector<std::string> paramLabels;
+					std::unordered_map<std::string, SymbolTableRecord> table = var.record->scope.get()->getTable();
+					for (auto param : table) {
+						if (param.second.kind  == SymbolKind::kind_parameter) {
+							paramLabels.push_back(param.second.label);
+						}	
+					}
+					// TODO: We are passing by value, so change it in the doc
+					// Pass by values
+					for (int i = 0; i < var.arguments.size(); ++i) {
+						// For each arugment, eval the expression then get the output register
+						Expression arg = var.arguments[i];
+						ExpressionEvalulationInstruction argExpr(generator, arg);
+						instrBlock.append(argExpr._toMoonCode());
+						// Store the value of the output register into the param's memory
+						instrBlock.append(StoreWordInstruction(r0, argExpr.outputRegister, paramLabels[i])._toMoonCode());
+						// free the output register
+						generator->freeRegister(argExpr.outputRegister);
+					}
+					// After the arugments have been loaded into the labels, jl to the function				
+					instrBlock.append(JumpAndLinkInstruction(r15, var.record->label).setComment("Jump to " + var.record->label + " function")._toMoonCode());
+					// Since we know the return value is in r14, we'll need to copy/mov the output register to our output expression register
+					// get some temp space to store the value in
+					TempMemory temp = generator->getTempMemory();
+					// Store the output of the return value into the temp memory
+					instrBlock.append(StoreWordInstruction(r0, r14, temp.label)._toMoonCode());
+					// Load the temp memory into our outpute register
+					instrBlock.append(LoadWordInstruction(outputRegister, r0, temp.label)._toMoonCode());
+					// Free the memoery we just used
+					generator->freeTempMemory(temp);
+
+				} else {
+					// load a variable
+					instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+				}
+				
 			} else if (valueNode->value.type == fragment_numeric) {
 				// load a literal
+				// TODO: we also need to handle negative values
 				instrBlock.append(ClearRegisterInstruction(ra)._toMoonCode());
 				instrBlock.append(AddImmediateInstruction(ra, ra, valueNode->value.numericValue).setComment("load " + valueNode->value.numericValue + " into register")._toMoonCode());
 			}

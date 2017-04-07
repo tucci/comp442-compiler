@@ -27,8 +27,8 @@ std::string Variable::toFullName() {
 	if (isFunc) {
 		varName.append("(");
 		if (arguments.size() != 0) {
-			for (std::vector<TypeStruct>::value_type type : arguments) {
-				varName.append(type.toString()  + ", ");
+			for (std::vector<Expression>::value_type expr: arguments) {
+				varName.append(expr.type.toString()  + ", ");
 			}
 			
 			

@@ -22,7 +22,7 @@ public:
 	SymbolTableRecord* record;
 	int location;
 	bool isFunc;
-	std::vector<TypeStruct> arguments;
+	std::vector<Expression> arguments;
 };
 
 #endif

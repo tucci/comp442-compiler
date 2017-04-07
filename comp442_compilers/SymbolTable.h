@@ -5,6 +5,7 @@
 // TODO: figure out how to handle recursion
 class SymbolTable {
 public:
+	// TODO: this can be removed since now we have a get table function
 	friend class SemanticActions;
 	friend class MoonGenerator;
 	// Create a symbol table with no parent
@@ -26,6 +27,8 @@ public:
 
 	// The link to the parent table of this symbol table
 	SymbolTable* parent;
+
+	const std::unordered_map<std::string, SymbolTableRecord> getTable();
 	
 	// A name to be added to the table for easier outputing
 	std::string resolvedName;

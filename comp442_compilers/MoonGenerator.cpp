@@ -103,9 +103,24 @@ void MoonGenerator::initTempMemoryAllocation(int size) {
 	}
 }
 
+void MoonGenerator::generateFunctionDefinition(SymbolTableRecord* functionRecord) {
+	// This will add all the necessary temp memory needed for the function
+	
+	// Add the function name return value in the temp memory
+	tempMemory.emplace(functionRecord->label + "_return", true);
+	// Create the temp memory for the params
+	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type param : functionRecord->scope.get()->table) {
+		if (param.second.kind == kind_parameter || param.second.kind == kind_variable) {
+			tempMemory.emplace(param.second.label, true);
+		}
+	}
+	// Add the function header instruction using a noop instruction
+	addInstruction(std::shared_ptr<NoopInstruction>(new NoopInstruction(functionRecord->label, "")));
+}
+
 void MoonGenerator::initRegisterAllocation() {
 	// Set all registers to free
-	// r0 is not included
+	// r0 is not included as it is used for the value 0
 	registers.emplace(registerToString(r1), true);
 	registers.emplace(registerToString(r2), true);
 	registers.emplace(registerToString(r3), true);
@@ -119,8 +134,8 @@ void MoonGenerator::initRegisterAllocation() {
 	registers.emplace(registerToString(r11), true);
 	registers.emplace(registerToString(r12), true);
 	registers.emplace(registerToString(r13), true);
-	registers.emplace(registerToString(r14), true);
-	registers.emplace(registerToString(r15), true);
+	// r14 is not a usable register, it is used for function return value
+	// r15 is not a usable register, it is used for function linking
 }
 
 void MoonGenerator::createEntriesForTable(SymbolTable& symbolTable) {

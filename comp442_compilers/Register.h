@@ -16,8 +16,8 @@ enum Register {
 	r11,
 	r12,
 	r13,
-	r14,
-	r15,
+	r14, // r14 is used for the function return value
+	r15, // r15 is used for function linking
 	r_error // used for when there is no more registers
 };
 

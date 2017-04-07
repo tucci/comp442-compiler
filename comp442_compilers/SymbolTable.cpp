@@ -82,6 +82,10 @@ std::string SymbolTable::toString() {
 	return output;
 }
 
+const std::unordered_map<std::string, SymbolTableRecord> SymbolTable::getTable() {
+	return table;
+}
+
 int SymbolTable::_sizeOf(SymbolTable* globalTable, TypeStruct idType) {
 	int typeSize = 0;
 	if (idType.type == SymbolType::type_int || idType.type == SymbolType::type_float) {

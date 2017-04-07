@@ -21,7 +21,7 @@ public:
 	// Claim/free temo memory
 	TempMemory getTempMemory();
 	void freeTempMemory(TempMemory tn);
-
+	void generateFunctionDefinition(SymbolTableRecord* functionRecord);
 private:
 	std::ofstream moonOutputStream;
 	SymbolTable* globalTable;
@@ -36,6 +36,7 @@ private:
 	// Where second value means if the temp memory is free or not
 	// if true, that means the temp memory is free to use
 	std::unordered_map<std::string, bool> tempMemory;
+	
 	
 	// Inits the register allocations. sets all registers to free
 	void initRegisterAllocation();

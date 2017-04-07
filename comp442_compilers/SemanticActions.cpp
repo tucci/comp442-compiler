@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SemanticActions.h"
 #include "SymbolTableRecord.h"
+#include "Instructions.h"
 
 // A simple data structure that keeps some context during the semantic actions
 static struct SemanticContext {
@@ -152,10 +153,16 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 			paramRecord.typeStructure = param.first;
 			(*container.currentTable)->addRecord(paramRecord.name, paramRecord, *container.currentTable, false);
 		}
+		
 	}
 	else {
+		// Create the temp memory for this function such as the parameters and return value
+		container.generator->generateFunctionDefinition(found.first);
+		// since we are in a function, all following instructions will be inside the function def
 		_goToScope(container, found.first);
 	}
+
+
 	container.semanticStack.pop_back();
 }
 
@@ -376,7 +383,7 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 		case attr_var: {
 			if (top.attr.var.isFunc) {
 				// Set this expression to the last arugment for this function
-				top.attr.var.arguments.push_back(popped.attr.expr.type);
+				top.attr.var.arguments.push_back(popped.attr.expr);
 			} else {
 				// Add this expression to the last indice for this var
 				top.attr.var.vars.back().indices.push_back(popped.attr.expr);
@@ -455,7 +462,7 @@ void SemanticActions::popVar(SemanticActionContainer& container) {
 				if (popped.attr.var.arguments.size() == record->functionData.parameters.size()) {
 					// Compare each function type
 					for (int i = 0; i < popped.attr.var.arguments.size(); ++i) {
-						if (!(popped.attr.var.arguments[i] == record->functionData.parameters[i].first)) {
+						if (!(popped.attr.var.arguments[i].type == record->functionData.parameters[i].first)) {
 							// There was a type mismatch for the type at param/arg index i
 							error = true;
 						}
@@ -667,6 +674,8 @@ void SemanticActions::putStatementStart(SemanticActionContainer& container) {
 void SemanticActions::returnStatementStart(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		container.top.attr.statementData.statType = StatementType::returnStat;
+		// Get the current function record
+		container.top.attr.statementData.returnStatement.linkedFunction = *container.currentTable;
 		// Get current function return type
 		container.top.attr.statementData.returnStatement.functionReturnType = (*container.currentTable)->parent->find((*container.currentTable)->name).first->functionData.returnType;
 		

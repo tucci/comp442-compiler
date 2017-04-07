@@ -17,6 +17,7 @@ public:
 	virtual std::string _toMoonCode() = 0;
 protected:
 	Instruction();
+	Instruction(std::string label, std::string comment);
 	// Wraps the instruction string with the comments,labels, and newline
 	std::string _toMoonCode(std::string instr);
 	MoonGenerator* generator;

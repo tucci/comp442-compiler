@@ -5,6 +5,11 @@
 Instruction::Instruction() {
 }
 
+Instruction::Instruction(std::string label, std::string comment) {
+	this->label = label;
+	this->comment = comment;
+}
+
 std::string Instruction::_toMoonCode(std::string instr) {
 	// This allows the instruction comment and labels to be added
 	// All subclasses should call this method to allow for labels and comments to be added to the instr string
