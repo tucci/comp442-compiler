@@ -21,5 +21,6 @@ std::string ReturnStatement::_toMoonCode() {
 	instrBlock.append(LoadWordInstruction(r14, r0, linkedFunction->label + "_return").setComment("Return the value to the r14 return register")._toMoonCode());
 	// jump to register r15. r15 is used specifically for return jumps
 	instrBlock.append(JumpRegisterInstruction(r15)._toMoonCode());
+	generator->freeRegister(exprInstruction.outputRegister);
 	return instrBlock;
 }
