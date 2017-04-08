@@ -1,54 +1,58 @@
-
-class Student {
-	int age;
-	String name;
-	float height;
-	int name;
-
-	int getAge() {
-		int test;
-		test = name.chars[2] * qt();
+class Test {
+	int jj;
+	float jk;
+	int too(int t, int u, int v) {
+		return (t + u + v);
 	};
 };
 
-class Student {};
-
-class String {
-	Char chars[10];
-};
-
-class Char {
-	ASCII ascii;
-};
-
-class ASCII {
-	int value;
-};
-
 program {
-	
-	Student s;
-	int av;
-	int jj;
-	String str;
+	 int s;
+	 int t;
+	 int e;
+	 int v;
+	 int n;
+	 s = 115;
+	 t = 116;
+	 e = 101;
+	 v = 118;
+	 n = 110;
+	 // output name
+	 //put(s);put(t);put(e);put(v);put(e);put(n);
 
-	s = jj();
-
-	s = s.value(id.x, abc);
-	t.s[2] = 4;
-	int t[2];
-	x = s[av[id[44]][2]];
-	s.name.chars[2][3] = 32;
-	s.name.chars[3].value = qt();
-	str.chars[2].ascii.value = 10;
-	str = str.qt();
-
-
+	 int char;
+	 get(char);
+	 int count;
+	 count = charToNum(char);
+	 for (int i = 0; i < count; i = i + 1) {
+		put(numToChar(i));
+	 };
+	 
 };
 
+int func(int x, int y, int z) {
+	int gg;
+	gg = 32;
+	gg = x * y * z;
+	return (gg);
+};
 
-int qt() {
-	
-	int x;
+int go(int f) {
+	return (f);
+};
 
+int numToChar(int number) {
+	int ascii;
+	if (number >= 0) then {
+		ascii = number + 48;
+	} else {
+		ascii = 47;
+	};
+	return (ascii);
+};
+
+int charToNum(int char) {
+	int number;
+	number = char - 48;
+	return (number);
 };

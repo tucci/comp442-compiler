@@ -263,7 +263,7 @@ public:
 	Register ri;
 	GetCInstruction(Register ri) {
 		this->ri = ri;
-		this->setComment("Outputs the ascii value from " + registerToString(ri));
+		this->setComment("Read the ascii value from the input");
 	};
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("getc\t" + registerToString(ri));
@@ -275,7 +275,7 @@ public:
 	Register ri;
 	PutCInstruction(Register ri) {
 		this->ri = ri;
-		this->setComment("Read the ascii value from input and assigns it to " + registerToString(ri));
+		this->setComment("put the ascii value to the output");
 	};
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("putc\t" + registerToString(ri));
