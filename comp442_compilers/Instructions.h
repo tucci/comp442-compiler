@@ -588,7 +588,6 @@ public:
 			ValueExpressionNode* valueNode = static_cast<ValueExpressionNode*>(root);
 			if (valueNode->value.type == fragment_var) {
 				Variable var = valueNode->value.var;
-				// TODO: we also need to handle negative values
 				// We need to handle functions and arrays
 				if (var.isFuncCall) {
 					// this is a function call
@@ -618,21 +617,33 @@ public:
 					TempMemory temp = generator->getTempMemory();
 					// Store the output of the return value into the temp memory
 					instrBlock.append(StoreWordInstruction(r0, r14, temp.label)._toMoonCode());
+
 					// Load the temp memory into our outpute register
 					instrBlock.append(LoadWordInstruction(outputRegister, r0, temp.label)._toMoonCode());
-					// Free the memoery we just used
+					if (valueNode->value.sign == sign_minus) {
+						instrBlock.append(SubtractInstruction(outputRegister, r0, outputRegister).setComment("load negative value " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+					}
+					
+					// Free the memory we just used
 					generator->freeTempMemory(temp);
 
 				} else {
 					// load a variable
 					instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+					if (valueNode->value.sign == sign_minus) {
+						instrBlock.append(SubtractInstruction(ra, r0, ra).setComment("load negative value of var " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+					}
 				}
 				
 			} else if (valueNode->value.type == fragment_numeric) {
 				// load a literal
-				// TODO: we also need to handle negative values
 				instrBlock.append(ClearRegisterInstruction(ra)._toMoonCode());
-				instrBlock.append(AddImmediateInstruction(ra, ra, valueNode->value.numericValue).setComment("load " + valueNode->value.numericValue + " into register")._toMoonCode());
+				if(valueNode->value.sign == sign_minus) {
+					instrBlock.append(SubtractImmediateInstruction(ra, ra, valueNode->value.numericValue).setComment("load negative value of " + valueNode->value.numericValue + " into register")._toMoonCode());
+				} else {
+					instrBlock.append(AddImmediateInstruction(ra, ra, valueNode->value.numericValue).setComment("load " + valueNode->value.numericValue + " into register")._toMoonCode());
+				}
+				
 			}
 		} else {
 			// This is a binary operator
