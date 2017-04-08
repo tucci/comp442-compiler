@@ -6,6 +6,7 @@ Instruction::Instruction() {
 }
 
 Instruction::Instruction(std::string label, std::string comment) {
+	// set the label/comment for this instruction
 	this->label = label;
 	this->comment = comment;
 }

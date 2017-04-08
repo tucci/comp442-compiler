@@ -2,11 +2,12 @@
 #define STAT_BLOCK_H
 
 
+// A statment block is just a list of statements
 struct StatementBlock {
+	// the list of statements in this block
 	std::vector<std::shared_ptr<Statement>> statements;
+	// the method that outputs all the statments into a string
 	std::string _toMoonCode();
-	
-
 };
 
 inline std::string StatementBlock::_toMoonCode() {

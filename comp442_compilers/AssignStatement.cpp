@@ -14,8 +14,7 @@ AssignStatement::~AssignStatement() {
 std::string AssignStatement::_toMoonCode() {
 	std::string instrs;
 	ExpressionElementNode* exprRoot = rhs.root.get();
-
-	// This is a full expression that needs to be evaluated	
+	// expression that needs to be evaluated	
 	ExpressionEvalulationInstruction exprInstr(generator, rhs);
 	instrs.append(exprInstr._toMoonCode());
 	instrs.append(StoreWordInstruction(r0, exprInstr.outputRegister, var.record->label).setComment(var.record->name + " assignment operation")._toMoonCode());

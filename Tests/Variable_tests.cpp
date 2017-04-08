@@ -126,7 +126,7 @@ public:
 
 		VariableFragment fragment2{ "value" };
 		var.vars.push_back(fragment2);
-		var.isFunc = true;
+		var.isFuncCall = true;
 		// No spaces when outputting
 		// If you get an error here in the future, that means u changed the spacing
 		Assert::IsTrue("abc[index+3*index].value()" == var.toFullName());

@@ -3,16 +3,18 @@
 
 
 
-
+// A parser generator builds a LL1 table parser using the given lexer and grammar
 class ParserGenerator {
 public:
 	
 	~ParserGenerator();
+	// Builds the parser from the given lexer and grammar
 	static Parser* buildParser(Lexer* lexer, Grammar* grammar);
 
 	// Creates an empty map that holds all the non terminals to empty sets
 	static std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> initMap(const Grammar& g);
 
+	// Computes an iteration of the first set, this needs to be called until no more new symbols are created
 	static TerminalSet computeFirst(const std::vector<Symbol>& symbols,
 		const std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual>& first);
 

@@ -121,17 +121,17 @@ public:
 	TEST_METHOD(SymbolTable_nameTest) {
 		SymbolTable global;
 		global.name = "Global";
-		global.resolvedName = "Global";
+		global.label = "Global";
 		SymbolTableRecord record;
 		record.name = "Test";
 		record.kind = kind_class;
 		// Third param is specified as the paret
 		SymbolTableRecord* ptr = global.addRecord(record.name, record, &global, true);
 		Assert::IsTrue(global.name == "Global");
-		Assert::IsTrue(global.resolvedName == "Global");
+		Assert::IsTrue(global.label == "Global");
 
 		Assert::IsTrue(ptr->scope->name == "Test");
-		Assert::IsTrue(ptr->scope->resolvedName == "Global.Test");
+		Assert::IsTrue(ptr->scope->label == "Global.Test");
 	};
 
 	// Taken from http://stackoverflow.com/questions/15874723/how-to-open-a-file-from-the-project-in-a-native-c-unit-test-visual-studio
@@ -178,7 +178,7 @@ public:
 
 		SymbolTable expected_globalTable;
 		expected_globalTable.name = "Global";
-		expected_globalTable.resolvedName = "Global";
+		expected_globalTable.label = "Global";
 		SymbolTableRecord expected_globalTable__f1;
 		expected_globalTable__f1.name = "f1";
 		expected_globalTable__f1.kind = kind_function;

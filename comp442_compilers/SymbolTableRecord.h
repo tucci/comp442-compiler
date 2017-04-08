@@ -47,10 +47,10 @@ public:
 	FunctionDeclarationData functionData;
 	// The link to the child symbol table
 	std::shared_ptr<SymbolTable> scope;
-	// On what line/location of the source code is this identifer defined
+	// location of the source code is this identifer defined
 	int definedLocation;
 	// TODO: figure out if we need this, maybe for call stacks
-	// The address of the element in memory
+	// The address/offset of the element in memory
 	int address;
 
 

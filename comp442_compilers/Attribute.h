@@ -2,7 +2,7 @@
 #define ATTRIBUTE_H
 
 
-
+// The type of statements we have in our program
 enum StatementType {
 	assignStat,
 	forStat,
@@ -12,6 +12,9 @@ enum StatementType {
 	returnStat,
 };
 
+
+// A grouping of statements
+// Usually only needs one statment at a time
 struct StatementData {
 	StatementType statType;
 	AssignStatement assignStatement;
@@ -25,7 +28,7 @@ struct StatementData {
 
 
 
-
+// The type of attributes
 enum AttributeType {
 	attr_expr,
 	attr_statement,
@@ -40,13 +43,14 @@ struct FunctionDeclStatementList {
 	std::vector<std::shared_ptr<Statement>> statements;
 };
 
+// All the neccessary attributes needed to build up data while performing semantic actions
 struct Attributes {
+	// the type of attribute this is
 	AttributeType type;
 	Expression expr;
 	StatementData statementData;
 	Variable var;
 	FunctionDeclStatementList funcDef;
-
 };
 
 #endif

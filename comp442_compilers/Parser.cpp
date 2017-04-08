@@ -2,7 +2,7 @@
 
 
 Parser::Parser() {
-	globalTable.resolvedName = "Global";
+	globalTable.label = "Global";
 	globalTable.name = "Global";
 	currentSymbolTable = &globalTable;
 	phase2 = false;

@@ -12,6 +12,7 @@ struct SemanticError {
 };
 
 // A simple container that gets passed to each semantic action
+// Holds all the data need for the semantic actions
 struct SemanticActionContainer {
 	const SemanticSymbol& symbol;
 	std::vector<SymbolTableRecord>& semanticStack;
@@ -29,6 +30,7 @@ class SemanticActions {
 public:
 	// Map of action name to function pointers that call the action
 	static std::unordered_map<std::string, void (*)(SemanticActionContainer&)> ACTION_MAP;
+	// Perform action takes in the semantic action, and redirects the action to the given function handler
 	static void performAction(const SemanticSymbol& symbol,
 		std::vector<SymbolTableRecord>& semanticStack,
 		SymbolTable& globalTable,
@@ -40,6 +42,8 @@ public:
 		MoonGenerator* generator);
 private:
 	// All of our semantic actions in the grammar
+
+	// semantic actions to build the symbol table
 	static void createGlobalTable(SemanticActionContainer& container);
 	static void endGlobalTable(SemanticActionContainer& container);
 	static void createClassEntryAndTable(SemanticActionContainer& container);
@@ -97,11 +101,6 @@ private:
 	static void getStatementEnd(SemanticActionContainer& container);
 	static void putStatementEnd(SemanticActionContainer& container);
 	static void returnStatementEnd(SemanticActionContainer& container);
-
-
-
-
-	
 
 
 	// Internal methods

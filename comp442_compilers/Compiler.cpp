@@ -27,11 +27,9 @@ Compiler::~Compiler() {
 void Compiler::compile() {
 	std::cout << "Compiling " << sourceFile << std::endl;
 	std::cout << "Analyzing Syntax and Building symbol table...";
-	parser->buildSymbolTable();
+	parser->buildSymbolTable(); // phase 1 parse. builds the symbol table without error checking
 	parsedSuccessfully = parser->parse(); // Phase 2 parse
 	std::cout << "Done" << std::endl;
-
-	
 
 	// TODO: output all errors in one file/stream
 	if (writeOutputs) {
@@ -41,10 +39,10 @@ void Compiler::compile() {
 		parser->outputSemanticErrors();
 	}
 
-	if (parsedSuccessfully) {
+	if (parsedSuccessfully) { // at this point all type checking has been done
 		std::cout << "Parsed Successfully" << std::endl;
 		std::cout << "Generating Code...";
-		generartor->generateCode();
+		generartor->generateCode(); // generate all the outpute code
 		std::cout << "Done" << std::endl;
 		std::cout << "Executing Code" << std::endl;
 		//executeMoonSimulator(generartor->getMoonFile());

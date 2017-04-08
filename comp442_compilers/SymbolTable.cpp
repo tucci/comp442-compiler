@@ -43,12 +43,12 @@ SymbolTableRecord* SymbolTable::addRecord(const std::string& identifier, SymbolT
 	std::unordered_map<std::string, SymbolTableRecord>::_Pairib emplacement = table.emplace(identifier, record);
 	SymbolTableRecord* addedRecord = &emplacement.first->second;
 	if (parent != NULL) {
-		std::string label = parent->resolvedName + "_" + identifier;;
+		std::string label = parent->label + "_" + identifier;;
 		addedRecord->label = label;
 		if (needsLink) {
 			addedRecord->scope = std::shared_ptr<SymbolTable>(new SymbolTable());
 			addedRecord->scope->parent = parent;
-			addedRecord->scope->resolvedName = label;
+			addedRecord->scope->label = label;
 			addedRecord->scope->name = identifier;
 		}
 	} else {
@@ -70,7 +70,7 @@ std::string SymbolTable::toString() {
 	while (queue.size() > 0) {
 		SymbolTable* n = queue.front();
 		queue.pop();
-		output += "\nTag: " + n->resolvedName + "\n";
+		output += "\nTag: " + n->label + "\n";
 		for (auto record : n->table) {
 			SymbolTable* scope = record.second.scope.get();
 			output += record.first + " -> " + record.second.toString();
@@ -130,7 +130,7 @@ int SymbolTable::sizeOfTable(SymbolTable* globalTable) {
 bool operator==(const SymbolTable& lhs, const SymbolTable& rhs) {
 	if (lhs.table.size() != rhs.table.size()) return false;
 	if (lhs.name != rhs.name) return false;
-	if (lhs.resolvedName!= rhs.resolvedName) return false;
+	if (lhs.label!= rhs.label) return false;
 	for (const std::unordered_map<std::string, SymbolTableRecord>::value_type& record : lhs.table) {
 		std::string lhsIdentifier = record.first;
 		std::unordered_map<std::string, SymbolTableRecord>::const_iterator foundInRhs = rhs.table.find(lhsIdentifier);

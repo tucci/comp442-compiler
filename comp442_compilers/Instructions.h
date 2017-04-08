@@ -13,6 +13,7 @@ public:
 	Register ri;
 	Register rj;
 	std::string offset;
+	// Creates "lw	ri,offset(rj)" instruction
 	LoadWordInstruction(Register ri, Register rj, std::string offset) {
 		this->ri = ri;
 		this->rj = rj;
@@ -28,6 +29,7 @@ public:
 	Register rj;
 	Register ri;
 	std::string offset;
+	// Creates "sw	offset(rj),ri" instruction
 	StoreWordInstruction(Register rj, Register ri, std::string offset) {
 		this->rj = rj;
 		this->ri = ri;
@@ -40,6 +42,7 @@ public:
 
 
 
+// Opcodes for our arithmetic instructions
 enum MathOpCode {
 	op_add, op_addi,
 	op_sub, op_subi,
@@ -53,6 +56,7 @@ enum MathOpCode {
 	op_cge, op_cgei
 };
 
+// Converts the opcode object to the opcode string in the moon code
 static std::string opcodeToString(MathOpCode opcode) {
 	switch (opcode) {
 		case op_add:  return "add";
@@ -80,6 +84,9 @@ static std::string opcodeToString(MathOpCode opcode) {
 }
 
 
+// Converts opertion string tokens to an Opcode object
+// Example "+" token gets converted to op_add
+//		   "-" to op_sub, etc
 static MathOpCode operatorStringToMathOpCode(std::string opStr) {
 	TokenType opToken = Specification::TOKEN_MAP.at(opStr);
 	switch (opToken) {
@@ -112,6 +119,7 @@ public:
 	Register rk;
 	MathOpCode opcode;
 	
+	// Creates the instruction "opcode dest,rj,rk"
 	ArithmeticInstruction(Register dest, Register rj, Register rk, MathOpCode opcode) {
 		this->dest = dest;
 		this->rj = rj;
@@ -189,6 +197,7 @@ public:
 	std::string k;
 	MathOpCode opcode;
 
+	// Creates the instruction "opcode dest,rj,k"
 	ArithmeticImmediateInstruction(Register dest, Register rj, std::string k, MathOpCode opcode) {
 		this->dest = dest;
 		this->rj = rj;
@@ -260,6 +269,7 @@ public:
 class GetCInstruction : public Instruction {
 public:
 	Register ri;
+	// Creates the instruction "getc ri"
 	GetCInstruction(Register ri) {
 		this->ri = ri;
 		this->setComment("Read the ascii value from the input");
@@ -272,6 +282,7 @@ public:
 class PutCInstruction : public Instruction {
 public:
 	Register ri;
+	// Creates the instruction "putc ri"
 	PutCInstruction(Register ri) {
 		this->ri = ri;
 		this->setComment("put the ascii value to the output");
@@ -287,6 +298,7 @@ public:
 
 	Register ri;
 	std::string k;
+	// Creates the instruction "bz ri,k"
 	BranchIfZeroInstruction(Register ri, const std::string& cs): ri(ri),k(cs) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("bz\t" + registerToString(ri) + "," + k);
@@ -297,6 +309,7 @@ class BranchIfNonZeroInstruction : public Instruction {
 public:
 	Register ri;
 	std::string k;
+	// Creates the instruction "bnz ri,k"
 	BranchIfNonZeroInstruction(Register ri, const std::string& cs) : ri(ri), k(cs) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("bnz\t" + registerToString(ri) + "," + k);
@@ -306,6 +319,7 @@ public:
 class JumpInstruction : public Instruction {
 public:
 	std::string k;
+	// Creates the instruction "j k"
 	JumpInstruction(const std::string& cs): k(cs) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("j\t" + k);
@@ -315,6 +329,7 @@ public:
 class JumpRegisterInstruction : public Instruction {
 public:
 	Register ri;
+	// Creates the instruction "jr ri"
 	JumpRegisterInstruction(Register ri): ri(ri) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("jr\t" + registerToString(ri));
@@ -325,6 +340,7 @@ class JumpAndLinkInstruction : public Instruction {
 public:
 	Register ri;
 	std::string k;
+	// Creates the instruction "jl ri,k"
 	JumpAndLinkInstruction(Register ri, const std::string& cs): ri(ri),k(cs) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("jl\t" + registerToString(ri) + "," + k);
@@ -335,6 +351,7 @@ class JumpAndLinkRegisterInstruction : public Instruction {
 public:
 	Register ri;
 	Register rj;
+	// Creates the instruction "jlr ri,rj"
 	JumpAndLinkRegisterInstruction(Register ri, Register rj): ri(ri),rj(rj) {}
 	std::string _toMoonCode() override {
 		return Instruction::_toMoonCode("jlr\t" + registerToString(ri) + "," + registerToString(rj));
@@ -346,7 +363,7 @@ public:
 
 	NoopInstruction() {
 	}
-
+	// Creates the instruction "nop"
 	NoopInstruction(const std::string& label, const std::string& comment)
 		: Instruction(label, comment) {
 	}
@@ -356,6 +373,8 @@ public:
 	};
 };
 
+
+// Creates the instruction "hlt"
 class HaltInstruction : public Instruction {
 public:
 	std::string _toMoonCode() override {
@@ -365,6 +384,7 @@ public:
 
 /* --------------------------  Directives ------------------------------- */
 
+// Creates the instruction "align"
 class AlignDirective : public Instruction {
 public:
 	std::string _toMoonCode() override {
@@ -372,6 +392,7 @@ public:
 	};
 };
 
+// Creates the instruction "entry"
 class EntryDirective : public Instruction {
 public:
 	std::string _toMoonCode() override {
@@ -388,12 +409,14 @@ class DefineWordDirective : public Instruction {
 
 public:
 
-
+	// Creates the instruction "record->label	dw	0"
+	// or if the record is an array or object "record->label	res		size", where size is determind at compile time
 	DefineWordDirective(SymbolTable* global_table, SymbolTableRecord* record)
 		: globalTable(global_table),
 		  record(record) {
 	}
 
+	// Creates the instruction "label	dw	0"
 	DefineWordDirective(std::string label) {
 		isTempMemory = true;
 		this->label = label;
@@ -429,7 +452,8 @@ class ClearRegisterInstruction : public Instruction {
 
 public:
 	Register r;
-
+	// Simply clears the value of that register
+	// This is simply sub r,r,r instruction
 	ClearRegisterInstruction(Register r) {
 		this->r = r;
 	}
@@ -443,7 +467,7 @@ class CommentInstruction : public Instruction {
 
 public:
 	std::string comment;
-
+	// Creates a comment in the moon code with the comment string
 	explicit CommentInstruction(const std::string& comment)
 		: comment(comment) {
 	}
@@ -453,16 +477,40 @@ public:
 	}
 };
 
+// This instruction generates all the instructions needed to evaluate an instruction
+// Give it an expression, and it will generate all the instructions, 
+// and at the end give you the output register of the final value.
+// However, once the value/register has been used, it is up to the caller to free the output register
+
+//	An example usage of this instruction is
+
+//		Expression expr = expr
+//		ExpressionEvalulationInstruction exprEval(generator, expr);
+//		// where instrBlock is the output string instruction block
+//		instrBlock.append(exprEval._toMoonCode());
+//		// Store the value of the output register into the memory
+//		instrBlock.append(StoreWordInstruction(r0, exprEval.outputRegister, "tempMemoryName")._toMoonCode());
+//		// free the output register
+//		generator->freeRegister(argExpr.outputRegister);
+
+// You create instruction
+// pass the expression,
+// call the _toMoonCode()
+// then store the output register,
+// then free it
 class ExpressionEvalulationInstruction : public Instruction {
-	
 public:
+	// the expression this instruction is going generate the instructions for
 	Expression& expr;
-	// This is the output temp memory that other instructions can use
+	// This is the output temp register where the final value/result of the expression will be in
+	// You should take the output of this register and save it your own temp memory
+	// Once done, you will need to manually free this output register
 	Register outputRegister;
 	ExpressionEvalulationInstruction(MoonGenerator* gen, Expression& expr): expr(expr) {
 		generator = gen;
 	}
 
+	// Converts the operator node to its given arithmetic instruction
 	std::string operationToInstruction(OperatorExpressionNode* opNode, Register ra, Register rb, Register rc) {
 		MathOpCode opcode = operatorStringToMathOpCode(opNode->operatorValue.operatorValue);
 		return ArithmeticInstruction(ra, rb, rc, opcode)._toMoonCode();
@@ -471,45 +519,64 @@ public:
 	std::string _toMoonCode() override {
 		std::string instrBlock;
 		// Label the register counts for this tree
-		registerFill(expr.root.get());
+		labelRegisters(expr.root.get());
+		// Get how many register this tree will need to evaluate
 		int registerNeedsCount = expr.root.get()->registerCount;
 
 		std::vector<Register> reglist;
+		// Fill our reg list with unused registers
 		for (int i = 0; i < registerNeedsCount; ++i) {
 			reglist.push_back(generator->getUnusedRegister());
 		}
-
+		// the output register will always be the first register
 		outputRegister = reglist[0];
-		// if true it should evaluate to a non zero value
-		// if false, it should evaluatio to zero
-		treeRegister(expr.root.get(), instrBlock, reglist);
+		// true values should evaluate to a non zero value
+		// false it should evaluatio to zero
+		// This is used for comparision instructions
+		// Since expression can have relational operators in them
+		// they will evalute to true/false values, but since we dont have true/false
+		// number values will be used
+		// so 0 evals to false
+		// and non 0 evals to true
+		generateInstructions(expr.root.get(), instrBlock, reglist);
 
 		// Free the non ouput registers
 		for (int i = 1; i < reglist.size(); ++i) {
 			generator->freeRegister(reglist[i]);
 		}
+		// the caller of this should free the register
 		return instrBlock;
 
 	}
 
-	void registerFill(ExpressionElementNode* root) {
+	// This labels the tree with how many registers each node will use
+	void labelRegisters(ExpressionElementNode* root) {
 		if (root->nodeType == node_value) {
+			// Leaf node will always use 1 register
 			root->registerCount = 1;
 		} else {
 			OperatorExpressionNode* opNode = static_cast<OperatorExpressionNode*>(root);
-			registerFill(opNode->left.get());
-			registerFill(opNode->right.get());
+			// Label left and right trees
+			labelRegisters(opNode->left.get());
+			labelRegisters(opNode->right.get());
+
 			if (opNode->left->registerCount == opNode->right->registerCount) {
 				root->registerCount = opNode->right->registerCount + 1;
 			} else {
+				// the root count is the max of the children
 				root->registerCount = std::max(opNode->left->registerCount, opNode->right->registerCount);
 			}
 		}
 	}
-	void treeRegister(ExpressionElementNode* root, std::string& instrBlock, std::vector<Register> reglist) {
+	// This generates all the instructions for the given expression root
+	// you must pass in the instruction block string, as this method builds the instruction block as we go
+	// reglist, is the list of registers the instructions will need. 
+	// How many registers we need will be created by calling labelRegisters on the tree
+	void generateInstructions(ExpressionElementNode* root, std::string& instrBlock, std::vector<Register> reglist) {
 		
-		Register ra = reglist.front();
-		Register rb;
+		// Get the two registers we will need
+		Register ra = reglist.front(); // head(reglist)
+		Register rb; // head(tail(reglist))
 		if (reglist.size() == 1) {
 			rb = ra;
 		} else {
@@ -517,14 +584,13 @@ public:
 		}
 		
 		
-
 		if (root->nodeType == node_value) {
 			ValueExpressionNode* valueNode = static_cast<ValueExpressionNode*>(root);
 			if (valueNode->value.type == fragment_var) {
 				Variable var = valueNode->value.var;
 				// TODO: we also need to handle negative values
 				// We need to handle functions and arrays
-				if (var.isFunc) {
+				if (var.isFuncCall) {
 					// this is a function call
 					// get the param labels
 					std::vector<std::string> paramLabels;
@@ -575,11 +641,11 @@ public:
 			ExpressionElementNode* right = opNode->right.get();
 			if (left->registerCount >= reglist.size() && right->registerCount >= reglist.size()) {
 				// Spill into memory
-				treeRegister(left, instrBlock, reglist);
+				generateInstructions(left, instrBlock, reglist);
 				TempMemory temp = generator->getTempMemory();
 				// Generate sw
 				instrBlock.append(StoreWordInstruction(r0, ra, temp.label)._toMoonCode());
-				treeRegister(right, instrBlock, reglist);
+				generateInstructions(right, instrBlock, reglist);
 				// Generate lw
 				instrBlock.append(LoadWordInstruction(ra, r0, temp.label)._toMoonCode());
 				generator->freeTempMemory(temp);
@@ -587,13 +653,13 @@ public:
 			} else {
 				// There is enough registers
 				if (left->registerCount >= right->registerCount) {
-					treeRegister(left, instrBlock, reglist);
-					treeRegister(right, instrBlock, sublist(reglist, 1, reglist.size()));
+					generateInstructions(left, instrBlock, reglist);
+					generateInstructions(right, instrBlock, sublist(reglist, 1, reglist.size()));
 					// Generate the operation
 					instrBlock.append(operationToInstruction(opNode, ra,ra,rb));
 				} else {
-					treeRegister(right, instrBlock, reglist);
-					treeRegister(left, instrBlock, sublist(reglist, 1, reglist.size()));
+					generateInstructions(right, instrBlock, reglist);
+					generateInstructions(left, instrBlock, sublist(reglist, 1, reglist.size()));
 					// Generate the operation
 					instrBlock.append(operationToInstruction(opNode, ra,rb,ra));
 				}
@@ -601,8 +667,6 @@ public:
 
 			}
 
-
-			
 		}
 		
 	}

@@ -1,6 +1,9 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
+
+// Registers are used during the code generation phase
+// This enum allows us to abstract away code register valuees
 enum Register {
 	r0, // Zero
 	r1,
@@ -21,6 +24,9 @@ enum Register {
 	r_error // used for when there is no more registers
 };
 
+// Converts Register enum to its corresponding register value string
+// Example the register r2 will be converted to "r2".
+// Used to convert register object to register string
 static std::string registerToString(Register r) {
 	switch (r) {
 		case r0: return "r0";
@@ -43,6 +49,7 @@ static std::string registerToString(Register r) {
 	}
 }
 
+// Converts a register value string to a register enum
 static Register stringToRegister(std::string r) {
 	if (r == "r0") return r0;
 	else if (r == "r1") return r1;

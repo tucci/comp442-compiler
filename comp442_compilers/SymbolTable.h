@@ -2,7 +2,6 @@
 #define SYMBOL_TABLE_H
 
 
-// TODO: figure out how to handle recursion
 class SymbolTable {
 public:
 	// Create a symbol table with no parent
@@ -17,23 +16,20 @@ public:
 	// Adds the given record with the identifer to the symbol table
 	SymbolTableRecord* addRecord(const std::string& identifier, SymbolTableRecord record, SymbolTable* parent, bool needsLink);
 	friend bool operator==(const SymbolTable& lhs, const SymbolTable& rhs);
-
 	// Outputs the contents of the symbol table and any child symbol table
 	// Does a breadth first traversal
 	std::string toString();
-
 	// The link to the parent table of this symbol table
 	SymbolTable* parent;
-
+	// Returns the inner symbol table
 	const std::unordered_map<std::string, SymbolTableRecord> getTable();
-	
 	// A name to be added to the table for easier outputing
-	std::string resolvedName;
+	std::string label;
 	// The base name for this table
 	std::string name;
-	// Returns the size of this type int bytes
+	// Returns the size of this type in bytes if it is a class
 	static int _sizeOf(SymbolTable* globalTable, TypeStruct idType);
-	// Used during circular table
+	// Used during circular table checking
 	bool marked;
 private:
 	std::unordered_map<std::string, SymbolTableRecord> table;

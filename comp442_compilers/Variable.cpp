@@ -2,7 +2,7 @@
 
 
 Variable::Variable() {
-	isFunc = false;
+	isFuncCall = false;
 	location = -1;
 }
 
@@ -24,7 +24,7 @@ std::string Variable::toFullName() {
 		}
 
 	}
-	if (isFunc) {
+	if (isFuncCall) {
 		varName.append("(");
 		if (arguments.size() != 0) {
 			for (std::vector<Expression>::value_type expr: arguments) {

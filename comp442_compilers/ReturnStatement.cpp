@@ -16,9 +16,10 @@ std::string ReturnStatement::_toMoonCode() {
 	instrBlock.append(exprInstruction._toMoonCode());
 	// TODO: find better way to get the name of the _return. this is hardcoded
 	// Store the value of the return expression into function's temporary return value memory
-	instrBlock.append(StoreWordInstruction(r0, exprInstruction.outputRegister, linkedFunction->resolvedName + "_return").setComment("Store the return value into the return temp memory")._toMoonCode());
+	instrBlock.append(StoreWordInstruction(r0, exprInstruction.outputRegister, linkedFunction->label + "_return").setComment("Store the return value into the return temp memory")._toMoonCode());
 	// Since the output of the expression is a register, we need to copy it to our return value register
-	instrBlock.append(LoadWordInstruction(r14, r0, linkedFunction->resolvedName + "_return").setComment("Return the value to the r14 return register")._toMoonCode());
+	instrBlock.append(LoadWordInstruction(r14, r0, linkedFunction->label + "_return").setComment("Return the value to the r14 return register")._toMoonCode());
+	// jump to register r15. r15 is used specifically for return jumps
 	instrBlock.append(JumpRegisterInstruction(r15)._toMoonCode());
 	return instrBlock;
 }

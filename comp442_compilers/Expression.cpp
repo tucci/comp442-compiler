@@ -24,12 +24,13 @@ Expression::~Expression() {
 }
 
 void Expression::addVar(Variable var) {
+	// Create a fragment and add the sign and var
 	ExpressionFragment fragment;
 	fragment.sign = signToAddToFragment;
 	fragment.type = ExpressionFragmentType::fragment_var;
 	fragment.var = var;
 	postfixExpression.push_back(fragment);
-	// Reset sign
+	// Reset sign for the next time
 	signToAddToFragment = sign_plus;
 
 }
@@ -43,22 +44,24 @@ void Expression::setSign(std::string sign) {
 }
 
 void Expression::addNumeric(std::string numeric) {
+	// Create a fragment and add the sign and the numreric literal
 	ExpressionFragment fragment;
 	fragment.sign = signToAddToFragment;
 	fragment.type = ExpressionFragmentType::fragment_numeric;
 	fragment.numericValue = numeric;
 	postfixExpression.push_back(fragment);
-	// Reset sign
+	// Reset sign for the next time
 	signToAddToFragment = sign_plus;
 
 }
 
 void Expression::addOperator(std::string op) {
+	// Create a fragment and add the sign and the operator
 	ExpressionFragment fragment;
 	fragment.type = ExpressionFragmentType::fragment_operator;
 	fragment.operatorValue = op;
 	
-
+	// Start pushing to the expression stack and postfix expression
 	if (expressionStack.empty() || expressionStack.back().operatorValue == "(") {
 		expressionStack.push_back(fragment);
 	} else {
@@ -93,6 +96,8 @@ void Expression::addParen(std::string paren) {
 
 
 void Expression::buildExpressionTree() {
+	// Convert our internal postfix expression to a tree
+	// the output of the tree will be the root
 	while (!expressionStack.empty()) {
 		ExpressionFragment popped = expressionStack.back();
 		expressionStack.pop_back();
@@ -144,7 +149,6 @@ void Expression::buildExpressionTree() {
 
 std::pair<bool, TypeStruct> Expression::typeCheckExpression() {
 	// go through the tree and make sure all the types are the same
-
 	NodeType nt = root->nodeType;
 	if (nt == node_operator) {
 		return typeCheckExpression(root);
@@ -175,7 +179,6 @@ int Expression::precedenceOf(std::string op) {
 	case subtractop: return 5;
 	case or : return 5;
 	case and: return 5;
-
 	case gt: return 4;
 	case greateq: return 4;
 	case lt: return 4;

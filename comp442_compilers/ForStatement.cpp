@@ -18,9 +18,9 @@ std::string ForStatement::_toMoonCode() {
 
 	
 	
-	initializer.setCodeGenerator(generator);
-	// Set the loop initializer assignment before the loop starts
-	instrBlock.append(initializer.setComment("Reset loop assignment")._toMoonCode());
+	initializerAssignStatement.setCodeGenerator(generator);
+	// Set the loop initializerAssignStatement assignment before the loop starts
+	instrBlock.append(initializerAssignStatement.setComment("Reset loop assignment")._toMoonCode());
 	instrBlock.append(NoopInstruction().setLabel(goWhile).setComment("Loop header")._toMoonCode());
 	// Creates all the sub expressions and outputs a temp memory
 	ExpressionEvalulationInstruction exprInstructions(generator, condition);
@@ -34,9 +34,6 @@ std::string ForStatement::_toMoonCode() {
 	// Jump to start of while block
 	instrBlock.append(JumpInstruction(goWhile)._toMoonCode());// loops here
 	instrBlock.append(NoopInstruction().setLabel(endWhile)._toMoonCode());
-
-;
-
 
 	// End of for code
 	// Clear register values
