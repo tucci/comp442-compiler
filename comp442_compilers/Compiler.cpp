@@ -49,7 +49,7 @@ void Compiler::compile() {
 		std::cout << "Executing Code" << std::endl;
 		//executeMoonSimulator(generartor->getMoonFile());
 	} else {
-		std::cout << "There was an error during parsing" << std::endl;
+		std::cout << "Please fix the errors before compiling again" << std::endl;
 	}
 }
 

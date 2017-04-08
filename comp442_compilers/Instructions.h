@@ -81,7 +81,6 @@ static std::string opcodeToString(MathOpCode opcode) {
 
 
 static MathOpCode operatorStringToMathOpCode(std::string opStr) {
-	// TODO: implement
 	TokenType opToken = Specification::TOKEN_MAP.at(opStr);
 	switch (opToken) {
 		// TODO: implement and or
@@ -481,7 +480,6 @@ public:
 		}
 
 		outputRegister = reglist[0];
-		// TODO: implement this. also needs to handle relational operators
 		// if true it should evaluate to a non zero value
 		// if false, it should evaluatio to zero
 		treeRegister(expr.root.get(), instrBlock, reglist);
@@ -536,7 +534,6 @@ public:
 							paramLabels.push_back(param.second.label);
 						}	
 					}
-					// TODO: We are passing by value, so change it in the doc
 					// Pass by values
 					for (int i = 0; i < var.arguments.size(); ++i) {
 						// For each arugment, eval the expression then get the output register

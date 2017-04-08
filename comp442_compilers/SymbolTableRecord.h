@@ -35,8 +35,6 @@ class SymbolTable;
 // A simple record that will go into the symbol tables
 class SymbolTableRecord {
 public:
-	// TODO: implment Whether this identifier has been declared properly
-	bool properlyDeclared;
 	// The name of this symbol
 	std::string name;
 	// the label of this object to be used during code generation

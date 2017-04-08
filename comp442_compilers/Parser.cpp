@@ -304,12 +304,17 @@ void Parser::outputDerivationAndErrors() {
 	parserErrors.open("parserErrors.txt");
 
 	for (SyntaxError error : syntaxErrors) {		
-		parserErrors << "Syntax error on line " << error.token.tokenLine << ". Unexpected identifer \"" << error.lookaheadToken.lexeme << "\"";
+		std::string errorStr = "Syntax error on line " + std::to_string(error.token.tokenLine) + ". Unexpected identifer \"" + error.lookaheadToken.lexeme + "\"";;
+		parserErrors << errorStr;
+		std::cout << errorStr;
 		if (error.token.type != TokenType::non_token) {
 			parserErrors << " after \"" << error.token.lexeme << "\"";
+			std::cout << " after \"" << error.token.lexeme << "\"";
 		}
 		parserErrors << std::endl;
+		std::cout << std::endl;
 	}
+	
 	parserErrors.close();
 }
 
@@ -325,6 +330,7 @@ void Parser::outputSemanticErrors() {
 	semanticErrorsOutput.open("semanticErrors.txt");
 	for (SemanticError& error : semanticErrors) {
 		semanticErrorsOutput << error.message << std::endl;
+		std::cout << error.message << std::endl;
 	}
 	semanticErrorsOutput.close();
 }

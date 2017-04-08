@@ -316,6 +316,7 @@ void Lexer::writeTokensToFile() {
 		if (t.type != TokenType::end_of_file_token) {
 			if (t.type == TokenType::error_token) {
 				error << t;
+				std::cout << t;
 			} else {
 				output << t;
 			}
@@ -323,7 +324,6 @@ void Lexer::writeTokensToFile() {
 	}
 	output.close();
 	error.close();
-	std::cout << "Successfully wrote tokens to lexerOutput.txt and lexerErrors.txt" << std::endl;
 }
 
 void Lexer::resetToStart() {

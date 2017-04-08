@@ -769,7 +769,7 @@ bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& fir
 		SymbolTable* possibleDependentTable = dependencyTable.first->scope.get();
 		std::vector<SymbolTable*> possibleDependencies;
 
-		for (auto identifier : possibleDependentTable->table) {
+		for (auto identifier : possibleDependentTable->getTable()) {
 			if (identifier.second.typeStructure.type == SymbolType::type_class) {
 				std::pair<SymbolTableRecord*, bool> scope = global.find(identifier.second.typeStructure.className);
 				possibleDependencies.push_back(scope.first->scope.get());
@@ -797,7 +797,7 @@ bool SemanticActions::_isCircularDependent(SymbolTable& global, SymbolTable& dep
 }
 
 void SemanticActions::_unmarkAllTables(SymbolTable& global) {
-	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type record : global.table) {
+	for (std::unordered_map<std::basic_string<char>, SymbolTableRecord>::value_type record : global.getTable()) {
 		if (record.second.kind == SymbolKind::kind_class) {
 			record.second.scope->marked = false;
 		}
@@ -860,15 +860,7 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 					// The dimensions are different
 					if (varDefinition->typeStructure.dimensions.size() != varFragment.indices.size()) {
 						_reportError(container, "Array " + var.toFullName() + " has wrong dimensions");
-					} else {
-						// Compare each size in the dimension
-						// TODO: We cant compare sizes at compile time as we dont know what the values of the expressions are
-						//std::vector<int> dimensions = varDefinition->typeStructure.dimensions;
-						//for (int i = 0; i < dimensions.size(); ++i) {
-						//	//if (dimensions[i] != std::stoi(varFragment.indices[i]))
-						//}
 					}
-
 				}
 				break;
 			}

@@ -5,9 +5,6 @@
 // TODO: figure out how to handle recursion
 class SymbolTable {
 public:
-	// TODO: this can be removed since now we have a get table function
-	friend class SemanticActions;
-	friend class MoonGenerator;
 	// Create a symbol table with no parent
 	SymbolTable();
 	~SymbolTable();
@@ -36,13 +33,12 @@ public:
 	std::string name;
 	// Returns the size of this type int bytes
 	static int _sizeOf(SymbolTable* globalTable, TypeStruct idType);
-private:
-	std::unordered_map<std::string, SymbolTableRecord> table;
 	// Used during circular table
 	bool marked;
+private:
+	std::unordered_map<std::string, SymbolTableRecord> table;
 	// Returns the size of this table in bytes
 	int sizeOfTable(SymbolTable* globalTable);
-
 	
 };
 
