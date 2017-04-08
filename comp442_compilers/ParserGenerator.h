@@ -6,7 +6,6 @@
 // A parser generator builds a LL1 table parser using the given lexer and grammar
 class ParserGenerator {
 public:
-	
 	~ParserGenerator();
 	// Builds the parser from the given lexer and grammar
 	static Parser* buildParser(Lexer* lexer, Grammar* grammar);

@@ -573,7 +573,7 @@ public:
 	// reglist, is the list of registers the instructions will need. 
 	// How many registers we need will be created by calling labelRegisters on the tree
 	void generateInstructions(ExpressionElementNode* root, std::string& instrBlock, std::vector<Register> reglist) {
-		
+		// TODO: bonus handle floating points
 		// Get the two registers we will need
 		Register ra = reglist.front(); // head(reglist)
 		Register rb; // head(tail(reglist))
@@ -619,15 +619,16 @@ public:
 					instrBlock.append(StoreWordInstruction(r0, r14, temp.label)._toMoonCode());
 
 					// Load the temp memory into our outpute register
-					instrBlock.append(LoadWordInstruction(outputRegister, r0, temp.label)._toMoonCode());
+					instrBlock.append(LoadWordInstruction(ra, r0, temp.label)._toMoonCode());
 					if (valueNode->value.sign == sign_minus) {
-						instrBlock.append(SubtractInstruction(outputRegister, r0, outputRegister).setComment("load negative value " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+						instrBlock.append(SubtractInstruction(ra, r0, ra).setComment("load negative value " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
 					}
 					
 					// Free the memory we just used
 					generator->freeTempMemory(temp);
 
 				} else {
+					// TODO: handle array
 					// load a variable
 					instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
 					if (valueNode->value.sign == sign_minus) {

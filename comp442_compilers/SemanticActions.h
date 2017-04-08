@@ -30,6 +30,7 @@ class SemanticActions {
 public:
 	// Map of action name to function pointers that call the action
 	static std::unordered_map<std::string, void (*)(SemanticActionContainer&)> ACTION_MAP;
+
 	// Perform action takes in the semantic action, and redirects the action to the given function handler
 	static void performAction(const SemanticSymbol& symbol,
 		std::vector<SymbolTableRecord>& semanticStack,
