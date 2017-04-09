@@ -23,8 +23,7 @@ std::string AssignStatement::_toMoonCode() {
 		// Since this is an array, we want to just calculate the size of the type and not the actual array
 		TypeStruct stripedType = var.varType;
 		stripedType.structure = struct_simple;
-		
-		
+				
 		Register offsetRegister = generator->getUnusedRegister();
 		// Make sure our sum register is 0
 		instrs.append(ClearRegisterInstruction(offsetRegister)._toMoonCode());

@@ -628,12 +628,52 @@ public:
 					generator->freeTempMemory(temp);
 
 				} else {
-					// TODO: handle array
+
+					Register offsetRegister;
+					if (var.varType.structure == struct_array) {
+						// Since this is an array, we want to just calculate the offset
+						TypeStruct stripedType = var.varType;
+						stripedType.structure = struct_simple;
+
+						offsetRegister = generator->getUnusedRegister();
+						// Make sure our sum register is 0
+						instrBlock.append(ClearRegisterInstruction(offsetRegister)._toMoonCode());
+						Register multRegister = generator->getUnusedRegister();
+						int typeSize = SymbolTable::_sizeOf(generator->globalTable, stripedType);
+						int dimBlockSize;
+						int offset = 0;
+						for (int dim = 0; dim < var.varType.dimensions.size(); dim++) {
+							int nextDimSize = 1;
+							// Get the next block size to multiply it by the sizeof(type)
+							if (dim < var.varType.dimensions.size() - 2) { nextDimSize = var.record->typeStructure.dimensions[dim + 2];}
+							if (dim < var.varType.dimensions.size() - 1) { dimBlockSize = var.record->typeStructure.dimensions[dim + 1] * nextDimSize;}
+							else {dimBlockSize = 1;}
+							// Eval the index expression
+							ExpressionEvalulationInstruction indexExpr(generator, var.vars.back().indices[dim]);
+							instrBlock.append(indexExpr._toMoonCode());
+							// Multiply the index value to the mult block to get the offset at this index
+							instrBlock.append(MultiplyImmediateInstruction(multRegister, indexExpr.outputRegister, std::to_string(typeSize * dimBlockSize))._toMoonCode());
+							// Add it to the sum to get the final offset
+							instrBlock.append(AddInstruction(offsetRegister, offsetRegister, multRegister)._toMoonCode());
+							generator->freeRegister(indexExpr.outputRegister);
+						};
+
+						generator->freeRegister(multRegister);
+					} else {
+						// This is not an array, this is a simple type
+						offsetRegister = r0;
+					}
+
 					// load a variable
-					instrBlock.append(LoadWordInstruction(ra, r0, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
+					instrBlock.append(LoadWordInstruction(ra, offsetRegister, valueNode->value.var.record->label).setComment("load " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
 					if (valueNode->value.sign == sign_minus) {
 						instrBlock.append(SubtractInstruction(ra, r0, ra).setComment("load negative value of var " + valueNode->value.var.toFullName() + " into register")._toMoonCode());
 					}
+
+					if (offsetRegister != r0) {
+						generator->freeRegister(offsetRegister);
+					}
+
 				}
 				
 			} else if (valueNode->value.type == fragment_numeric) {
