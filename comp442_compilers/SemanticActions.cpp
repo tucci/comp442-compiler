@@ -671,10 +671,10 @@ void SemanticActions::returnStatementStart(SemanticActionContainer& container) {
 
 void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container) {
 	if (context.inPhase2) {
-	
 		// Type check assignment statement
 		AssignStatement assignStatement = container.top.attr.statementData.assignStatement;
-		if (!(assignStatement.var.varType == assignStatement.rhs.type)) {
+		if (!(assignStatement.var.varType.type == assignStatement.rhs.type.type)) {
+			// TODO: array error here
 			_reportError(container, "Assignment Statement " + assignStatement.var.toFullName() + " = " + assignStatement.rhs.toFullName() + " has type mismatch");
 		}
 		

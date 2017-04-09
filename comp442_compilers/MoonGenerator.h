@@ -36,11 +36,11 @@ public:
 	// Since function declarations can't be defined during code execution or after the align directive
 	// It must be generated before the actual code generation
 	void addFuncDeclStatmentList(FunctionDeclStatementList funcDec);
+	// The global symbol table for the code we are generating
+	SymbolTable* globalTable;
 private:
 	// The output stream of the generated moon code
 	std::ofstream moonOutputStream;
-	// The global symbol table for the code we are generating
-	SymbolTable* globalTable;
 	// list of function declarations to be generated before the actual user program/align directive
 	std::vector<FunctionDeclStatementList> functionDeclarations;
 	// the list of instructions inside the program body
