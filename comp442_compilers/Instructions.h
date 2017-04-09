@@ -645,7 +645,11 @@ public:
 						for (int dim = 0; dim < var.varType.dimensions.size(); dim++) {
 							int nextDimSize = 1;
 							// Get the next block size to multiply it by the sizeof(type)
-							if (dim < var.varType.dimensions.size() - 2) { nextDimSize = var.record->typeStructure.dimensions[dim + 2];}
+							if (dim < var.varType.dimensions.size() - 2) {
+								for (int i = dim + 1; i < var.varType.dimensions.size() - 1; i++) {
+									nextDimSize *= var.record->typeStructure.dimensions[i];
+								}
+							}
 							if (dim < var.varType.dimensions.size() - 1) { dimBlockSize = var.record->typeStructure.dimensions[dim + 1] * nextDimSize;}
 							else {dimBlockSize = 1;}
 							// Eval the index expression
