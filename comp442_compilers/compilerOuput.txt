@@ -1,0 +1,5 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Parsed Successfully
+Generating Code...Done
+Executing Code

@@ -1,44 +1,38 @@
-class Test {
-	int jj;
-	float jk;
-	int too(int t, int u, int v) {
-		return (t + u + v);
-	};
-};
-
 program {
-	 int s;
-	 int t;
-	 int e;
-	 int v;
-	 int n;
-	 s = 115;
-	 t = 116;
-	 e = 101;
-	 v = 118;
-	 n = 110;
-	 // output name
-	 //put(s);put(t);put(e);put(v);put(e);put(n);
+	
+	// out puts string "put number"
+	int str[11];
+	str[0] = 112;
+	str[1] = 117;
+	str[2] = 116;
+	str[3] = 32;
+	str[4] = 110;
+	str[5] = 117;
+	str[6] = 109;
+	str[7] = 98;
+	str[8] = 101;
+	str[9] = 114;
+	str[10] = 10;
 
+	// outputs array
+	for (int n = 0; n <= 10; n = n + 1) {
+		put(str[n]);
+	};
+	
+
+
+	// Gets the number as ascii
 	 int char;
 	 get(char);
 	 int count;
+	 // converts ascii to number
 	 count = charToNum(char);
 	 for (int i = 0; i < count; i = i + 1) {
+		// converts number to ascii
 		put(numToChar(i));
 	 };
-	 
-};
 
-int func(int x, int y, int z) {
-	int gg;
-	gg = 32;
-	gg = x * y * z;
-	return (gg);
-};
 
-int go(int f) {
-	return (f);
 };
 
 int numToChar(int number) {

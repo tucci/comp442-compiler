@@ -54,8 +54,8 @@ void Compiler::compile() {
 		Log(streams, "Generating Code...");
 		generartor->generateCode(); // generate all the outpute code
 		LogLine(streams, "Done");
-		LogLine(streams, "Executing Code");
-		//executeMoonSimulator(generartor->getMoonFile());
+		LogLine(streams, "Executing Code...");
+		executeMoonSimulator(generartor->getMoonFile());
 	} else {
 		LogLine(streams, "Please fix the errors before compiling again");
 	}
@@ -80,7 +80,7 @@ void Compiler::executeMoonSimulator(std::string moonfile) {
 	char   psBuffer[128];
 	FILE   *pPipe;
 	std::string moonExe = "moon.exe -p -s -t +x " + moonfile;
-	if ((pPipe = _popen(moonExe.c_str(), "rt")) == NULL)
+	if ((pPipe = _popen(moonExe.c_str(), "rb")) == NULL)
 		exit(1);
 
 	/* Read pipe until end of file, or an error occurs. */
