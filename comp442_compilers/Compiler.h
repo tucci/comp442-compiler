@@ -24,6 +24,8 @@ private:
 	std::string sourceFile;
 	// Whether to write the outputs
 	bool writeOutputs;
+	// stream that outputs all errors or any neccessary outputs
+	std::ofstream outputStream;
 	// The specfication for the lexer
 	std::shared_ptr<Specification> spec;
 	// The lexer that will tokenize our source

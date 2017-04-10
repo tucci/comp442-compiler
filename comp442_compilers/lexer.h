@@ -15,7 +15,7 @@ public:
 	// Whether the lexer has more tokens
 	bool hasMoreTokens();
 	// Writes the tokens and error tokens to the file
-	void writeTokensToFile();
+	void writeTokensToFile(std::ostream* outputFile);
 	// Resets the lexer to the start of the token stream
 	void resetToStart();
 private:

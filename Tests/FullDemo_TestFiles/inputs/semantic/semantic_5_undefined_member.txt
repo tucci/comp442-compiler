@@ -1,0 +1,43 @@
+class Test1 {
+	Test2 t2;
+};
+
+class Test2 {
+	Test3 t3;
+};
+
+class Test3 {
+	Test4 t4;
+	int x;
+	int y;
+	int z;
+};
+
+class Test4 {
+	
+};
+
+program {
+	Test1 a;
+
+	int x;
+
+	// undefined
+	a.b = 3;
+	x = a.func();
+	x = a.t2.var;
+	x = a.t2.func();
+	x = a.t2.t3.var;
+	x = a.t2.t3.func();
+	x = a.t2.t3.t4.var;
+	x = a.t2.t3.t4.func();
+	x = a.t2.t3.x[3];
+	x = a.t2.t3.y[43].d;
+	x = a.t2.t3.z[2].e;
+
+	// Good and defined
+	x = a.t2.t3.x;
+	x = a.t2.t3.y;
+	x = a.t2.t3.z;
+
+};

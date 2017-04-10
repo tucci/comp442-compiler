@@ -1,0 +1,52 @@
+class Test1 {
+	int a;
+	int b;
+	int c;
+
+};
+
+program {
+	int x[32];
+
+	x[0] = 0;
+	x[1] = 2;
+	x[2] = 4;
+	x[3] = 6;
+	x[4] = 8;
+	x[5] = 10;
+
+	x[31] = 100;
+
+	int y[2][2];
+
+	y[0][0] = 16;
+	y[0][1] = 32;
+	y[1][0] = 64;
+	y[1][1] = 128;
+
+
+	int z[2][2][2];
+
+	z[0][0][0] = 111;
+	z[0][0][1] = 222;
+
+	z[1][1][1] = 333;
+
+
+	Test1 t1_array[10];
+
+	Test1 t1_obj;
+
+	t1_array[0] = t1_obj;
+	t1_array[1] = t1_obj;
+	t1_array[2] = t1_obj;
+	t1_array[3] = t1_obj;
+
+
+	t1_array[9] = t1_obj;
+
+
+
+};
+
+

@@ -1,0 +1,9 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Circular dependency of B on line 2
+Circular dependency of A on line 6
+Circular dependency of D on line 10
+Circular dependency of E on line 14
+Circular dependency of C on line 18
+Circular dependency of F on line 22
+Please fix the errors before compiling again

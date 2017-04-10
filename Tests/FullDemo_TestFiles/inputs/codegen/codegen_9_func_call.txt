@@ -1,0 +1,32 @@
+program {
+	int a;
+	int b;
+	int max;
+	max = f3(a, b);
+
+	int sum;
+	sum = f2(a,b,max);
+
+	int expr;
+	expr = f3(10, 20) * f2(1, 2, f3(15, 20)) * 3;
+
+};
+
+int f1() {
+	return (1);
+};
+
+int f2(int x, int y, int z) {
+	return (x + y + z);
+};
+
+int f3(int a, int b) {
+	int max;
+	if (a > b) then {
+		max = a;
+	} else {
+		max = b;
+	};
+
+	return (max);
+};

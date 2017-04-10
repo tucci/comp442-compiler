@@ -1,0 +1,62 @@
+class Test {
+	int goodInt() {
+	return (1);
+};
+
+float goodFloat() {
+	return (1.4);
+};
+
+Test goodClass() {
+	Test t;
+	return (t);
+};
+
+int badInt() {
+	return (3.2);
+};
+
+
+float badFloat() {
+	return (3);
+};
+
+Test badObject() {
+	return (3);
+};
+
+};
+
+program {
+	
+};
+
+int goodInt() {
+	return (1);
+};
+
+float goodFloat() {
+	return (1.4);
+};
+
+Test goodClass() {
+	Test t;
+	return (t);
+};
+
+int badInt() {
+	return (3.2);
+};
+
+
+float badFloat() {
+	return (3);
+};
+
+Test badObject() {
+	return (3);
+};
+
+int noReturn() {
+	
+};

@@ -1,0 +1,27 @@
+program {
+	int i;
+	i = 0;
+
+	if (i < 10) then {
+		i = 10;
+	} else {
+		i = 20;
+	};
+	if (i > 10) then {};
+	if (i <= 10) then {};
+	if (i >= 10) then {};
+	if (i == 10) then {};
+	if (i <> 10) then {};
+
+	if (i < 10) then
+		i = 30;
+	;
+
+	if (i < 10) then 
+		i = 45;
+	 else 
+		i = 60;
+	;
+
+
+};

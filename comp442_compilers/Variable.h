@@ -39,7 +39,7 @@ public:
 	// Whether this a function call
 	bool isFuncCall;
 	// if it is a function call
-	// then the list of arguments for this function call
+	// then the list of arguments for this function call in order
 	std::vector<Expression> arguments;
 };
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Logger.h"
 
 
 Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool outputTofile) {
@@ -25,30 +26,40 @@ Compiler::~Compiler() {
 
 // Compiles our source code the to the target code
 void Compiler::compile() {
-	std::cout << "Compiling " << sourceFile << std::endl;
-	std::cout << "Analyzing Syntax and Building symbol table...";
+	outputStream.open("compilerOuput.txt");
+	std::vector<std::ostream*> streams;
+	streams.push_back(&std::cout);
+	streams.push_back(&outputStream);
+
+	LogLine(streams, "Compiling " + sourceFile);
+	Log(streams, "Analyzing Syntax and Building symbol table...");
+	
 	parser->buildSymbolTable(); // phase 1 parse. builds the symbol table without error checking
 	parsedSuccessfully = parser->parse(); // Phase 2 parse
-	std::cout << "Done" << std::endl;
+	LogLine(streams, "Done");
+
+	
 
 	// TODO: output all errors in one file/stream
 	if (writeOutputs) {
-		parser->outputDerivationAndErrors();
-		lexer->writeTokensToFile();
+		parser->outputDerivationAndErrors(&outputStream);
+		lexer->writeTokensToFile(&outputStream);
 		parser->outputSymbolTable();
-		parser->outputSemanticErrors();
+		parser->outputSemanticErrors(&outputStream);
 	}
 
 	if (parsedSuccessfully) { // at this point all type checking has been done
-		std::cout << "Parsed Successfully" << std::endl;
-		std::cout << "Generating Code...";
+		LogLine(streams, "Parsed Successfully");
+		Log(streams, "Generating Code...");
 		generartor->generateCode(); // generate all the outpute code
-		std::cout << "Done" << std::endl;
-		std::cout << "Executing Code" << std::endl;
+		LogLine(streams, "Done");
+		LogLine(streams, "Executing Code");
 		//executeMoonSimulator(generartor->getMoonFile());
 	} else {
-		std::cout << "Please fix the errors before compiling again" << std::endl;
+		LogLine(streams, "Please fix the errors before compiling again");
 	}
+
+	outputStream.close();
 }
 
 // Sets the source file for our compile to compile

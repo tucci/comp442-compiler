@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Logger.h"
 
 
 Parser::Parser() {
@@ -88,8 +89,6 @@ void Parser::skipErrors() {
 					// Hack: Avoids infinite loops
 					// This "should" rarely happen 
 					if (loopCount == 1000) {
-						// Output which ever syntaxErrors we alreay have						
-						outputDerivationAndErrors();
 						// Throw expection so that main could catch and deallocate our memory
 						std::cout << "There was an unrecoverable error during parsing the file." << std::endl;
 						throw std::exception("There was an unrecoverable error during parsing the file.");
@@ -270,7 +269,11 @@ void Parser::outputParserDataToFile() {
 	parsingTableOutput.close(); // close file
 }
 
-void Parser::outputDerivationAndErrors() {
+
+
+void Parser::outputDerivationAndErrors(std::ostream* outputFile) {
+
+	
 
 	std::ofstream parserDerivation;
 	parserDerivation.open("derivation.html");
@@ -300,19 +303,18 @@ void Parser::outputDerivationAndErrors() {
 	parserDerivation << "</body></html>"; // close html
 	parserDerivation.close();
 
+	
 	std::ofstream parserErrors;
+	std::vector<std::ostream*> streams = { outputFile, &parserErrors, &std::cout };
 	parserErrors.open("parserErrors.txt");
 
 	for (SyntaxError error : syntaxErrors) {		
 		std::string errorStr = "Syntax error on line " + std::to_string(error.token.tokenLine) + ". Unexpected identifer \"" + error.lookaheadToken.lexeme + "\"";;
-		parserErrors << errorStr;
-		std::cout << errorStr;
+		Log(streams, errorStr);
 		if (error.token.type != TokenType::non_token) {
-			parserErrors << " after \"" << error.token.lexeme << "\"";
-			std::cout << " after \"" << error.token.lexeme << "\"";
+			Log(streams, " after \"" + error.token.lexeme + "\"");
 		}
-		parserErrors << std::endl;
-		std::cout << std::endl;
+		Log(streams, "\n");
 	}
 	
 	parserErrors.close();
@@ -325,12 +327,16 @@ void Parser::outputSymbolTable() {
 	symbolTableOutput.close();
 }
 
-void Parser::outputSemanticErrors() {
+
+
+void Parser::outputSemanticErrors(std::ostream* output) {
+
+	
 	std::ofstream semanticErrorsOutput;
+	std::vector<std::ostream*> streams = { &std::cout, output, &semanticErrorsOutput };
 	semanticErrorsOutput.open("semanticErrors.txt");
 	for (SemanticError& error : semanticErrors) {
-		semanticErrorsOutput << error.message << std::endl;
-		std::cout << error.message << std::endl;
+		LogLine(streams, error.message);
 	}
 	semanticErrorsOutput.close();
 }

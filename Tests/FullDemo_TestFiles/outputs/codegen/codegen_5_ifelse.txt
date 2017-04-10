@@ -1,0 +1,155 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_program_i	dw	0
+% ---------------- Create function definitions ----------------
+% ---------------- Start of user program ----------------
+	align
+	entry
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_program_i(r0),r9	% i assignment operation
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,else_6my5o9xs
+% ---------------- If block ----------------
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+	j	endif_6my5o9xs
+% ---------------- else block ----------------
+else_6my5o9xs	nop
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,20	% load 20 into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+endif_6my5o9xs	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	cgt	r9,r9,r1
+	bz	r9,else_cy056rl1
+% ---------------- If block ----------------
+	j	endif_cy056rl1
+% ---------------- else block ----------------
+else_cy056rl1	nop
+endif_cy056rl1	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	cle	r9,r9,r1
+	bz	r9,else_k7wbg9hd
+% ---------------- If block ----------------
+	j	endif_k7wbg9hd
+% ---------------- else block ----------------
+else_k7wbg9hd	nop
+endif_k7wbg9hd	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	cge	r9,r9,r1
+	bz	r9,else_crqqdfmq
+% ---------------- If block ----------------
+	j	endif_crqqdfmq
+% ---------------- else block ----------------
+else_crqqdfmq	nop
+endif_crqqdfmq	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	ceq	r9,r9,r1
+	bz	r9,else_1newcepo
+% ---------------- If block ----------------
+	j	endif_1newcepo
+% ---------------- else block ----------------
+else_1newcepo	nop
+endif_1newcepo	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	cne	r9,r9,r1
+	bz	r9,else_3bwnx9lb
+% ---------------- If block ----------------
+	j	endif_3bwnx9lb
+% ---------------- else block ----------------
+else_3bwnx9lb	nop
+endif_3bwnx9lb	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,else_88wt7whe
+% ---------------- If block ----------------
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,30	% load 30 into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+	j	endif_88wt7whe
+% ---------------- else block ----------------
+else_88wt7whe	nop
+endif_88wt7whe	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,else_8bj8vp0m
+% ---------------- If block ----------------
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,45	% load 45 into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+	j	endif_8bj8vp0m
+% ---------------- else block ----------------
+else_8bj8vp0m	nop
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,60	% load 60 into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+endif_8bj8vp0m	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	hlt
+% ---------------- end of program ----------------

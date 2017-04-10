@@ -105,6 +105,9 @@
     <Text Include="symbolTables.txt">
       <Filter>Resource Files\semanticOutput</Filter>
     </Text>
+    <Text Include="compilerOuput.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="Instructions.h">
       <Filter>Header Files\codegen\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,12 @@
+program {
+	int a[5];
+	int b[2][2];
+	int c[2][2][2];
+	int d[2][2][2][2];
+
+	float w[5];
+	float x[2][2];
+	float y[2][2][2];
+	float z[2][2][2][2];
+
+};

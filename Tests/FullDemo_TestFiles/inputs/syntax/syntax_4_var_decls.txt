@@ -1,0 +1,6 @@
+program {
+	int id;
+	float id;
+	id id;
+	int id[integer];
+};

@@ -1,0 +1,90 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_Test1_t_f1_return	dw	0
+	Global_Test1_t_f2_p1	dw	0
+	Global_Test1_t_f2_p2	dw	0
+	Global_Test1_t_f2_p3	dw	0
+	Global_Test1_t_f2_return	dw	0
+	Global_func3_a	dw	0
+	Global_func3_b	dw	0
+	Global_func3_c	dw	0
+	Global_func3_return	dw	0
+	Global_func1_return	dw	0
+	Global_func2_x	dw	0
+	Global_func2_return	dw	0
+% ---------------- Create function definitions ----------------
+Global_Test1_t_f1	nop
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_Test1_t_f1_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_Test1_t_f1_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_Test1_t_f2	nop
+	lw	r9,Global_Test1_t_f2_p1(r0)	% load p1 into register
+	lw	r1,Global_Test1_t_f2_p2(r0)	% load p2 into register
+	add	r9,r9,r1
+	lw	r1,Global_Test1_t_f2_p3(r0)	% load p3 into register
+	add	r9,r9,r1
+	sw	Global_Test1_t_f2_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_Test1_t_f2_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_func1	nop
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_func1_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_func1_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_func2	nop
+	lw	r9,Global_func2_x(r0)	% load x into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,1	% load 1 into register
+	add	r9,r9,r1
+	sw	Global_func2_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_func2_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_func3	nop
+	lw	r9,Global_func3_a(r0)	% load a into register
+	lw	r1,Global_func3_b(r0)	% load b into register
+	add	r9,r9,r1
+	lw	r1,Global_func3_c(r0)	% load c into register
+	add	r9,r9,r1
+	sw	Global_func3_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_func3_return(r0)	% Return the value to the r14 return register
+	jr	r15
+% ---------------- Start of user program ----------------
+	align
+	entry
+	hlt
+% ---------------- end of program ----------------

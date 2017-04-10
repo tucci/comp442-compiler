@@ -193,23 +193,30 @@ int Expression::precedenceOf(std::string op) {
 std::pair<bool, TypeStruct> Expression::typeCheckExpression(std::shared_ptr<ExpressionElementNode> root) {
 	NodeType nt = root->nodeType;
 	if (nt == node_operator) {
+		// This is an operator
+		// Try to match the left and right sub trees
+		// if the subtrees match, then the root is the type of both subtrees
 		std::shared_ptr<OperatorExpressionNode> operatorNode = std::static_pointer_cast<OperatorExpressionNode>(root);
 		std::shared_ptr<ExpressionElementNode> left = operatorNode->left;
 		std::shared_ptr<ExpressionElementNode> right = operatorNode->right;
 
+		// type check left and right
 		std::pair<bool, TypeStruct> leftPair = typeCheckExpression(left);
 		std::pair<bool, TypeStruct> rightPair = typeCheckExpression(right);
+		// If there is a match in both subtrees, then return there is match with the type
 		if (leftPair.first && rightPair.first && leftPair.second == rightPair.second) {
 			return std::make_pair(true, leftPair.second);
 		} else {
 			TypeStruct valueTypeStruct;
-			valueTypeStruct.type = SymbolType::type_none;
+			// There is a mismatch in the types
+			valueTypeStruct.type = SymbolType::type_mismatch;
 			valueTypeStruct.structure = SymbolStructure::struct_simple;
 			return std::make_pair(false, valueTypeStruct);
 		}
 
 	} else if (nt == node_value) {
 		// this is a single node tree
+		// so the type of this expression is just the type of the single value node
 		std::shared_ptr<ValueExpressionNode> valueNode = std::static_pointer_cast<ValueExpressionNode>(root);
 		return std::make_pair(true, valueNode->valueType);
 

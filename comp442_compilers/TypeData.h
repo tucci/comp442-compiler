@@ -9,6 +9,7 @@
 // List of symbol types that can be in the lanaguage
 enum SymbolType {
 	type_none,
+	type_mismatch,
 	type_int,
 	type_float,
 	type_class,
@@ -27,6 +28,7 @@ static std::string typeToString(SymbolType type) {
 	case type_float:	return "type_float"; break;
 	case type_class:	return "type_class"; break;
 	case type_none:		return "type_none"; break;
+	case type_mismatch:	return "type_mismatch"; break;
 	default:			return "type_none"; break;
 	}
 }

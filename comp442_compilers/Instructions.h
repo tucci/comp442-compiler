@@ -473,7 +473,7 @@ public:
 	}
 
 	std::string _toMoonCode() override { 
-		return "% ----------------" + comment + " ----------------\n";
+		return "% ---------------- " + comment + " ----------------\n";
 	}
 };
 

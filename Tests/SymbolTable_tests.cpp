@@ -67,7 +67,6 @@ public:
 	TEST_METHOD(SymbolTable_addRecordTest) {
 		SymbolTable global;
 		SymbolTableRecord record;
-		record.properlyDeclared = true;
 		record.name = "testVar";
 		record.kind = SymbolKind::kind_variable;
 		record.typeStructure = { SymbolType::type_int, SymbolStructure::struct_simple, "", {} };
@@ -82,7 +81,6 @@ public:
 	TEST_METHOD(SymbolTable_addRecord2Test) {
 		SymbolTable global;
 		SymbolTableRecord record;
-		record.properlyDeclared = true;
 		record.name = "testVar";
 		record.kind = SymbolKind::kind_variable;
 		record.typeStructure = { SymbolType::type_int, SymbolStructure::struct_simple, "",{} };
@@ -131,7 +129,7 @@ public:
 		Assert::IsTrue(global.label == "Global");
 
 		Assert::IsTrue(ptr->scope->name == "Test");
-		Assert::IsTrue(ptr->scope->label == "Global.Test");
+		Assert::IsTrue(ptr->scope->label == "Global_Test");
 	};
 
 	// Taken from http://stackoverflow.com/questions/15874723/how-to-open-a-file-from-the-project-in-a-native-c-unit-test-visual-studio

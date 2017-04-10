@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="compilerOuput.txt" />
     <Text Include="grammar_with_sdt.txt" />
     <Text Include="parserErrors.txt" />
     <Text Include="semanticErrors.txt" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Instruction.h" />
     <ClInclude Include="Instructions.h" />
     <ClInclude Include="lexer.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="MoonGenerator.h" />
     <ClInclude Include="NonTerminal.h" />
     <ClInclude Include="Parser.h" />

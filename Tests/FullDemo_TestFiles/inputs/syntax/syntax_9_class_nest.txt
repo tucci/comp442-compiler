@@ -1,0 +1,11 @@
+
+
+program {
+	id = id;
+	id = id.id.id.id.id.id;
+	id.id.id.id = id.id.id.id.id.id;
+	id = id.id[id + id * id].id.id[id].id();
+	id = id[id + id][integer][integer][integer + id];
+
+};
+

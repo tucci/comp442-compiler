@@ -41,6 +41,7 @@ public:
 		Variable var;
 		Expression expr;
 		expr.addNumeric("3");
+		expr.buildExpressionTree();
 		VariableFragment fragment{ "abc" };
 		fragment.indices.push_back(expr);
 		var.vars.push_back(fragment);
@@ -55,7 +56,7 @@ public:
 		varExpr.vars.push_back(fragmentIndex);
 		Expression expr;
 		expr.addVar(varExpr);
-
+		expr.buildExpressionTree();
 		Variable var;
 		VariableFragment fragment{ "abc" };
 		fragment.indices.push_back(expr);
@@ -66,14 +67,17 @@ public:
 
 	TEST_METHOD(Variable_addFragment6Test) {
 		Variable varExpr;
+
 		VariableFragment fragmentIndex{ "index" };
 		varExpr.vars.push_back(fragmentIndex);
+
 		Expression expr;
 		expr.addVar(varExpr);
 		expr.addOperator("+");
 		expr.addNumeric("3");
 		expr.addOperator("*");
 		expr.addVar(varExpr);
+		expr.buildExpressionTree();
 
 		Variable var;
 		VariableFragment fragment{ "abc" };
@@ -81,7 +85,7 @@ public:
 		var.vars.push_back(fragment);
 		// No spaces when outputting
 		// If you get an error here in the future, that means u changed the spacing
-		Assert::IsTrue("abc[index+3*index]" == var.toFullName());
+		Assert::IsTrue("abc[(index+(3*index))]" == var.toFullName());
 	};
 
 	TEST_METHOD(Variable_addFragment7Test) {
@@ -94,7 +98,7 @@ public:
 		expr.addNumeric("3");
 		expr.addOperator("*");
 		expr.addVar(varExpr);
-
+		expr.buildExpressionTree();
 		Variable var;
 		VariableFragment fragment{ "abc" };
 		fragment.indices.push_back(expr);
@@ -104,7 +108,7 @@ public:
 		var.vars.push_back(fragment2);
 		// No spaces when outputting
 		// If you get an error here in the future, that means u changed the spacing
-		Assert::IsTrue("abc[index+3*index].value" == var.toFullName());
+		Assert::IsTrue("abc[(index+(3*index))].value" == var.toFullName());
 	};
 
 
@@ -118,7 +122,7 @@ public:
 		expr.addNumeric("3");
 		expr.addOperator("*");
 		expr.addVar(varExpr);
-
+		expr.buildExpressionTree();
 		Variable var;
 		VariableFragment fragment{ "abc" };
 		fragment.indices.push_back(expr);
@@ -129,7 +133,49 @@ public:
 		var.isFuncCall = true;
 		// No spaces when outputting
 		// If you get an error here in the future, that means u changed the spacing
-		Assert::IsTrue("abc[index+3*index].value()" == var.toFullName());
+		Assert::IsTrue("abc[(index+(3*index))].value()" == var.toFullName());
+	};
+
+
+
+	TEST_METHOD(Variable_addFragment9Test) {
+		Variable varExpr;
+		VariableFragment fragmentIndex{ "index" };
+		varExpr.vars.push_back(fragmentIndex);
+		Expression expr;
+		expr.addVar(varExpr);
+		expr.addOperator("+");
+		expr.addNumeric("3");
+		expr.addOperator("*");
+		expr.addVar(varExpr);
+		expr.buildExpressionTree();
+		Variable var;
+		VariableFragment fragment{ "abc" };
+		fragment.indices.push_back(expr);
+		var.vars.push_back(fragment);
+
+		VariableFragment fragment2{ "value" };
+		var.vars.push_back(fragment2);
+		var.isFuncCall = true;
+
+		Expression arg1;
+		Expression arg2;
+
+		arg1.addNumeric("3");
+		arg1.addOperator("+");
+		arg1.addVar(varExpr);
+
+		arg2.addVar(varExpr);
+		arg2.addOperator("*");
+		arg2.addNumeric("9");
+
+		arg1.buildExpressionTree();
+		arg2.buildExpressionTree();
+		var.arguments.push_back(arg1);
+		var.arguments.push_back(arg2);
+		// No spaces when outputting
+		// If you get an error here in the future, that means u changed the spacing
+		Assert::IsTrue("abc[(index+(3*index))].value((3+index), (index*9), )" == var.toFullName());
 	};
 
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Logger.h"
 
 Lexer::Lexer() {
 }
@@ -162,6 +163,7 @@ bool Lexer::hasMoreTokens() {
 	return lookaheadToken.type != TokenType::end_of_file_token;
 }
 
+
 Token Lexer::createToken(std::string lexeme, State state) {
 	Token token;
 	token.lexeme = lexeme;
@@ -305,9 +307,13 @@ void Lexer::handleComment(Token* token, State* currentState) {
 	}
 }
 
-void Lexer::writeTokensToFile() {
+void Lexer::writeTokensToFile(std::ostream* outputFile) {
+
+	
 	std::ofstream output;
 	std::ofstream error;
+	std::vector<std::ostream*> streams = { outputFile, &error, &std::cout };
+
 	output.open("lexerOutput.txt");
 	error.open("lexerErrors.txt");
 
@@ -315,8 +321,9 @@ void Lexer::writeTokensToFile() {
 		const Token t = outputTokens.at(i);
 		if (t.type != TokenType::end_of_file_token) {
 			if (t.type == TokenType::error_token) {
-				error << t;
-				std::cout << t;
+				for (auto stream : streams) {
+					*stream << t;
+				}
 			} else {
 				output << t;
 			}

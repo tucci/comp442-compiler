@@ -33,15 +33,7 @@ void SemanticActions::performAction(const SemanticSymbol& symbol,
 		}
 		SymbolTableRecord& top = semanticStack.back();
 		SemanticActionContainer container = {symbol, semanticStack, globalTable, top, currentTable, token, semanticErrors, parserError, generator};
-
-		// TODO: remove try/catch
-		try {
-			ACTION_MAP.at(symbol.getName())(container);
-		} catch(std::exception e) {
-			std::cout <<  "unknown symbol " + symbol.getName();
-			throw e;
-		}
-		
+		ACTION_MAP.at(symbol.getName())(container);
 	}
 }
 
@@ -118,9 +110,9 @@ void SemanticActions::createVariableEntry(SemanticActionContainer& container) {
 			(*container.currentTable)->addRecord(container.top.name, container.top, *container.currentTable, false);
 		} else {
 			if (_isRedefined(*found.first, container.top)) {
-				if (context.inPhase2) {
+				//if (context.inPhase2) {
 					_reportError(container, "Variable " + container.top.name + " redeclared");
-				}
+				//}
 			}
 		}
 		container.semanticStack.pop_back();
@@ -150,6 +142,7 @@ void SemanticActions::createFuncEntryAndTable(SemanticActionContainer& container
 		}	
 		container.semanticStack.pop_back();
 	} else if (context.inPhase2) {
+		container.semanticStack.pop_back();
 		SymbolTableRecord record;
 		record.attr.type = AttributeType::attr_funcDef;
 		// link the function record
@@ -329,7 +322,7 @@ void SemanticActions::popExpr(SemanticActionContainer& container) {
 		container.top.attr.expr.buildExpressionTree();
 
 		std::pair<bool, TypeStruct> valueType = container.top.attr.expr.typeCheckExpression();
-		if (valueType.second.type == type_none || !valueType.first) {
+		if (valueType.second.type == type_mismatch || valueType.second.type == type_none || !valueType.first) {
 			_reportError(container, "Expression " + container.top.attr.expr.toFullName() + " has different types");
 			container.top.attr.expr.type = {};
 		} else {
@@ -674,7 +667,6 @@ void SemanticActions::assignmentStatementEnd(SemanticActionContainer& container)
 		// Type check assignment statement
 		AssignStatement assignStatement = container.top.attr.statementData.assignStatement;
 		if (!(assignStatement.var.varType.type == assignStatement.rhs.type.type)) {
-			// TODO: array error here
 			_reportError(container, "Assignment Statement " + assignStatement.var.toFullName() + " = " + assignStatement.rhs.toFullName() + " has type mismatch");
 		}
 		
@@ -709,7 +701,7 @@ void SemanticActions::returnStatementEnd(SemanticActionContainer& container) {
 	if (context.inPhase2) {
 		ReturnStatement returnStatement = container.top.attr.statementData.returnStatement;
 		if (!(returnStatement.functionReturnType == returnStatement.returnExpression.type)) {
-			_reportError(container, "Return type " + returnStatement.returnExpression.type.toString() + " mismatches function return type " + returnStatement.functionReturnType.toString());
+			_reportError(container, "Given return type " + returnStatement.returnExpression.type.toString() + " mismatches actual function return type " + returnStatement.functionReturnType.toString());
 		}
 		context.returnedValued = true;
 	}
@@ -811,34 +803,35 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 			// Not found, this variable is undefined
 			_reportError(container, "Identifier " + var.toFullName() + " is undefined");
 		} else {
+			// only do function checking at the last fragment
+			if (i == var.vars.size() - 1) {
+				if (varDefinition->kind == SymbolKind::kind_function && !var.isFuncCall) {
+					// the def is a function but is being used as a var
+					_reportError(container, "Identifier " + var.toFullName() + " is a not a being called as a function");
+				} else if (varDefinition->kind != SymbolKind::kind_function && var.isFuncCall) {
+					// The definition is not a function, but it is being used as a function
+					_reportError(container, "Identifier " + var.toFullName() + " is being called as a function when it is not");
+				}
 
-
-			if (varDefinition->kind == SymbolKind::kind_function && !var.isFuncCall) {
-				_reportError(container, "Identifier " + var.toFullName() + " is not a function");
-			} else if (varDefinition->kind != SymbolKind::kind_function && var.isFuncCall) {
-				// The definition is not a function, but it is being used as a function
-				_reportError(container, "Identifier " + var.toFullName() + " is not a function");
+				// If the var is being used before it has been declared
+				// If it is a function, then we can ignore it's location
+				if (varDefinition->kind != SymbolKind::kind_function && i == 0 && varDefinition->definedLocation > var.location) {
+					_reportError(container, "Identifier " + var.toFullName() + " is used before it is defined");
+				}
 			}
-
-			// If the var is being used before it has been declared
-			// If it is a function, then we can ignore it's location
-			if (varDefinition->kind != SymbolKind::kind_function && i == 0 && varDefinition->definedLocation > var.location) {
-				_reportError(container, "Identifier " + var.toFullName() + " is used before it is defined");
-			}
-
 
 			switch (varDefinition->typeStructure.structure) {
 			case struct_simple: {
 				// trying to index a variable, but the variable is not an array
 				if (varFragment.indices.size() != 0) {
-					_reportError(container, "Identifier " + var.toFullName() + " is not an array");
+					_reportError(container, "Identifier " + var.toFullName() + " is not supposed to be an array");
 				}
 				break;
 			}
 			case struct_array: {
 				//  Trying to use a array without indexing into it
 				if (varFragment.indices.size() == 0) {
-					_reportError(container, "Identifier " + var.toFullName() + " is not an array");
+					_reportError(container, "Identifier " + var.toFullName() + " is supposed to be an array");
 				} else {
 					// Compare dimension length 
 					// The dimensions are different
@@ -850,7 +843,6 @@ void SemanticActions::_checkVarError(SemanticActionContainer& container) {
 			}
 			default:;
 			}
-
 			// This is a object
 			if (varDefinition->typeStructure.type == SymbolType::type_class) {
 				// We need to nest down the object structure

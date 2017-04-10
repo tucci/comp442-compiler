@@ -1,0 +1,38 @@
+class Test1 {
+	int a;
+};
+
+class Test2 {
+	int a;
+	int b;
+	float c;
+};
+
+class Test3 {
+	Test1 a;
+	Test2 b;
+};
+
+class Test4 {
+	int ar[10];
+};
+
+class Test5 {
+	Test2 ar[10];
+};
+
+program {
+	Test1 t1;
+	Test2 t2;
+	Test3 t3;
+	Test4 t4;
+	Test5 t5;
+
+	Test1 t1_array_10[10];
+	Test2 t2_array_10[10];
+	Test3 t3_array_10[10];
+	Test4 t4_array_10[10];
+	Test5 t5_array_10[10];
+
+	
+};

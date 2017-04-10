@@ -1,0 +1,14 @@
+class id {
+	int id;
+	id id;
+	float id;
+	int id() {};
+};
+
+class id {
+	int id;
+	id id;
+	float id;
+	int id() {};
+};
+program {};

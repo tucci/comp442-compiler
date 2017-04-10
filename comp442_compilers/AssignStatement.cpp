@@ -23,6 +23,7 @@ std::string AssignStatement::_toMoonCode() {
 		instrs.append(StoreWordInstruction(r0, rhsInstr.outputRegister, var.record->label).setComment(var.record->name + " assignment operation")._toMoonCode());
 	} else if (var.varType.structure == struct_array) {
 
+		
 		// Since this is an array, we want to just calculate the size of the type and not the actual array
 		TypeStruct stripedType = var.varType;
 		stripedType.structure = struct_simple;

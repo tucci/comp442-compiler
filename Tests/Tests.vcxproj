@@ -187,6 +187,7 @@
     <ClCompile Include="..\comp442_compilers\token.cpp" />
     <ClCompile Include="..\comp442_compilers\Variable.cpp" />
     <ClCompile Include="Expression_tests.cpp" />
+    <ClCompile Include="Instruction_tests.cpp" />
     <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />

@@ -66,11 +66,11 @@ private:
 	// Outputs the data about the fisrt/follow sets and parsing table
 	void outputParserDataToFile();
 	// Outputs the derivation and any syntaxErrors
-	void outputDerivationAndErrors();
+	void outputDerivationAndErrors(std::ostream* outputFile);
 	// Outputs the symbol table to a file
 	void outputSymbolTable();
 	// Outputs the semantic errors
-	void outputSemanticErrors();
+	void outputSemanticErrors(std::ostream* output);
 	// Internally calls the lexer
 	void nextToken();
 	// Handles the syntaxErrors

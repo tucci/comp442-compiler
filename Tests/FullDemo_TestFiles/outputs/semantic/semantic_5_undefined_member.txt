@@ -1,0 +1,28 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Identifier a.b is undefined on line 26
+Assignment Statement a.b = 3 has type mismatch on line 26
+Identifier a.func() is undefined on line 27
+Expression a.func() has different types on line 27
+Assignment Statement x = a.func() has type mismatch on line 27
+Identifier a.t2.var is undefined on line 28
+Assignment Statement x = a.t2.var has type mismatch on line 28
+Identifier a.t2.func() is undefined on line 29
+Expression a.t2.func() has different types on line 29
+Assignment Statement x = a.t2.func() has type mismatch on line 29
+Identifier a.t2.t3.var is undefined on line 30
+Assignment Statement x = a.t2.t3.var has type mismatch on line 30
+Identifier a.t2.t3.func() is undefined on line 31
+Expression a.t2.t3.func() has different types on line 31
+Assignment Statement x = a.t2.t3.func() has type mismatch on line 31
+Identifier a.t2.t3.t4.var is undefined on line 32
+Assignment Statement x = a.t2.t3.t4.var has type mismatch on line 32
+Identifier a.t2.t3.t4.func() is undefined on line 33
+Expression a.t2.t3.t4.func() has different types on line 33
+Assignment Statement x = a.t2.t3.t4.func() has type mismatch on line 33
+Identifier a.t2.t3.x[3] is not supposed to be an array on line 34
+Identifier a.t2.t3.y[43].d is not supposed to be an array on line 35
+Identifier a.t2.t3.y[43].d is not an object on line 35
+Identifier a.t2.t3.z[2].e is not supposed to be an array on line 36
+Identifier a.t2.t3.z[2].e is not an object on line 36
+Please fix the errors before compiling again
