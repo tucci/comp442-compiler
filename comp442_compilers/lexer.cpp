@@ -227,7 +227,7 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 			// Recover from this error
 			// We are not going to tokens such as "3.a" as an error because we don't know anything about the language
 			// Instead we are going to turn it into 3 tokens such as 3	.	a. Perhaphs the language has number literal functions
-			break;
+			return;
 		}
 		case invalid_float: {
 				// Float that ends with 0 error. Does not follow the specification
