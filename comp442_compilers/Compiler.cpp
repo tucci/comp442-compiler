@@ -10,6 +10,7 @@ Compiler::Compiler(std::string grammarFile, std::string grammarStartSymbol, bool
 	grammar = std::shared_ptr<Grammar>(new Grammar(grammarFile, grammarStartSymbol));
 	// Create the lexer with the given specification
 	lexer = std::shared_ptr<Lexer>(new Lexer(spec.get()));
+	lexer->setMainStream(&outputStream);
 	// Create the parser given from our lexer and grammar
 	parser = std::shared_ptr<Parser>(ParserGenerator::buildParser(lexer.get(), grammar.get()));
 	// Create the generator
