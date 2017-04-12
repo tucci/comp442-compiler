@@ -151,21 +151,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\comp442_compilers\Instructions.h" />
+    <ClInclude Include="..\comp442_compilers\SymbolTableRecord.h" />
     <ClInclude Include="..\comp442_compilers\token.h" />
+    <ClInclude Include="..\comp442_compilers\TypeData.h" />
     <ClInclude Include="..\comp442_compilers\Utils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\comp442_compilers\AssignStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\Compiler.cpp" />
     <ClCompile Include="..\comp442_compilers\dfa.cpp" />
     <ClCompile Include="..\comp442_compilers\Expression.cpp" />
+    <ClCompile Include="..\comp442_compilers\ForStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\GetStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\Grammar.cpp" />
+    <ClCompile Include="..\comp442_compilers\IfElseStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\Instruction.cpp" />
     <ClCompile Include="..\comp442_compilers\lexer.cpp" />
+    <ClCompile Include="..\comp442_compilers\MoonGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\NonTerminal.cpp" />
     <ClCompile Include="..\comp442_compilers\Parser.cpp" />
     <ClCompile Include="..\comp442_compilers\ParserGenerator.cpp" />
     <ClCompile Include="..\comp442_compilers\Production.cpp" />
+    <ClCompile Include="..\comp442_compilers\PutStatement.cpp" />
+    <ClCompile Include="..\comp442_compilers\ReturnStatement.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticActions.cpp" />
     <ClCompile Include="..\comp442_compilers\SemanticSymbol.cpp" />
     <ClCompile Include="..\comp442_compilers\specification.cpp" />
@@ -174,7 +185,9 @@
     <ClCompile Include="..\comp442_compilers\SymbolTable.cpp" />
     <ClCompile Include="..\comp442_compilers\Terminal.cpp" />
     <ClCompile Include="..\comp442_compilers\token.cpp" />
+    <ClCompile Include="..\comp442_compilers\Variable.cpp" />
     <ClCompile Include="Expression_tests.cpp" />
+    <ClCompile Include="Instruction_tests.cpp" />
     <ClCompile Include="ParserGenerator_tests.cpp" />
     <ClCompile Include="Grammar_tests.cpp" />
     <ClCompile Include="lexer_tests.cpp" />

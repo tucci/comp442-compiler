@@ -1,0 +1,9 @@
+program {
+	int x;
+	int y;
+	int z;
+
+	float a;
+	float b;
+	float c;
+};

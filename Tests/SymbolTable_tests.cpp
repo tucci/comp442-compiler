@@ -25,7 +25,7 @@ public:
 		SymbolTableRecord record;
 		record.name = "testVar";
 		record.scope = NULL; // no scope
-		SymbolTableRecord* ptr = global.addRecord(record.name, record);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, NULL, false);
 		std::pair<SymbolTableRecord*, bool> found = global.find(record.name);
 		Assert::IsTrue(found.second);
 	};
@@ -47,7 +47,7 @@ public:
 		classTable.parent = &global;
 		SymbolTableRecord record;
 		record.name = "testVar";
-		SymbolTableRecord* ptr = global.addRecord(record.name, record);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, NULL, false);
 		std::pair<SymbolTableRecord*, bool> found = classTable.findInParents(record.name);
 		Assert::IsTrue(found.second);
 	};
@@ -67,14 +67,13 @@ public:
 	TEST_METHOD(SymbolTable_addRecordTest) {
 		SymbolTable global;
 		SymbolTableRecord record;
-		record.properlyDeclared = true;
 		record.name = "testVar";
 		record.kind = SymbolKind::kind_variable;
 		record.typeStructure = { SymbolType::type_int, SymbolStructure::struct_simple, "", {} };
 		record.functionData = {};// none
 		record.scope = NULL; // no scope
 		record.address = 0; // no address now
-		SymbolTableRecord* ptr = global.addRecord(record.name, record);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, NULL, false);
 		Assert::IsNotNull(ptr);
 
 	};
@@ -82,15 +81,14 @@ public:
 	TEST_METHOD(SymbolTable_addRecord2Test) {
 		SymbolTable global;
 		SymbolTableRecord record;
-		record.properlyDeclared = true;
 		record.name = "testVar";
 		record.kind = SymbolKind::kind_variable;
 		record.typeStructure = { SymbolType::type_int, SymbolStructure::struct_simple, "",{} };
 		record.functionData = {};// none
 		record.scope = NULL; // no scope
 		record.address = 0; // no address now
-		SymbolTableRecord* ptr = global.addRecord(record.name, record);
-		SymbolTableRecord* ptr2 = global.addRecord(record.name, record);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, NULL, false);
+		SymbolTableRecord* ptr2 = global.addRecord(record.name, record, NULL, false);
 		Assert::IsNotNull(ptr);
 		Assert::IsNull(ptr2);
 	};
@@ -102,7 +100,7 @@ public:
 		SymbolTableRecord record;
 		record.name = "Test";
 		// Third param is not specified
-		SymbolTableRecord* ptr = global.addRecord(record.name, record);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, NULL, false);
 		Assert::IsNull(ptr->scope.get());
 	};
 
@@ -113,7 +111,7 @@ public:
 		record.name = "Test";
 		record.kind = kind_class;
 		// Third param is not specified
-		SymbolTableRecord* ptr = global.addRecord(record.name, record, &global);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, &global, true);
 		Assert::IsNotNull(ptr->scope.get());
 	};
 
@@ -121,17 +119,17 @@ public:
 	TEST_METHOD(SymbolTable_nameTest) {
 		SymbolTable global;
 		global.name = "Global";
-		global.resolvedName = "Global";
+		global.label = "Global";
 		SymbolTableRecord record;
 		record.name = "Test";
 		record.kind = kind_class;
 		// Third param is specified as the paret
-		SymbolTableRecord* ptr = global.addRecord(record.name, record, &global);
+		SymbolTableRecord* ptr = global.addRecord(record.name, record, &global, true);
 		Assert::IsTrue(global.name == "Global");
-		Assert::IsTrue(global.resolvedName == "Global");
+		Assert::IsTrue(global.label == "Global");
 
 		Assert::IsTrue(ptr->scope->name == "Test");
-		Assert::IsTrue(ptr->scope->resolvedName == "Global.Test");
+		Assert::IsTrue(ptr->scope->label == "Global_Test");
 	};
 
 	// Taken from http://stackoverflow.com/questions/15874723/how-to-open-a-file-from-the-project-in-a-native-c-unit-test-visual-studio
@@ -147,6 +145,7 @@ public:
 	}
 
 	TEST_METHOD(SymbolTable_sourceFilesTest) {
+		// TODO: if this test fails, that means the grammar.txt file is out of date
 		Compiler c(GetDirectoryName(TEST_CASE_DIRECTORY) + "grammar.txt", "prog", false);
 		c.setSourceFile(GetDirectoryName(TEST_CASE_DIRECTORY) + "SymbolTableTestSource.txt");
 		c.compile();
@@ -177,7 +176,7 @@ public:
 
 		SymbolTable expected_globalTable;
 		expected_globalTable.name = "Global";
-		expected_globalTable.resolvedName = "Global";
+		expected_globalTable.label = "Global";
 		SymbolTableRecord expected_globalTable__f1;
 		expected_globalTable__f1.name = "f1";
 		expected_globalTable__f1.kind = kind_function;
@@ -200,11 +199,11 @@ public:
 		expected_globalTable__program.kind = kind_function;
 		expected_globalTable__program.functionData = { { type_none, struct_simple, "", {} }, {} };
 
-		SymbolTableRecord* expected_globalTable__f1scope = expected_globalTable.addRecord(expected_globalTable__f1.name, expected_globalTable__f1, &expected_globalTable);
-		SymbolTableRecord* expected_globalTable__f2scope = expected_globalTable.addRecord(expected_globalTable__f2.name, expected_globalTable__f2, &expected_globalTable);
-		SymbolTableRecord* expected_globalTable_MyClass1Scope = expected_globalTable.addRecord(expected_globalTable__MyClass1.name, expected_globalTable__MyClass1, &expected_globalTable);
-		SymbolTableRecord* expected_globalTable_MyClass2Scope = expected_globalTable.addRecord(expected_globalTable__MyClass2.name, expected_globalTable__MyClass2, &expected_globalTable);
-		SymbolTableRecord* expected_globalTable_programScope = expected_globalTable.addRecord(expected_globalTable__program.name, expected_globalTable__program, &expected_globalTable);
+		SymbolTableRecord* expected_globalTable__f1scope = expected_globalTable.addRecord(expected_globalTable__f1.name, expected_globalTable__f1, &expected_globalTable, true);
+		SymbolTableRecord* expected_globalTable__f2scope = expected_globalTable.addRecord(expected_globalTable__f2.name, expected_globalTable__f2, &expected_globalTable, true);
+		SymbolTableRecord* expected_globalTable_MyClass1Scope = expected_globalTable.addRecord(expected_globalTable__MyClass1.name, expected_globalTable__MyClass1, &expected_globalTable, true);
+		SymbolTableRecord* expected_globalTable_MyClass2Scope = expected_globalTable.addRecord(expected_globalTable__MyClass2.name, expected_globalTable__MyClass2, &expected_globalTable, true);
+		SymbolTableRecord* expected_globalTable_programScope = expected_globalTable.addRecord(expected_globalTable__program.name, expected_globalTable__program, &expected_globalTable, true);
 
 
 		SymbolTable expected_MyClass1Table = *expected_globalTable_MyClass1Scope->scope.get();
@@ -233,11 +232,11 @@ public:
 		std::vector<std::pair<TypeStruct, std::string>> expected_MyClass1Table__f2_parameters;
 		expected_MyClass1Table__f2_parameters.push_back({ { type_class, struct_array, "MyClass1",{ 3 } }, "f2p1" });
 		expected_MyClass1Table__f2.functionData = { { type_int, struct_simple, "",{} }, expected_MyClass1Table__f2_parameters };
-		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v1.name, expected_MyClass1Table__mc1v1);
-		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v2.name, expected_MyClass1Table__mc1v2);
-		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v3.name, expected_MyClass1Table__mc1v3);
-		SymbolTableRecord* expected_MyClass1Table__mcf1scope = expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1f1.name, expected_MyClass1Table__mc1f1, &expected_MyClass1Table);
-		SymbolTableRecord* expected_MyClass1Table__f2scope = expected_MyClass1Table.addRecord(expected_MyClass1Table__f2.name, expected_MyClass1Table__f2, &expected_MyClass1Table);
+		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v1.name, expected_MyClass1Table__mc1v1, NULL, false), 
+		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v2.name, expected_MyClass1Table__mc1v2, NULL, false);
+		expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1v3.name, expected_MyClass1Table__mc1v3, NULL, false);
+		SymbolTableRecord* expected_MyClass1Table__mcf1scope = expected_MyClass1Table.addRecord(expected_MyClass1Table__mc1f1.name, expected_MyClass1Table__mc1f1, &expected_MyClass1Table, true);
+		SymbolTableRecord* expected_MyClass1Table__f2scope = expected_MyClass1Table.addRecord(expected_MyClass1Table__f2.name, expected_MyClass1Table__f2, &expected_MyClass1Table, true);
 
 
 
@@ -255,9 +254,9 @@ public:
 		expected_MyClass2Table__m2.name = "m2";
 		expected_MyClass2Table__m2.kind = kind_variable;
 		expected_MyClass2Table__m2.typeStructure = { type_class, struct_array, "MyClass2",{3} };
-		expected_MyClass2Table.addRecord(expected_MyClass2Table__mc1v1.name, expected_MyClass2Table__mc1v1);
-		expected_MyClass2Table.addRecord(expected_MyClass2Table__fp1.name, expected_MyClass2Table__fp1);
-		expected_MyClass2Table.addRecord(expected_MyClass2Table__m2.name, expected_MyClass2Table__m2);
+		expected_MyClass2Table.addRecord(expected_MyClass2Table__mc1v1.name, expected_MyClass2Table__mc1v1, NULL, false);
+		expected_MyClass2Table.addRecord(expected_MyClass2Table__fp1.name, expected_MyClass2Table__fp1, NULL, false);
+		expected_MyClass2Table.addRecord(expected_MyClass2Table__m2.name, expected_MyClass2Table__m2, NULL, false);
 
 
 		SymbolTable expected_f1Table = *expected_globalTable__f1scope->scope.get();
@@ -277,10 +276,10 @@ public:
 		expected_f1Table__fv2.name = "fv2";
 		expected_f1Table__fv2.kind = kind_variable;
 		expected_f1Table__fv2.typeStructure = { type_int, struct_simple, "",{} };
-		expected_f1Table.addRecord(expected_f1Table__fp1.name, expected_f1Table__fp1);
-		expected_f1Table.addRecord(expected_f1Table__fp2.name, expected_f1Table__fp2);
-		expected_f1Table.addRecord(expected_f1Table__fv1.name, expected_f1Table__fv1);
-		expected_f1Table.addRecord(expected_f1Table__fv2.name, expected_f1Table__fv2);
+		expected_f1Table.addRecord(expected_f1Table__fp1.name, expected_f1Table__fp1, NULL, false);
+		expected_f1Table.addRecord(expected_f1Table__fp2.name, expected_f1Table__fp2, NULL, false);
+		expected_f1Table.addRecord(expected_f1Table__fv1.name, expected_f1Table__fv1, NULL, false);
+		expected_f1Table.addRecord(expected_f1Table__fv2.name, expected_f1Table__fv2, NULL, false);
 
 
 		// Empty table
@@ -300,9 +299,9 @@ public:
 		expected_programTable__m3.name = "m3";
 		expected_programTable__m3.kind = kind_variable;
 		expected_programTable__m3.typeStructure = { type_class, struct_array, "MyClass2",{ 2 } };
-		expected_programTable.addRecord(expected_programTable__m1.name, expected_programTable__m1);
-		expected_programTable.addRecord(expected_programTable__m2.name, expected_programTable__m2);
-		expected_programTable.addRecord(expected_programTable__m3.name, expected_programTable__m3);
+		expected_programTable.addRecord(expected_programTable__m1.name, expected_programTable__m1, NULL, false);
+		expected_programTable.addRecord(expected_programTable__m2.name, expected_programTable__m2, NULL, false);
+		expected_programTable.addRecord(expected_programTable__m3.name, expected_programTable__m3, NULL, false);
 
 
 
@@ -319,9 +318,9 @@ public:
 		expected_MyClass1_mc1f1__fv1.name = "fv1";
 		expected_MyClass1_mc1f1__fv1.kind = kind_variable;
 		expected_MyClass1_mc1f1__fv1.typeStructure = { type_class, struct_array, "MyClass2",{ 3 } };
-		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__p1.name, expected_MyClass1_mc1f1__p1);
-		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__p2.name, expected_MyClass1_mc1f1__p2);
-		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__fv1.name, expected_MyClass1_mc1f1__fv1);
+		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__p1.name, expected_MyClass1_mc1f1__p1, NULL, false);
+		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__p2.name, expected_MyClass1_mc1f1__p2, NULL, false);
+		expected_MyClass1_mc1f1.addRecord(expected_MyClass1_mc1f1__fv1.name, expected_MyClass1_mc1f1__fv1, NULL, false);
 
 		
 
@@ -335,8 +334,8 @@ public:
 		expected_MyClass1_f2__mc1v1.name = "mc1v1";
 		expected_MyClass1_f2__mc1v1.kind = kind_variable;
 		expected_MyClass1_f2__mc1v1.typeStructure = { type_int, struct_simple, "", {} };;
-		expected_MyClass1_f2.addRecord(expected_MyClass1_f2__f2p1.name, expected_MyClass1_f2__f2p1);
-		expected_MyClass1_f2.addRecord(expected_MyClass1_f2__mc1v1.name, expected_MyClass1_f2__mc1v1);
+		expected_MyClass1_f2.addRecord(expected_MyClass1_f2__f2p1.name, expected_MyClass1_f2__f2p1, NULL, false);
+		expected_MyClass1_f2.addRecord(expected_MyClass1_f2__mc1v1.name, expected_MyClass1_f2__mc1v1, NULL, false);
 
 
 

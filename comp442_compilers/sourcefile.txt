@@ -1,54 +1,52 @@
-
-class Student {
-	int age;
-	String name;
-	float height;
-	int name;
-
-	int getAge() {
-		int test;
-		test = name.chars[2] * qt();
-	};
-};
-
-class Student {};
-
-class String {
-	Char chars[10];
-};
-
-class Char {
-	ASCII ascii;
-};
-
-class ASCII {
-	int value;
-};
-
 program {
 	
-	Student s;
-	int av;
-	int jj;
-	String str;
+	// out puts string "put number"
+	int str[11];
+	str[0] = 112;
+	str[1] = 117;
+	str[2] = 116;
+	str[3] = 32;
+	str[4] = 110;
+	str[5] = 117;
+	str[6] = 109;
+	str[7] = 98;
+	str[8] = 101;
+	str[9] = 114;
+	str[10] = 10;
 
-	s = jj();
+	// outputs array
+	for (int n = 0; n <= 10; n = n + 1) {
+		put(str[n]);
+	};
+	
 
-	s = s.value(id.x, abc);
-	t.s[2] = 4;
-	int t[2];
-	x = s[av[id[44]][2]];
-	s.name.chars[2][3] = 32;
-	s.name.chars[3].value = qt();
-	str.chars[2].ascii.value = 10;
-	str = str.qt();
+
+	// Gets the number as ascii
+	 int char;
+	 get(char);
+	 int count;
+	 // converts ascii to number
+	 count = charToNum(char);
+	 for (int i = 0; i < count; i = i + 1) {
+		// converts number to ascii
+		put(numToChar(i));
+	 };
 
 
 };
 
+int numToChar(int number) {
+	int ascii;
+	if (number >= 0) then {
+		ascii = number + 48;
+	} else {
+		ascii = 47;
+	};
+	return (ascii);
+};
 
-int qt() {
-	
-	int x;
-
+int charToNum(int char) {
+	int number;
+	number = char - 48;
+	return (number);
 };

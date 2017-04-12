@@ -14,13 +14,16 @@
 #include <fstream>
 #include <sstream>
 #include <queue>
+#include <iostream>
+#include <stdio.h>
+
 
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
 #include <memory>
 
-// Our classes
+// Lexer
 #include "token.h"
 #include "dfa.h"
 #include "specification.h"
@@ -35,11 +38,28 @@
 #include "NonTerminal.h"
 #include "Production.h"
 #include "Grammar.h"
+
+// Semantic data
+// TODO: move this next to the code gen includes
+#include "Instruction.h"
+
+#include "TypeData.h"
+#include "Variable.h"
 #include "Expression.h"
 #include "Statement.h"
 
+#include "StatementBlock.h"
+#include "AssignStatement.h"
+#include "ForStatement.h"
+#include "GetStatement.h"
+#include "IfElseStatement.h"
+#include "PutStatement.h"
+#include "ReturnStatement.h"
+#include "Attribute.h"
 
-#include "SymbolTableData.h"
+
+
+#include "SymbolTableRecord.h"
 #include "SymbolTable.h"
 #include "SemanticActions.h"
 
@@ -49,6 +69,8 @@ typedef std::unordered_map <Terminal, Production, SymbolHasher, SymbolEqual> Ter
 
 // Util code
 #include "Utils.h"
+
+#include "MoonGenerator.h"
 
 #include "Parser.h"
 #include "ParserGenerator.h"

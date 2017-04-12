@@ -1,0 +1,40 @@
+class A {
+	B b;
+};
+
+class B {
+	A a;
+};
+
+class C {
+	D d;
+};
+
+class D {
+	E e;
+};
+
+class E {
+	C c;
+};
+
+class F {
+	F f;
+};
+
+// No circular
+class G {
+	H h;
+};
+
+class H {
+	I i;
+};
+
+class I {
+	int abc;
+};
+
+program {
+	
+};

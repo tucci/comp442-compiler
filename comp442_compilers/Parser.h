@@ -37,12 +37,12 @@ private:
 	Token consumedToken;
 	// The lookahead token for our parser to use
 	Token lookAheadToken;
-
+	// The generator for the parser to use
+	MoonGenerator* generator;
 	// Global symbol table
 	SymbolTable globalTable;
 	// Current symbol table we are working in
 	SymbolTable* currentSymbolTable;
-	
 	// Data structure to hold first set
 	std::unordered_map<NonTerminal, TerminalSet, SymbolHasher, SymbolEqual> firstSet;
 	// Data structure to hold follow set
@@ -66,11 +66,11 @@ private:
 	// Outputs the data about the fisrt/follow sets and parsing table
 	void outputParserDataToFile();
 	// Outputs the derivation and any syntaxErrors
-	void outputDerivationAndErrors();
+	void outputDerivationAndErrors(std::ostream* outputFile);
 	// Outputs the symbol table to a file
 	void outputSymbolTable();
 	// Outputs the semantic errors
-	void outputSemanticErrors();
+	void outputSemanticErrors(std::ostream* output);
 	// Internally calls the lexer
 	void nextToken();
 	// Handles the syntaxErrors

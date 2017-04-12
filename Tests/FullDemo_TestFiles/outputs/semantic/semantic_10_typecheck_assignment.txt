@@ -1,0 +1,10 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Assignment Statement x = 32.4 has type mismatch on line 33
+Assignment Statement y = 1 has type mismatch on line 34
+Assignment Statement zz = 3 has type mismatch on line 35
+Assignment Statement x = zz.b.d has type mismatch on line 36
+Assignment Statement x = giveFloat() has type mismatch on line 37
+Assignment Statement y = giveInt() has type mismatch on line 38
+Assignment Statement x = giveTest() has type mismatch on line 39
+Please fix the errors before compiling again

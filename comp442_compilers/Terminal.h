@@ -11,7 +11,6 @@ public:
 class SpecialTerminal : public Terminal {
 public:
 	// Special symbols to hold epsilon/end of file symbols
-	// TODO: maybe move this out of a static context
 	static const SpecialTerminal EPSILON;
 	static const SpecialTerminal END_OF_FILE;
 	SpecialTerminal(std::string name);

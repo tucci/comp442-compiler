@@ -1,0 +1,10 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Function call func_0(1, ) has mismatich in arugment length or types on line 19
+Function call func_1(1, 2, ) has mismatich in arugment length or types on line 20
+Function call func_2(1, 2, 3, ) has mismatich in arugment length or types on line 21
+Function call func_3(1, 2, 3, 4, ) has mismatich in arugment length or types on line 22
+Function call func_1(1.3, ) has mismatich in arugment length or types on line 25
+Function call func_2(1, 2.43, ) has mismatich in arugment length or types on line 26
+Function call func_3(1, 2.3, 3.4, ) has mismatich in arugment length or types on line 27
+Please fix the errors before compiling again

@@ -1,0 +1,15 @@
+program {
+	int x;
+	int y;
+	int z;
+
+
+	get(x);
+	get(y);
+	get(z);
+
+
+	put(66);
+	put(x + y + z);
+
+};

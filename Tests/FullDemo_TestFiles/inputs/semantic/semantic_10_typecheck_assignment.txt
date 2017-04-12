@@ -1,0 +1,57 @@
+class Test {
+	int a;
+	Test2 b;
+};
+class Test2 {
+	int c;
+	Test3 d;	
+};
+
+class Test3 {
+	int e;
+};
+
+
+program {
+	int x;
+	float y;
+	Test z;
+	Test zz;
+
+	// No mismatch
+	x = 32;
+	y = 43.3;
+	zz = z;
+	x = zz.a;
+	x = zz.b.c;
+	x = zz.b.d.e;
+	x = giveInt();
+	y = giveFloat();
+	z = giveTest();
+
+	// Mismatch
+	x = 32.4;
+	y = 1;
+	zz = 3;
+	x = zz.b.d;
+	x = giveFloat();
+	y = giveInt();
+	x = giveTest();
+
+
+
+};
+
+
+float giveFloat() {
+	return (1.54);
+};
+
+int giveInt() {
+	return (1);
+};
+
+Test giveTest() {
+	Test a;
+	return (a);
+};

@@ -8,7 +8,7 @@ funcDef					-> type #storeType# id #storeId# funcDefRest
 funcDefRest				-> #startFuncDef# ( fParams ) #createFuncEntryAndTable# funcBody ; #endFuncEntryAndTable#
 funcDefList				-> funcDef funcDefList 
 funcDefList				-> EPSILON 
-funcBody				-> { varStatementList } 
+funcBody				-> { varStatementList #checkIfReturns# } 
 
 varDecl					-> type #storeType# id #storeId# varDeclRest
 varDeclNoId				-> typeNoId #storeType# id #storeId# varDeclRest
@@ -24,32 +24,32 @@ varStatementList		-> varDeclNoId varStatementList
 varStatementList		-> noIdStartStatement varStatementList
 varStatementList		-> EPSILON
 varStatementListRest	-> #checkTypeGlobal# #storeType# id #storeId# varDeclRest 
-varStatementListRest	-> #pushStatement# #assignmentStatement# #pushVar# #addToVar# assignStatRest ; #popStatement#
+varStatementListRest	-> #pushStatement# #assignmentStatementStart# #pushVar# #addToVar# assignStatRest ; #assignmentStatementEnd# #popStatement#
 
 statement				-> noIdStartStatement
 statement				-> #pushStatement# assignStat ; #popStatement#
 statementList			-> statement statementList 
 statementList			-> EPSILON 
-noIdStartStatement      -> #pushStatement# #forStatement# for ( type #storeType# id #storeId# #createVariableEntry# assignOp expr ; relExpr ; assignStat ) statBlock ; #popStatement#
-noIdStartStatement      -> #pushStatement# #ifelseStatement# if ( expr ) then statBlock elseBlock ; #popStatement#
-noIdStartStatement      -> #pushStatement# #getStatement# get ( #pushVar# variable #popVar# ) ; #popStatement#
-noIdStartStatement      -> #pushStatement# #putStatement# put ( expr ) ; #popStatement#
-noIdStartStatement      -> #pushStatement# #returnStatement# return ( expr ) ; #popStatement#
+noIdStartStatement      -> #pushStatement# #forStatementStart# for ( #forInitStatementStart# type #storeType# id #storeId# #createVariableEntry# #forAddVar# assignOp expr #forInitStatementEnd# ; #forRelExpr# #pushExpr# relExpr #popExpr# ; #forIncrementStatementStart# #pushStatement# assignStat #popStatement# #forIncrementStatementEnd# ) statBlock ; #forStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #ifelseStatementStart# if ( expr ) then statBlock #setInElseBlock# elseBlock ; #ifelseStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #getStatementStart# get ( #pushVar# variable #popVar# ) ; #getStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #putStatementStart# put ( expr ) ; #putStatementEnd# #popStatement#
+noIdStartStatement      -> #pushStatement# #returnStatementStart# return ( expr ) ; #returnStatementEnd# #popStatement#
 elseBlock				-> else statBlock
 elseBlock				-> EPSILON
-assignStat				-> #assignmentStatement# #pushVar# id #addToVar# assignStatRest
+assignStat				-> #assignmentStatementStart# #pushVar# id #addToVar# assignStatRest #assignmentStatementEnd#
 assignStat				-> assignStatRest
 assignStatRest			-> indiceList assignStatRestRest
-assignStatRestRest		-> . variable #popVar# assignOp expr #checkExpr#
-assignStatRestRest		-> #popVar# assignOp expr #checkExpr#
+assignStatRestRest		-> . variable #popVar# assignOp expr
+assignStatRestRest		-> #popVar# assignOp expr
 statBlock				-> { statementList } 
 statBlock				-> statement 
 statBlock				-> EPSILON 
 
 expr					-> #pushExpr# arithExpr exprRest #popExpr#
-exprRest 				-> relOp arithExpr 
+exprRest 				-> relOp #operatorExprFragment# arithExpr 
 exprRest 				-> EPSILON
-relExpr					-> arithExpr relOp arithExpr
+relExpr					-> arithExpr relOp #operatorExprFragment# arithExpr
 
 
 sign					-> + #addSignExprFragment#
@@ -61,13 +61,13 @@ arithExprRest 			-> EPSILON
 term					-> factor termRest
 termRest 				-> multOp #operatorExprFragment# factor termRest
 termRest				-> EPSILON
-factor					-> ( arithExpr ) 
+factor					->  ( #addLeftParen# arithExpr ) #addRightParen# 
 factor					-> num #addNumericExprFragment#
 factor					-> not factor 
 factor					-> sign factor 
 factor					-> #pushVar# id #addToVar# factorRest #popVar#
 factorRest				-> dotidnest factorRest 
-factorRest				-> #setFunc# ( aParams )
+factorRest				-> #startFuncCall# ( aParams )
 factorRest				-> indice factorRestRest 
 factorRest				-> EPSILON 
 factorRestRest			-> indice factorRestRest 
@@ -104,9 +104,9 @@ typeNoId				-> int
 type					-> typeNoId 
 type					-> id #checkTypeGlobal#
 
-fParams					-> #addParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
+fParams					-> #addFuncDefParameter# type #storeType# id #storeId# arraySizeList fParamsTailList 
 fParams					-> EPSILON 
-fParamsTail				-> , #addParameter# type #storeType# id #storeId# arraySizeList 
+fParamsTail				-> , #addFuncDefParameter# type #storeType# id #storeId# arraySizeList 
 fParamsTailList			-> fParamsTail fParamsTailList 
 fParamsTailList			-> EPSILON 
 

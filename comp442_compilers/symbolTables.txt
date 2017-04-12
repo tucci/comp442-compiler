@@ -1,36 +1,20 @@
 
 Tag: Global
-qt -> Name=qt -> Kind=kind_function: {return type=type_int:struct_simple, params={nil}}
-ASCII -> Name=ASCII -> Kind=kind_class
-String -> Name=String -> Kind=kind_class
-Student -> Name=Student -> Kind=kind_class
-Char -> Name=Char -> Kind=kind_class
-program -> Name=program -> Kind=kind_function: {return type=type_none:struct_simple, params={nil}}
+program -> Name=program Label=Global_program -> Kind=kind_function: {return type=type_none:struct_simple, params={nil}}
+numToChar -> Name=numToChar Label=Global_numToChar -> Kind=kind_function: {return type=type_int:struct_simple, params={type_int:struct_simple number, }}
+charToNum -> Name=charToNum Label=Global_charToNum -> Kind=kind_function: {return type=type_int:struct_simple, params={type_int:struct_simple char, }}
 
-Tag: Global.qt
-x -> Name=x -> Kind=kind_variable: {Type: type_int:struct_simple}
+Tag: Global_program
+str -> Name=str Label=Global_program_str -> Kind=kind_variable: {Type: type_int[11]:struct_array}
+n -> Name=n Label=Global_program_n -> Kind=kind_variable: {Type: type_int:struct_simple}
+char -> Name=char Label=Global_program_char -> Kind=kind_variable: {Type: type_int:struct_simple}
+i -> Name=i Label=Global_program_i -> Kind=kind_variable: {Type: type_int:struct_simple}
+count -> Name=count Label=Global_program_count -> Kind=kind_variable: {Type: type_int:struct_simple}
 
-Tag: Global.ASCII
-value -> Name=value -> Kind=kind_variable: {Type: type_int:struct_simple}
+Tag: Global_numToChar
+ascii -> Name=ascii Label=Global_numToChar_ascii -> Kind=kind_variable: {Type: type_int:struct_simple}
+number -> Name=number Label=Global_numToChar_number -> Kind=kind_parameter: {Type: type_int:struct_simple}
 
-Tag: Global.String
-chars -> Name=chars -> Kind=kind_variable: {Type: type_class Char[10]:struct_array}
-
-Tag: Global.Student
-age -> Name=age -> Kind=kind_variable: {Type: type_int:struct_simple}
-getAge -> Name=getAge -> Kind=kind_function: {return type=type_int:struct_simple, params={nil}}
-name -> Name=name -> Kind=kind_variable: {Type: type_class String:struct_simple}
-height -> Name=height -> Kind=kind_variable: {Type: type_float:struct_simple}
-
-Tag: Global.Char
-ascii -> Name=ascii -> Kind=kind_variable: {Type: type_class ASCII:struct_simple}
-
-Tag: Global.program
-s -> Name=s -> Kind=kind_variable: {Type: type_class Student:struct_simple}
-av -> Name=av -> Kind=kind_variable: {Type: type_int:struct_simple}
-jj -> Name=jj -> Kind=kind_variable: {Type: type_int:struct_simple}
-str -> Name=str -> Kind=kind_variable: {Type: type_class String:struct_simple}
-t -> Name=t -> Kind=kind_variable: {Type: type_int[2]:struct_array}
-
-Tag: Global.Student.getAge
-test -> Name=test -> Kind=kind_variable: {Type: type_int:struct_simple}
+Tag: Global_charToNum
+char -> Name=char Label=Global_charToNum_char -> Kind=kind_parameter: {Type: type_int:struct_simple}
+number -> Name=number Label=Global_charToNum_number -> Kind=kind_variable: {Type: type_int:struct_simple}

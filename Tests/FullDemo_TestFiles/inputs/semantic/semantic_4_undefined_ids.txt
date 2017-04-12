@@ -1,0 +1,11 @@
+program {
+	
+	x = 32;
+	y = 54;
+
+	z = a * b * c;
+
+	Test1 d;
+
+	v = func() + func2();
+};

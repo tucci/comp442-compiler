@@ -1,0 +1,7 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Expression ((12+32.22)+65) has different types on line 23
+Assignment Statement d = ((12+32.22)+65) has type mismatch on line 23
+Expression (func1()+3.2) has different types on line 24
+Assignment Statement e = (func1()+3.2) has type mismatch on line 24
+Please fix the errors before compiling again

@@ -1,0 +1,29 @@
+program {
+	int x;
+	x = 0;
+
+
+	// simple loop
+	for (int a = 0; a < 10; a = a + 1) {
+		x = a;
+	};
+
+	// No loop block
+	for (int i = 0; i < 10; i = i + 1)
+		i = a;
+	;
+
+	int y;
+	// Nested loop
+	for (int j = 0; j < 10; j = j + 1) {
+		for (int k = 0; k < 10; k = k + 1) {
+			y = j + k;
+			x = x + y;
+		};
+	};
+
+
+
+
+
+};

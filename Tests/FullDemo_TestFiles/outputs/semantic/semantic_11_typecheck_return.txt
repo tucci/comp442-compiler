@@ -1,0 +1,10 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Given return type type_float:struct_simple mismatches actual function return type type_int:struct_simple on line 16
+Given return type type_int:struct_simple mismatches actual function return type type_float:struct_simple on line 21
+Given return type type_int:struct_simple mismatches actual function return type type_class Test:struct_simple on line 25
+Given return type type_float:struct_simple mismatches actual function return type type_int:struct_simple on line 48
+Given return type type_int:struct_simple mismatches actual function return type type_float:struct_simple on line 53
+Given return type type_int:struct_simple mismatches actual function return type type_class Test:struct_simple on line 57
+Function noReturn doesn't return a value on line 60
+Please fix the errors before compiling again

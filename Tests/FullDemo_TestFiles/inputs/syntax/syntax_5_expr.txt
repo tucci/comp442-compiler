@@ -1,0 +1,12 @@
+program {
+	int id;
+	id = id + id - id * id / id;
+	id = id < id;
+	id = id > id;
+	id = id < = id;
+	id = id > = id;
+	id = id = = id;
+	id = id < > id;
+
+
+};

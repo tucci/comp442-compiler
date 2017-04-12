@@ -1,20 +1,15 @@
-#ifndef SYMBOL_TABLE_DATA_H
-#define SYMBOL_TABLE_DATA_H
-#include "Statement.h"
+#ifndef TYPEDATA_H
+#define TYPEDATA_H
 
+#include <string>
+#include <vector>
 
-// List of symbols kinds
-enum SymbolKind {
-	kind_variable,
-	kind_parameter,
-	kind_function,
-	kind_class,
-	kind_error
-};
+#define WORD_SIZE_IN_BYTES 4
 
 // List of symbol types that can be in the lanaguage
 enum SymbolType {
 	type_none,
+	type_mismatch,
 	type_int,
 	type_float,
 	type_class,
@@ -27,22 +22,13 @@ enum SymbolStructure {
 	struct_error,
 };
 
-static std::string kindToString(SymbolKind kind) {
-	switch (kind) {
-	case kind_variable:		return "kind_variable"; break;
-	case kind_parameter:	return "kind_parameter"; break;
-	case kind_function:		return "kind_function"; break;
-	case kind_class:		return "kind_class"; break;
-	default:				return "kind_error"; break;
-	}
-}
-
 static std::string typeToString(SymbolType type) {
 	switch (type) {
 	case type_int:		return "type_int"; break;
 	case type_float:	return "type_float"; break;
 	case type_class:	return "type_class"; break;
 	case type_none:		return "type_none"; break;
+	case type_mismatch:	return "type_mismatch"; break;
 	default:			return "type_none"; break;
 	}
 }
@@ -58,8 +44,8 @@ static SymbolType stringToType(const std::string& str) {
 		// This is a class
 		return SymbolType::type_class;
 	}
-} 
-	
+}
+
 
 static std::string structureToString(SymbolStructure structure) {
 	switch (structure) {
@@ -71,13 +57,13 @@ static std::string structureToString(SymbolStructure structure) {
 
 // A simple wrapper around type/struct
 struct TypeStruct {
-	TypeStruct (): type(type_none), structure(struct_simple) {}
-	TypeStruct(SymbolType stype, SymbolStructure sstructure) : type(stype), structure(sstructure) {	}
-	TypeStruct(SymbolType stype, SymbolStructure sstructure, std::string sclassName, std::vector<int> dim) 
-	: type(stype),
-	structure(sstructure),
-	className(sclassName),
-	dimensions(dim){
+	TypeStruct() : type(type_none), structure(struct_simple) {}
+	TypeStruct(SymbolType stype, SymbolStructure sstructure) : type(stype), structure(sstructure) {}
+	TypeStruct(SymbolType stype, SymbolStructure sstructure, std::string sclassName, std::vector<int> dim)
+		: type(stype),
+		structure(sstructure),
+		className(sclassName),
+		dimensions(dim) {
 
 	}
 
@@ -110,7 +96,7 @@ struct TypeStruct {
 };
 
 // Holds all the data for a function declaration
-struct FunctionData {
+struct FunctionDeclarationData {
 	// The return values type and struct
 	// This is allowing for returning of arrays
 	TypeStruct returnType;
@@ -133,7 +119,7 @@ struct FunctionData {
 		return s;
 	};
 
-	friend bool operator==(const FunctionData& lhs, const FunctionData& rhs) {
+	friend bool operator==(const FunctionDeclarationData& lhs, const FunctionDeclarationData& rhs) {
 		if (!(lhs.returnType == rhs.returnType)) return false;
 		if (lhs.parameters != rhs.parameters) return false;
 		return true;
@@ -141,71 +127,5 @@ struct FunctionData {
 
 };
 
-enum AttributeType {
-	attr_expr,
-	attr_statement,
-	attr_var
-};
 
-struct Attributes {
-	AttributeType type;
-	Expression expr;
-	Statement statmenent;
-	Variable var;
-};
-
-// Forward declration
-class SymbolTable;
-
-
-
-
-// A simple record that will go into the symbol tables
-class SymbolTableRecord {
-public:
-	// TODO: implment Whether this identifier has been declared properly
-	bool properlyDeclared;
-	// The name of this symbol
-	std::string name;
-	// The kind of symbol this is. var/param/function/class
-	SymbolKind kind;
-	// The symbol's type and structure. int,float,class -> simple/array and any array data
-	TypeStruct typeStructure;
-	// used when this type is a function type
-	FunctionData functionData;
-	// The link to the child symbol table
-	std::shared_ptr<SymbolTable> scope;
-	// On what line/location of the source code is this identifer defined
-	int definedLocation;
-	// The address of the element in memory
-	int address;
-
-
-	// The attributes of this semantic record
-	// Used to build up expressions/statments and other values while parsing
-	Attributes attr;
-
-	std::string toString() {
-
-		std::string s = "Name=" + name + " -> Kind=" + kindToString(kind);
-		if (kind == SymbolKind::kind_variable || kind == SymbolKind::kind_parameter) {
-			s += ": {Type: " + typeStructure.toString() + "}";
-		}
-		if (kind == SymbolKind::kind_function) {
-			s += ": {" + functionData.toString() + "}";
-		}
-		return s + "\n";
-
-	};
-
-	friend bool operator==(const SymbolTableRecord& r1, const SymbolTableRecord& r2) {
-		if (r1.name != r2.name) return false;
-		if (r1.kind != r2.kind) return false;
-		if (!(r1.typeStructure == r2.typeStructure)) return false;
-		if (!(r1.functionData == r2.functionData)) return false;
-		return true;
-	}
-
-};
-
-#endif // !SYMBOL_TABLE_DATA_H
+#endif

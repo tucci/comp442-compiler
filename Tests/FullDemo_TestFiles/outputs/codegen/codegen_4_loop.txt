@@ -1,0 +1,137 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_program_x	dw	0
+	Global_program_a	dw	0
+	Global_program_i	dw	0
+	Global_program_y	dw	0
+	Global_program_j	dw	0
+	Global_program_k	dw	0
+% ---------------- Create function definitions ----------------
+% ---------------- Start of user program ----------------
+	align
+	entry
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_program_x(r0),r9	% x assignment operation
+% ---------------- for block ----------------
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_program_a(r0),r9	% a assignment operation
+gowhile_6my5o9xs	nop	% Loop header
+	lw	r9,Global_program_a(r0)	% load a into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,endwhile_6my5o9xs
+	lw	r1,Global_program_a(r0)	% load a into register
+	sw	Global_program_x(r0),r1	% x assignment operation
+	lw	r1,Global_program_a(r0)	% load a into register
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,1	% load 1 into register
+	add	r1,r1,r2
+	sw	Global_program_a(r0),r1	% a assignment operation
+	j	gowhile_6my5o9xs
+endwhile_6my5o9xs	nop
+% ---------------- end of for block ----------------
+	sub	r9,r9,r9	% Clear register
+% ---------------- for block ----------------
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_program_i(r0),r9	% i assignment operation
+gowhile_cy056rl1	nop	% Loop header
+	lw	r9,Global_program_i(r0)	% load i into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,endwhile_cy056rl1
+	lw	r1,Global_program_a(r0)	% load a into register
+	sw	Global_program_i(r0),r1	% i assignment operation
+	lw	r1,Global_program_i(r0)	% load i into register
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,1	% load 1 into register
+	add	r1,r1,r2
+	sw	Global_program_i(r0),r1	% i assignment operation
+	j	gowhile_cy056rl1
+endwhile_cy056rl1	nop
+% ---------------- end of for block ----------------
+	sub	r9,r9,r9	% Clear register
+% ---------------- for block ----------------
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sw	Global_program_j(r0),r9	% j assignment operation
+gowhile_k7wbg9hd	nop	% Loop header
+	lw	r9,Global_program_j(r0)	% load j into register
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,10	% load 10 into register
+	clt	r9,r9,r1
+	bz	r9,endwhile_k7wbg9hd
+% ---------------- for block ----------------
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,0	% load 0 into register
+	sw	Global_program_k(r0),r1	% k assignment operation
+gowhile_crqqdfmq	nop	% Loop header
+	lw	r1,Global_program_k(r0)	% load k into register
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,10	% load 10 into register
+	clt	r1,r1,r2
+	bz	r1,endwhile_crqqdfmq
+	lw	r2,Global_program_j(r0)	% load j into register
+	lw	r3,Global_program_k(r0)	% load k into register
+	add	r2,r2,r3
+	sw	Global_program_y(r0),r2	% y assignment operation
+	lw	r2,Global_program_x(r0)	% load x into register
+	lw	r3,Global_program_y(r0)	% load y into register
+	add	r2,r2,r3
+	sw	Global_program_x(r0),r2	% x assignment operation
+	lw	r2,Global_program_k(r0)	% load k into register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	add	r2,r2,r3
+	sw	Global_program_k(r0),r2	% k assignment operation
+	j	gowhile_crqqdfmq
+endwhile_crqqdfmq	nop
+% ---------------- end of for block ----------------
+	sub	r1,r1,r1	% Clear register
+	lw	r1,Global_program_j(r0)	% load j into register
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,1	% load 1 into register
+	add	r1,r1,r2
+	sw	Global_program_j(r0),r1	% j assignment operation
+	j	gowhile_k7wbg9hd
+endwhile_k7wbg9hd	nop
+% ---------------- end of for block ----------------
+	sub	r9,r9,r9	% Clear register
+	hlt
+% ---------------- end of program ----------------

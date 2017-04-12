@@ -1,0 +1,15 @@
+program {
+	// Used before they are defined
+	x = 32;
+	y = 55;
+	z = 32;
+
+	int x;
+	int y;
+	int z;
+
+	// Redelcared
+	int x;
+	int y;
+	int z;
+};

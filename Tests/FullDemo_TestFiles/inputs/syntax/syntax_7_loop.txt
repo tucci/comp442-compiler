@@ -1,0 +1,21 @@
+program {
+	for (id id = num; id < id ; id = id + id) {
+
+	};
+
+	for (id id = num; id < id ; id = id + id)
+	
+	;
+
+	for (id id = num; id < id ; id = id + id) {
+		for (id id = num; id < id ; id = id + id) {
+
+		};
+	};
+
+	for (id id = num; id < id ; id = id + id)
+		for (id id = num; id < id ; id = id + id)
+		
+		;
+	;
+};

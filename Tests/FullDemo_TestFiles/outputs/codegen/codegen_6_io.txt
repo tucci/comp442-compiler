@@ -1,0 +1,61 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_program_x	dw	0
+	Global_program_y	dw	0
+	Global_program_z	dw	0
+% ---------------- Create function definitions ----------------
+% ---------------- Start of user program ----------------
+	align
+	entry
+	getc	r9	% Read the ascii value from the input
+	sw	Global_program_x(r0),r9
+	sub	r9,r9,r9	% Clear register
+	getc	r9	% Read the ascii value from the input
+	sw	Global_program_y(r0),r9
+	sub	r9,r9,r9	% Clear register
+	getc	r9	% Read the ascii value from the input
+	sw	Global_program_z(r0),r9
+	sub	r9,r9,r9	% Clear register
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,66	% load 66 into register
+	putc	r9	% put the ascii value to the output
+	lw	r9,Global_program_x(r0)	% load x into register
+	lw	r1,Global_program_y(r0)	% load y into register
+	add	r9,r9,r1
+	lw	r1,Global_program_z(r0)	% load z into register
+	add	r9,r9,r1
+	putc	r9	% put the ascii value to the output
+	hlt
+% ---------------- end of program ----------------

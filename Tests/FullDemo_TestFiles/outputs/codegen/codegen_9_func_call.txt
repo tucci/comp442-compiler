@@ -1,0 +1,140 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_program_a	dw	0
+	Global_program_b	dw	0
+	Global_program_max	dw	0
+	Global_program_sum	dw	0
+	Global_program_expr	dw	0
+	Global_f1_return	dw	0
+	Global_f2_x	dw	0
+	Global_f2_y	dw	0
+	Global_f2_z	dw	0
+	Global_f2_return	dw	0
+	Global_f3_a	dw	0
+	Global_f3_b	dw	0
+	Global_f3_max	dw	0
+	Global_f3_return	dw	0
+% ---------------- Create function definitions ----------------
+Global_f1	nop
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,1	% load 1 into register
+	sw	Global_f1_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_f1_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_f2	nop
+	lw	r9,Global_f2_x(r0)	% load x into register
+	lw	r1,Global_f2_y(r0)	% load y into register
+	add	r9,r9,r1
+	lw	r1,Global_f2_z(r0)	% load z into register
+	add	r9,r9,r1
+	sw	Global_f2_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_f2_return(r0)	% Return the value to the r14 return register
+	jr	r15
+Global_f3	nop
+	lw	r9,Global_f3_a(r0)	% load a into register
+	lw	r1,Global_f3_b(r0)	% load b into register
+	cgt	r9,r9,r1
+	bz	r9,else_6my5o9xs
+% ---------------- If block ----------------
+	lw	r1,Global_f3_a(r0)	% load a into register
+	sw	Global_f3_max(r0),r1	% max assignment operation
+	j	endif_6my5o9xs
+% ---------------- else block ----------------
+else_6my5o9xs	nop
+	lw	r1,Global_f3_b(r0)	% load b into register
+	sw	Global_f3_max(r0),r1	% max assignment operation
+endif_6my5o9xs	nop
+% ---------------- end of else block ----------------
+	sub	r9,r9,r9	% Clear register
+	lw	r9,Global_f3_max(r0)	% load max into register
+	sw	Global_f3_return(r0),r9	% Store the return value into the return temp memory
+	lw	r14,Global_f3_return(r0)	% Return the value to the r14 return register
+	jr	r15
+% ---------------- Start of user program ----------------
+	align
+	entry
+	lw	r1,Global_program_a(r0)	% load a into register
+	sw	Global_f3_a(r0),r1
+	lw	r1,Global_program_b(r0)	% load b into register
+	sw	Global_f3_b(r0),r1
+	jl	r15,Global_f3	% Jump to Global_f3 function
+	sw	t28(r0),r14
+	lw	r9,t28(r0)
+	sw	Global_program_max(r0),r9	% max assignment operation
+	lw	r1,Global_program_a(r0)	% load a into register
+	sw	Global_f2_x(r0),r1
+	lw	r1,Global_program_b(r0)	% load b into register
+	sw	Global_f2_y(r0),r1
+	lw	r1,Global_program_max(r0)	% load max into register
+	sw	Global_f2_z(r0),r1
+	jl	r15,Global_f2	% Jump to Global_f2 function
+	sw	t28(r0),r14
+	lw	r9,t28(r0)
+	sw	Global_program_sum(r0),r9	% sum assignment operation
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,10	% load 10 into register
+	sw	Global_f3_a(r0),r2
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,20	% load 20 into register
+	sw	Global_f3_b(r0),r2
+	jl	r15,Global_f3	% Jump to Global_f3 function
+	sw	t28(r0),r14
+	lw	r9,t28(r0)
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,1	% load 1 into register
+	sw	Global_f2_x(r0),r2
+	sub	r2,r2,r2	% Clear register
+	addi	r2,r2,2	% load 2 into register
+	sw	Global_f2_y(r0),r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,15	% load 15 into register
+	sw	Global_f3_a(r0),r3
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,20	% load 20 into register
+	sw	Global_f3_b(r0),r3
+	jl	r15,Global_f3	% Jump to Global_f3 function
+	sw	t28(r0),r14
+	lw	r2,t28(r0)
+	sw	Global_f2_z(r0),r2
+	jl	r15,Global_f2	% Jump to Global_f2 function
+	sw	t28(r0),r14
+	lw	r1,t28(r0)
+	mul	r9,r9,r1
+	sub	r1,r1,r1	% Clear register
+	addi	r1,r1,3	% load 3 into register
+	mul	r9,r9,r1
+	sw	Global_program_expr(r0),r9	% expr assignment operation
+	hlt
+% ---------------- end of program ----------------

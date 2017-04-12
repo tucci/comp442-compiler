@@ -15,9 +15,10 @@ public:
 	// Whether the lexer has more tokens
 	bool hasMoreTokens();
 	// Writes the tokens and error tokens to the file
-	void writeTokensToFile();
+	void writeTokensToFile(std::ostream* outputFile);
 	// Resets the lexer to the start of the token stream
 	void resetToStart();
+	void setMainStream(std::ostream* stream);
 private:
 	// The state transiton table tokenizer that holds all the rules for this lexer
 	std::shared_ptr<Dfa> tokenizer;
@@ -41,6 +42,10 @@ private:
 	int sourceIndex;
 	// If the lexer has been reset
 	bool streamReset;
+
+	// Error stream
+	std::ofstream errorStream;
+	std::ostream* mainStream;
 	// This does all the actual work of getting the token
 	Token getLookaheadToken();
 	// Returns the token that is evaluated from this state

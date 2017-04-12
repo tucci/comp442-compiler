@@ -1,0 +1,4 @@
+program {
+	id = id[id[id[id[id + integer] * id] + id * integer]];
+	id = id[id[id]][integer][id*id[integer]];
+};

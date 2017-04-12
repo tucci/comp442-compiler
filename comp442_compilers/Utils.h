@@ -95,4 +95,24 @@ static bool isNewLine(char c) {
 	return c == '\n\r' || c == '\n' || c == '\r';
 }
 
+static bool isFloat(std::string str) {
+	if (str.find('.') != std::string::npos) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+static std::string uniqueLabel() {
+	int length = 8;
+	std::string str;
+	std::string charset ="0123456789abcdefghijklmnopqrstuvwxyz";
+	for (int i = 0; i < length; ++i) {
+		int randIndex = rand() % (charset.length() - 1);
+		str.append(charset.substr(randIndex, 1));
+	}
+	return str;
+};
+
 #endif // !UTILS_H

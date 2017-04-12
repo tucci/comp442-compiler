@@ -1,0 +1,45 @@
+program {
+	int f0_good;
+	int f1_good;
+	int f2_good;
+	int f3_good;
+
+	int f0_bad;
+	int f1_bad;
+	int f2_bad;
+	int f3_bad;
+
+	// good calls
+	f0_good = func_0();
+	f1_good = func_1(1);
+	f2_good = func_2(1,2);
+	f3_good = func_3(1,2,3);
+
+	// bad lengths
+	f0_bad = func_0(1);
+	f1_bad = func_1(1,2);
+	f2_bad = func_2(1,2,3);
+	f3_bad = func_3(1,2,3,4);
+	
+	// Type mismatch
+	f1_bad = func_1(1.3);
+	f2_bad = func_2(1,2.43);
+	f3_bad = func_3(1,2.3,3.4);
+
+};
+
+int func_0() {
+	return (0);
+};
+
+int func_1(int x) {
+	return (0);
+};
+
+int func_2(int x, int y) {
+	return (0);
+};
+
+int func_3(int x, int y, int z) {
+	return (0);
+};

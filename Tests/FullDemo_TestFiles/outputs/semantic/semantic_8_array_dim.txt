@@ -1,0 +1,8 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Identifier x[32] is not supposed to be an array on line 3
+Identifier x[0][3] is not supposed to be an array on line 5
+Identifier y is supposed to be an array on line 8
+Array y[2][34] has wrong dimensions on line 10
+Array z[1][2][4] has wrong dimensions on line 14
+Please fix the errors before compiling again

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Logger.h"
 
 Lexer::Lexer() {
 }
@@ -6,9 +7,13 @@ Lexer::Lexer() {
 Lexer::Lexer(Specification* spec) {
 	streamReset = false;
 	tokenizer = spec->getSpec();
+	
+	errorStream.open("lexerErrors.txt");
+
 }
 
 Lexer::~Lexer() {
+	errorStream.close();
 }
 
 Token Lexer::nextToken() {
@@ -162,6 +167,7 @@ bool Lexer::hasMoreTokens() {
 	return lookaheadToken.type != TokenType::end_of_file_token;
 }
 
+
 Token Lexer::createToken(std::string lexeme, State state) {
 	Token token;
 	token.lexeme = lexeme;
@@ -205,7 +211,7 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 			token->lexeme = lookup;
 			token->tokenLine = currentLine;
 			token->type = TokenType::error_token;
-			token->error = TokenError{"Unknown symbol", ErrorType::unknown_symbol};
+			token->error = TokenError{"Unknown symbol " + token->lexeme, ErrorType::unknown_symbol};
 			break;
 		}
 		case incomplete_float: {
@@ -221,7 +227,7 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 			// Recover from this error
 			// We are not going to tokens such as "3.a" as an error because we don't know anything about the language
 			// Instead we are going to turn it into 3 tokens such as 3	.	a. Perhaphs the language has number literal functions
-			break;
+			return;
 		}
 		case invalid_float: {
 				// Float that ends with 0 error. Does not follow the specification
@@ -247,6 +253,15 @@ void Lexer::handleError(Token* token, std::string lexeme, State* errorState, std
 			break;
 		}
 	}
+	std::vector<std::ostream*> streams = {&errorStream, &std::cout };
+	if (mainStream != NULL) {
+		streams.push_back(mainStream);
+	}
+
+	for (std::vector<std::ostream*>::value_type stream : streams) {
+		*stream << "\n" << token->error.errorMessage << " on line " << token->tokenLine << std::endl;
+	}
+
 
 }
 
@@ -305,29 +320,29 @@ void Lexer::handleComment(Token* token, State* currentState) {
 	}
 }
 
-void Lexer::writeTokensToFile() {
-	std::ofstream output;
-	std::ofstream error;
-	output.open("lexerOutput.txt");
-	error.open("lexerErrors.txt");
+void Lexer::writeTokensToFile(std::ostream* outputFile) {
 
+	std::ofstream output;
+	output.open("lexerOutput.txt");
 	for (int i = 0; i < outputTokens.size(); i++) {
 		const Token t = outputTokens.at(i);
 		if (t.type != TokenType::end_of_file_token) {
 			if (t.type == TokenType::error_token) {
-				error << t;
 			} else {
 				output << t;
 			}
 		}
 	}
 	output.close();
-	error.close();
-	std::cout << "Successfully wrote tokens to lexerOutput.txt and lexerErrors.txt" << std::endl;
+	
 }
 
 void Lexer::resetToStart() {
 	tokenIndex = 0;
 	lookaheadToken = outputTokens.at(0);
 	streamReset = true;
+}
+
+void Lexer::setMainStream(std::ostream* stream) {
+	this->mainStream = stream;
 }

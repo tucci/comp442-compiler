@@ -27,6 +27,15 @@
     <ClInclude Include="..\comp442_compilers\Utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\comp442_compilers\SymbolTableRecord.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\comp442_compilers\TypeData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\comp442_compilers\Instructions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -120,6 +129,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\comp442_compilers\token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Variable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\MoonGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\AssignStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\ForStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\GetStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\IfElseStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\PutStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\ReturnStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\comp442_compilers\Instruction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Instruction_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

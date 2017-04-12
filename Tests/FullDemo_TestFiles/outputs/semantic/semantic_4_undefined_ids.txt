@@ -1,0 +1,19 @@
+Compiling sourcefile.txt
+Analyzing Syntax and Building symbol table...Done
+Identifier x is undefined on line 3
+Assignment Statement x = 32 has type mismatch on line 3
+Identifier y is undefined on line 4
+Assignment Statement y = 54 has type mismatch on line 4
+Identifier z is undefined on line 6
+Identifier a is undefined on line 6
+Identifier b is undefined on line 6
+Identifier c is undefined on line 6
+Expression ((a*b)*c) has different types on line 6
+Type Test1 not defined on line 8
+Identifier v is undefined on line 10
+Identifier func() is undefined on line 10
+Function call func() has mismatich in arugment length or types on line 10
+Identifier func2() is undefined on line 10
+Function call func2() has mismatich in arugment length or types on line 10
+Expression (func()+func2()) has different types on line 10
+Please fix the errors before compiling again

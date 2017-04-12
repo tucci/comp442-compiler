@@ -1,0 +1,232 @@
+% ---------------- Allocate temp memory ----------------
+	t28	dw	0
+	t8	dw	0
+	t20	dw	0
+	t0	dw	0
+	t21	dw	0
+	t1	dw	0
+	t22	dw	0
+	t2	dw	0
+	t23	dw	0
+	t3	dw	0
+	t24	dw	0
+	t4	dw	0
+	t25	dw	0
+	t5	dw	0
+	t26	dw	0
+	t6	dw	0
+	t27	dw	0
+	t7	dw	0
+	t29	dw	0
+	t9	dw	0
+	t10	dw	0
+	t11	dw	0
+	t12	dw	0
+	t13	dw	0
+	t14	dw	0
+	t15	dw	0
+	t16	dw	0
+	t17	dw	0
+	t18	dw	0
+	t19	dw	0
+	t30	dw	0
+	t31	dw	0
+% ---------------- Allocate function var/param temp data ----------------
+	Global_program_x	res	128
+	Global_program_y	res	16
+	Global_program_z	res	32
+	Global_program_t1_array	res	120
+	Global_program_t1_obj	res	12
+% ---------------- Create function definitions ----------------
+% ---------------- Start of user program ----------------
+	align
+	entry
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,0	% load 0 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,2	% load 2 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,4	% load 4 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,2	% load 2 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,6	% load 6 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,3	% load 3 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,8	% load 8 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,4	% load 4 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,10	% load 10 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,5	% load 5 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,100	% load 100 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,31	% load 31 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_x(r1),r9	% x assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,16	% load 16 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_y(r1),r9	% y assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,32	% load 32 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_y(r1),r9	% y assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,64	% load 64 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_y(r1),r9	% y assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,128	% load 128 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_y(r1),r9	% y assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,111	% load 111 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,16
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_z(r1),r9	% z assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,222	% load 222 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,16
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_z(r1),r9	% z assignment operation
+	sub	r9,r9,r9	% Clear register
+	addi	r9,r9,333	% load 333 into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,16
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,8
+	add	r1,r1,r2
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,4
+	add	r1,r1,r2
+	sw	Global_program_z(r1),r9	% z assignment operation
+	lw	r9,Global_program_t1_obj(r0)	% load t1_obj into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,0	% load 0 into register
+	muli	r2,r3,12
+	add	r1,r1,r2
+	sw	Global_program_t1_array(r1),r9	% t1_array assignment operation
+	lw	r9,Global_program_t1_obj(r0)	% load t1_obj into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,1	% load 1 into register
+	muli	r2,r3,12
+	add	r1,r1,r2
+	sw	Global_program_t1_array(r1),r9	% t1_array assignment operation
+	lw	r9,Global_program_t1_obj(r0)	% load t1_obj into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,2	% load 2 into register
+	muli	r2,r3,12
+	add	r1,r1,r2
+	sw	Global_program_t1_array(r1),r9	% t1_array assignment operation
+	lw	r9,Global_program_t1_obj(r0)	% load t1_obj into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,3	% load 3 into register
+	muli	r2,r3,12
+	add	r1,r1,r2
+	sw	Global_program_t1_array(r1),r9	% t1_array assignment operation
+	lw	r9,Global_program_t1_obj(r0)	% load t1_obj into register
+	sub	r1,r1,r1	% Clear register
+	sub	r3,r3,r3	% Clear register
+	addi	r3,r3,9	% load 9 into register
+	muli	r2,r3,12
+	add	r1,r1,r2
+	sw	Global_program_t1_array(r1),r9	% t1_array assignment operation
+	hlt
+% ---------------- end of program ----------------
